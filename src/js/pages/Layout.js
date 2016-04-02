@@ -18,17 +18,16 @@ export default class Layout extends React.Component {
       paddingTop: "60px"
     };
     const { history } = this.props;
-    console.log(history.isActive("archives"));
-        
+    
+      
     return (    
         <div class="container-fluid">
-            <div class="row-fluid">
-              <Header/>
-              <h1>Boilerplate React and Redux</h1>
+           
+              {/* <Header /> */}
+              <h1>Editable Grid</h1>
               {this.props.children}
-              <Footer />            
-             {/* <button class="btn btn-info" onClick={this.navigate.bind(this)}>Featured</button> */}
-          </div>
+              {/*<Footer />*/}            
+             {/* <button class="btn btn-info" onClick={this.navigate.bind(this)}>Featured</button> */}          
        </div>
     );
   }
