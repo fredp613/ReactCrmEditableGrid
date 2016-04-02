@@ -9,7 +9,14 @@ class TableDataStore extends EventEmitter {
 		this.rowData = [];
 		this.headers = [];	
 		this.values = [];
-		this.isEditing = false;		
+		this.isEditing = false;	
+
+
+		//Quick sort 1 to 1 for sort name and sort direction
+		this.newSortDirection = "";
+		this.newSortFieldName = "";	
+		/////////////////////////////////////////////////////
+
 		this._ = require("lodash");
 		//in crm this is 2 recrods, taking the three fields in the view
 		//field Name would be the header (field display name)
@@ -32,18 +39,21 @@ class TableDataStore extends EventEmitter {
 						id: "1",
 						crmFieldName: "firstName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "John",
 					},
 					{
 						id: "2",
 						crmFieldName: "lastName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "Smith",
 					},					
 					{
 						id: "3",
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
+						sortDirection: "asc",
 						value: "true",
 					},					
 				],
@@ -56,18 +66,21 @@ class TableDataStore extends EventEmitter {
 						id: "3",
 						crmFieldName: "firstName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "Jane",
 					},
 					{
 						id: "4",
 						crmFieldName: "lastName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "JonesU",
 					},		
 					{
 						id: "30",
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
+						sortDirection: "asc",
 						value: "false",
 					},				
 				]
@@ -80,18 +93,21 @@ class TableDataStore extends EventEmitter {
 						id: "5",
 						crmFieldName: "firstName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "Mike",
 					},
 					{
 						id: "6",
 						crmFieldName: "lastName",
 						crmFieldType: "crmShortText",
+						sortDirection: "desc",
 						value: "Jones",
 					},
 					{
 						id: "31",
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
+						sortDirection: "asc",
 						value: "true",
 					},					
 				]
@@ -99,16 +115,87 @@ class TableDataStore extends EventEmitter {
 		]
 		
 	}
+
+	getNewSortedTableData() {
+		//manipulate array to properly sort
+		//find nodes with crmfieldname that is being sorted in the new sorted
+		//extract its value and add a new field called sortedValue
+		//then sort array completed using the sorted value field and return it
+		var newArr = [];
+		for (var i=0;i<=this.tableData.length - 1;i++) {
+			var firstNode = this.tableData[i];			
+			for (var y=0;y<=firstNode.values.length - 1;y++) {
+				var val = firstNode.values[y];
+				if (val.crmFieldName == this.newSortFieldName) {
+					firstNode.sortedValue = val.value;
+				}
+			}
+			newArr.push(firstNode);
+		}
+		console.log(newArr)
+
+		if (this.newSortDirection == "asc") {
+			newArr.sort(function (a, b) {			
+				if (a.sortedValue > b.sortedValue) {
+			    	return 1;
+			  	}
+			    if (a.sortedValue < b.sortedValue) {
+			    	return -1;
+			    }						
+			  // a must be equal to b
+			  return 0;
+			});
+		} else {
+			newArr.sort(function (a, b) {			
+				if (a.sortedValue < b.sortedValue) {
+			    	return 1;
+			  	}
+			    if (a.sortedValue > b.sortedValue) {
+			    	return -1;
+			    }
+						 
+			   // a must be equal to b
+			    return 0;
+			});
+		}
+			
+		return newArr;
+
+	}
+		
+	getHeaders() {	
+		if (this.newSortDirection != "") {			
+			return this.getMutadedHeaderNames();
+		}
+		return _.uniqBy(this.getHeaderNames(), "headerName")
+	}
+
 	
-	getHeaders() {		
-		return _.uniq(this.getHeaderNames())
+	getMutadedHeaderNames() {
+		var headers = _.uniqBy(this.getHeaderNames(), "headerName");
+		var newHeaders = [];
+		for (var i=0;i<=headers.length-1;i++) {
+			var header = headers[i];			
+			if (header.headerName == this.newSortFieldName) {
+				header.sortDirection = this.newSortDirection;
+			} else {
+				header.sortDirection = "desc";				
+			}
+			newHeaders.push(header);
+		}		
+		return newHeaders;
 	}
 
 	getHeaderNames() {						
-		return this.getHeadersCleaned().map((header) => {			
-			return header.crmFieldName;
+		return this.getHeadersCleaned().map((header, index) => {			
+			return {
+				headerName: header.crmFieldName,
+				key: index,
+				sortDirection: header.sortDirection,
+			};
 		})		
 	}
+
 
 	getHeadersCleaned() {
 		for (var i=0;i<=this.tableData.length - 1;i++) {			
@@ -149,7 +236,11 @@ class TableDataStore extends EventEmitter {
 				this.emit("change");
 				break;
 			case "TOGGLE_EDITING_MODE":			
-				this.toggleEditingMode(action.isEditing)					
+				this.toggleEditingMode(action.isEditing)
+				break;
+			case "TOGGLE_QUICK_SORT":
+				this.toggleQuickSort(action.sortFieldName, action.sortDirection)								
+				break;
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			
 		}
@@ -157,10 +248,16 @@ class TableDataStore extends EventEmitter {
 
 	toggleEditingMode(isEditing) {
 		this.isEditing = isEditing
-		this.emit("change");
-		console.log("store changed" + this.isEditing);
+		this.emit("change");		
 	}
-	
+	toggleQuickSort(fieldName, direction) {				
+		this.newSortFieldName = fieldName;
+		this.newSortDirection = direction;	
+		//temporary, get rid of this its redundant since the server will return a sroted array
+		this.tableData = this.getNewSortedTableData();
+		/////////////////////////////////////////////////////////////////////////////////////
+		this.emit("change");
+	}
 
 }
 

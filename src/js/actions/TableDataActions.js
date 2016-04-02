@@ -1,14 +1,20 @@
 import dispatcher from "../dispatcher";
 
-
-
-	
 	
 	export function toggleEditingMode(isEditing) {
 		dispatcher.dispatch({
 			type: "TOGGLE_EDITING_MODE",
 			isEditing,
 		});
+	}
+	
+
+	export function toggleQuickSort(sortFieldName, sortDirection) {
+		dispatcher.dispatch({
+			type: "TOGGLE_QUICK_SORT",
+			sortFieldName,
+			sortDirection,
+		})
 	}
 
 

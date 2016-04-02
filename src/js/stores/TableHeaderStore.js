@@ -1,48 +1,26 @@
 import { EventEmitter } from "events";
 import dispatcher from "../dispatcher";
+import lodash from "lodash";
 
 
 class TableHeaderStore extends EventEmitter {
 	constructor() {
-		super()
-		this.headers = [
-			{
-				id: 434,
-				title: "AGAOM asdfsfddsaf",
-				fieldType: "plainText",					
-			},
-			{
-				id: 234,
-				title: "asfasf 234324asdfsfddsaf",					
-				fieldType: "date",
-			},
-			{
-				id: 214,
-				title: "farnk 234324asdfsfddsaf",					
-				fieldType: "lookup"
-			},	
-			{
-				id: 215,
-				title: "farnk 234324asdfsfddsaf",					
-				fieldType: "currency",
-			},		
-		]
+		super();
+		this.sortDirection = "down";
+		
 	}
-	
-
-	getAll() {
-		return this.headers;
-	}
-
+			
 	handleActions(action) {
-		switch(action.type) {			
-			case "RECEIVE_HEADERS": 				
-				this.headers = action.headers;
-				this.emit("change");
-				break;							
-			case "FETCH_FOOTERS_ERROR": 
-				break;			
+		switch(action.type) {						
+			case "TOGGLE_QUICK_SORT":			
+				this.toggleQuickSort(action.sortDirection)								
+				break;					
 		}
+	}
+
+	toggleQuickSort(sortDirection) {
+		this.sortDirection = sortDirection
+		this.emit("change");		
 	}
 
 }
