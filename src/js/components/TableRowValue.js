@@ -9,44 +9,53 @@ export default class TableRow extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			isEditing: false,	
-			currentValue: ""		
+			isEditing: TableDataStore.isEditing,	
+			currentValue: "",
+			isEditingComponent: false		
 		}
 	}	
 
 	componentWillMount() {
-		this.setState({
-			isEditing: false,	
-			currentValue: this.props.value
-		});
+		
+		TableDataStore.on('change', () => {           
+        	 this.setState({
+        	 	isEditing: TableDataStore.isEditing,	
+				currentValue: "",
+				isEditingComponent: false	        	 	
+        	 });
+        });
+
 	}
+	
 
 	componentWillUnmount() {
-		this.setState({
-			isEditing: false,	
-			currentValue: this.props.value
-		});	
+		TableDataStore.removeListener('change', () => {           
+        	 this.setState({
+				isEditing: TableDataStore.isEditing,	
+				currentValue: "",
+				isEditingComponent: false	        	 	
+        	 });
+        });	
 	}
 	
 
 	handleClick(value, ft) {
 		
-		const val = value
-		console.log(val)
-
 		if (!this.state.isEditing) {
-			TableDataActions.toggleEditingMode(true),
+			TableDataActions.toggleEditingMode(true);
+		}
+
+		const val = value		
+		if (!this.state.isEditingComponent) {
+			// TableDataActions.toggleEditingMode(true),
+			
 			this.setState({
-				isEditing: true,
+				// isEditing: TableDataStore.isEditing,
+				isEditingComponent: true,
 				currentValue: val,
 			})
-		} else {
-			isEditing: TableDataActions.toggleEditingMode(false),
-			this.setState({
-				isEditing: false,
-				// currentValue: val,
-			})
-		}
+
+		} 
 	}
 
 	handleChange(e) {
@@ -63,21 +72,27 @@ export default class TableRow extends React.Component {
     	}; 
     	const gkey = Date.now();
     	var field;
-    	if (!this.state.isEditing) {	
-    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.value}</a> 
+
+    	if (this.state.isEditing) {
+    		if (!this.state.isEditingComponent) {	
+    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.value}</a> 
+	    	} else {
+	    		switch(this.props.fieldType) {
+	    			case "crmShortText":    				
+						field = <input type="text" value={this.state.currentValue} onChange={this.handleChange.bind(this)} />	    				    			
+	    			break;
+	    			case "boolean":
+		    			field = <select defaultValue={this.props.value =="true" ? "Yes" : "No"}>
+		    				<option value="Yes">Yes</option>
+		    				<option value="No">No</option>
+		    			</select>
+	    			break;
+	    		}    		
+	    	}
     	} else {
-    		switch(this.props.fieldType) {
-    			case "crmShortText":    				
-					field = <input type="text" value={this.state.currentValue} onChange={this.handleChange.bind(this)} />	    				    			
-    			break;
-    			case "boolean":
-	    			field = <select defaultValue={this.props.value =="true" ? "Yes" : "No"}>
-	    				<option value="Yes">Yes</option>
-	    				<option value="No">No</option>
-	    			</select>
-    			break;
-    		}    		
+    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.value}</a> 
     	}
+    	
 
 		return(
 			<td>	

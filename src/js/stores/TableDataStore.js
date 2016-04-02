@@ -5,7 +5,7 @@ import lodash from "lodash";
 
 class TableDataStore extends EventEmitter {
 	constructor() {
-		super()
+		super();
 		this.rowData = [];
 		this.headers = [];	
 		this.values = [];
@@ -149,12 +149,16 @@ class TableDataStore extends EventEmitter {
 				this.emit("change");
 				break;
 			case "TOGGLE_EDITING_MODE":			
-				this.isEditing = action.isEditing;
-				console.log(this.isEditing);
-				this.emit("change");							
+				this.toggleEditingMode(action.isEditing)					
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			
 		}
+	}
+
+	toggleEditingMode(isEditing) {
+		this.isEditing = isEditing
+		this.emit("change");
+		console.log("store changed" + this.isEditing);
 	}
 	
 

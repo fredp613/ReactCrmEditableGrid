@@ -1,9 +1,6 @@
 import React from "react";
-// import Articles from "../components/articles";
-import TableHeaderStore from "../stores/tableHeaderStore";
-import TableBodyStore from "../stores/tableBodyStore";
-import TableFooterStore from "../stores/tableFooterStore";
-import TableDataStore from "../stores/tableDataStore";
+import TableDataStore from "../stores/TableDataStore";
+import * as TableDataActions from "../actions/TableDataActions";
 import TableHeader from "../components/tableHeader";
 import TableFooter from "../components/tableFooter";
 import TableBody from "../components/tableBody";
@@ -21,9 +18,10 @@ export default class Home extends React.Component {
           searchText: "",
           isEditing: TableDataStore.isEditing,                
 	    }
+      
 
 	}
-
+   
 	toggleInitialState() {
 		  this.setState({
           headers: TableDataStore.getHeaders(),           
@@ -33,10 +31,18 @@ export default class Home extends React.Component {
       });		
 	}
 
+  
+
+  componentDidMount() {
+    TableDataStore.on('change', () => {
+      console.log("changed");
+    });
+  }
+
 	componentWillMount() {
       this.toggleInitialState();      
                
-        TableBodyStore.on('change', () => { 
+        TableDataStore.on('change', () => { 
           console.log("store changed")          
         	 this.toggleInitialState();
         });
@@ -44,13 +50,15 @@ export default class Home extends React.Component {
     }
 
     componentWillUnmount() {        
-        TableBodyStore.removeListener('change', () => {           
+        TableDataStore.removeListener('change', () => {           
         	 this.toggleInitialState();
         });
         
     }
     
-   
+   shouldComponentUpdate() {
+      return true;
+   }
 
 	handleSearchTextChange(e) {
 		console.log(e.target.value);
@@ -63,9 +71,20 @@ export default class Home extends React.Component {
 		this.setState({searchText:""})
 	}
 
+  handeBtnClick() {  
+    if (this.state.isEditing) {
+      TableDataActions.toggleEditingMode(false)
+      
+    } else {
+      TableDataActions.toggleEditingMode(true)      
+    }
+  }
+
 
   render() {
-  	const { searchText } = this.state.searchText;  	
+    
+
+  	const { searchText } = this.state;  	
     const { headers } = this.state;      
     const { tableData } = this.state;
     const { rowValues } = this.state;
@@ -82,9 +101,9 @@ export default class Home extends React.Component {
     var saveBtn;
     if (this.state.isEditing) {
       console.log("top level compoent got hcange")
-      saveBtn = <button>Save</button>
+      saveBtn = <button onClick={this.handeBtnClick.bind(this)}>Save</button>
     } else {
-      saveBtn = <button>Save Not</button>
+      saveBtn = <button onClick={this.handeBtnClick.bind(this)}>Save Not</button>
     }       
 
     return (
