@@ -10,12 +10,12 @@ export default class TableRow extends React.Component {
 
 		const rowValueComponents = this.props.childValues.map((child) => {
 			if (child.crmFieldType == "lookup") {
-				return <TableRowValue key={child.id} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} lookupData={this.props.lookupData}/>
+				return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} lookupData={this.props.lookupData}/>
 			}
 			if (child.crmFieldType == "boolean") {
-				return <TableRowValue key={child.id} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} twoOptionsData={this.props.twoOptionsData}/>	
+				return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} twoOptionsData={this.props.twoOptionsData}/>	
 			}
-			return <TableRowValue key={child.id} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName}/>
+			return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName}/>
 		})
 		
 		return(

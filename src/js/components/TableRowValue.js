@@ -13,8 +13,10 @@ export default class TableRow extends React.Component {
 		this.state = {
 			isEditing: TableDataStore.isEditing,	
 			isDirty: TableRowDataStore.isDirty,
+			saveRequired: TableDataStore.saveRequired,
 			currentValue: "",
-			isEditingComponent: false		
+			isEditingComponent: false,
+			dirtyParentIds: [],		
 		}
 	}	
 
@@ -23,9 +25,11 @@ export default class TableRow extends React.Component {
 		TableDataStore.on('change', () => {           
         	 this.setState({
         	 	isEditing: TableDataStore.isEditing,
-        	 	isDirty: TableRowDataStore.isDirty,	
+        	 	isDirty: TableRowDataStore.isDirty,
+        	 	saveRequired: TableDataStore.saveRequired,	
 				currentValue: "",
-				isEditingComponent: false	        	 	
+				isEditingComponent: false,
+				dirtyParentIds: [],	        	 	
         	 });
         });
 
@@ -39,12 +43,14 @@ export default class TableRow extends React.Component {
 	
 
 	componentWillUnmount() {
-		TableDataStore.removeListener('change', () => {           
+		TableDataStore.removeListener('change', () => {
         	 this.setState({
 				isEditing: TableDataStore.isEditing,
 				isDirty: TableRowDataStore.isDirty,	
+				saveRequired: TableDataStore.saveRequired,
 				currentValue: "",
-				isEditingComponent: false	        	 	
+				isEditingComponent: false,
+				dirtyParentIds: [],	        	 	
         	 });
         });	
         TableRowDataStore.removeListener('change', () => {           
@@ -72,17 +78,23 @@ export default class TableRow extends React.Component {
 		} 
 	}
 
+	updateRecords() {
+		console.log("updating the following records: " + this.dirtyParentIds);
+	}
+
 	handleChange(e) {
 		console.log("changed")
 		const newValue = e.target.value;
-		TableRowDataActions.toggleDirtyMode(true)
+		TableRowDataActions.toggleDirtyMode(true);
+		TableDataActions.updateDirtyRecords(this.props.parentId, this.props.fieldName, newValue)	
+		console.log(TableDataStore.dirtyRecords)				
 		this.setState({
 			currentValue: newValue
 		});
 	}
 
-	render() {
-		console.log(this.props.lookupData)
+	render() {				
+
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important" 
@@ -130,3 +142,45 @@ export default class TableRow extends React.Component {
 	}
 
 }
+
+
+
+// 				id: "11",
+// 				crmRecordId: "431212",
+// 				values: [
+// 					{
+// 						id: "1",
+// 						crmFieldName: "firstName",
+// 						crmFieldType: "crmShortText",
+// 						sortDirection: "desc",
+// 						value: "John",
+// 					},
+// 					{
+// 						id: "2",
+// 						crmFieldName: "lastName",
+// 						crmFieldType: "crmShortText",
+// 						sortDirection: "desc",
+// 						value: "Smith",
+// 					},					
+// 					{
+// 						id: "3",
+// 						crmFieldName: "isActive",
+// 						crmFieldType: "boolean",
+// 						sortDirection: "asc",
+// 						value: "1",
+// 					},		
+// 					{
+// 						id: "37",
+// 						crmFieldName: "isAboriginal",
+// 						crmFieldType: "boolean",
+// 						sortDirection: "desc",
+// 						value: "1",
+// 					},	
+// 					{
+// 						id: "38",
+// 						crmFieldName: "Category",
+// 						crmFieldType: "lookup",
+// 						sortDirection: "desc",
+// 						value: "140012",
+// 					},				
+// 				],

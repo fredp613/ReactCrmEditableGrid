@@ -21,7 +21,8 @@ export default class Home extends React.Component {
           twoOptionsData: TableDataStore.getTwoOptionsData(),
           searchText: "",
           isEditing: TableDataStore.isEditing,
-          isDirty: TableRowDataStore.isDirty,                
+          isDirty: TableRowDataStore.isDirty,
+          dirtyRecords: TableDataStore.dirtyRecords,                
 	    }    
 	}
    
@@ -30,7 +31,8 @@ export default class Home extends React.Component {
           headers: TableDataStore.getHeaders(),           
           tableData: TableDataStore.getAll(), 
           lookupData: TableDataStore.getLookupData(),
-          twoOptionsData: TableDataStore.getTwoOptionsData(),     
+          twoOptionsData: TableDataStore.getTwoOptionsData(),  
+          dirtyRecords: TableDataStore.dirtyRecords,                   
           searchText: "", 
           isEditing: TableDataStore.isEditing,  
           isDirty: TableRowDataStore.isDirty,             
@@ -79,11 +81,14 @@ export default class Home extends React.Component {
 
   handeCancelBtnClick() {      
       TableDataActions.toggleEditingMode(false)    
+      TableRowDataActions.toggleDirtyMode(false)        
   }
 
-  handeSaveBtnClick() {      
+  handeSaveBtnClick() {    
+      TableDataActions.updateRequest();
       TableRowDataActions.toggleDirtyMode(false)        
       TableDataActions.toggleEditingMode(false)          
+
   }
 
 
@@ -117,21 +122,18 @@ export default class Home extends React.Component {
 
     return (
       <div class='row-fluid'> 
-               
-      	<div class="span4 input-group col-md-3 col-xs-offset-9">
-            
+                  
+      	<div class="input-group col-md-5 col-xs-offset-9">           
 	         <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} />           
-         		 <span class="input-group-btn">
-             		 <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
+         		 <span class="input-group-btn">                          		 
+                 <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
                 			<span class="glyphicon glyphicon-search"></span>
-          		</button>
+            		</button>
           	</span>
-
         </div>    
 		    <br/>
-        <div class='row-fluid'>
-          {cancelBtn}
-          {saveBtn}
+        <div class='row-fluid'>        
+          
           <table class='table table-stripped table-bordered table-hover table-condensed'>         
           <thead>
             <tr>{TableHeaderComponents}</tr>            
@@ -142,6 +144,8 @@ export default class Home extends React.Component {
           </tfoot>
         
         </table>
+        {cancelBtn}{saveBtn} 
+
         </div>
       	
       	

@@ -12,9 +12,10 @@ class TableDataStore extends EventEmitter {
 		this.rowData = [];
 		this.headers = [];	
 		this.values = [];
+		
 		this.isEditing = false;	
-
-
+		this.saveRequired = false;
+		this.dirtyRecords = [];
 		//Quick sort 1 to 1 for sort name and sort direction
 		this.newSortDirection = "";
 		this.newSortFieldName = "";	
@@ -348,6 +349,33 @@ class TableDataStore extends EventEmitter {
 	}
 
 
+	updateDirtyRecords(parentId, fieldName, value) {
+		
+		const revised = {
+			parentId: parentId,
+			fieldName: fieldName,
+			value: value,
+		}
+		var tmpArr = [];
+		const foundObject = _.find(this.dirtyRecords, ['parentId', parentId])
+		if (!foundObject) {
+			this.dirtyRecords.push(revised)
+		} else {
+			for (var i=0;i<=this.dirtyRecords.length - 1;i++) {
+				const dirtyRecord = this.dirtyRecords[i];
+				if (dirtyRecord.parentId == parentId) {
+					dirtyRecord.value = value;
+				}
+
+				tmpArr.push(dirtyRecord)
+			}
+			this.dirtyRecords = tmpArr
+		}
+		// this.emit('change') 
+							
+	}
+
+
 	handleActions(action) {
 		switch(action.type) {			
 			case "RECEIVE_TABLE_DATA": 				
@@ -359,14 +387,23 @@ class TableDataStore extends EventEmitter {
 				break;
 			case "TOGGLE_QUICK_SORT":
 				this.toggleQuickSort(action.sortFieldName, action.sortDirection)								
+				break;	
+			case "UPDATE_REQUEST":
+				this.saveRequired = true;
+				this.emit('change');
 				break;
+			case "UPDATE_DIRTY_RECORDS":
+				this.updateDirtyRecords(action.parentId, action.fieldName, action.value)
+				break;			
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			
 		}
 	}
 
+
 	toggleEditingMode(isEditing) {
 		this.isEditing = isEditing
+		this.dirtyRecords = [];
 		this.emit("change");		
 	}
 	toggleQuickSort(fieldName, direction) {				
@@ -377,6 +414,7 @@ class TableDataStore extends EventEmitter {
 		/////////////////////////////////////////////////////////////////////////////////////
 		this.emit("change");
 	}
+
 
 }
 
