@@ -6,6 +6,9 @@ import lodash from "lodash";
 class TableDataStore extends EventEmitter {
 	constructor() {
 		super();
+		//libs
+		this._ = require("lodash");
+		//////////////////////////////////////////////////////
 		this.rowData = [];
 		this.headers = [];	
 		this.values = [];
@@ -17,7 +20,7 @@ class TableDataStore extends EventEmitter {
 		this.newSortFieldName = "";	
 		/////////////////////////////////////////////////////
 
-		this._ = require("lodash");
+		
 		//in crm this is 2 recrods, taking the three fields in the view
 		//field Name would be the header (field display name)
 		/**
@@ -54,8 +57,22 @@ class TableDataStore extends EventEmitter {
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
 						sortDirection: "asc",
-						value: "true",
-					},					
+						value: "1",
+					},		
+					{
+						id: "37",
+						crmFieldName: "isAboriginal",
+						crmFieldType: "boolean",
+						sortDirection: "desc",
+						value: "1",
+					},	
+					{
+						id: "38",
+						crmFieldName: "Category",
+						crmFieldType: "lookup",
+						sortDirection: "desc",
+						value: "140012",
+					},				
 				],
 			},
 			{
@@ -81,7 +98,21 @@ class TableDataStore extends EventEmitter {
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
 						sortDirection: "asc",
-						value: "false",
+						value: "0",
+					},	
+					{
+						id: "34",
+						crmFieldName: "isAboriginal",
+						crmFieldType: "boolean",
+						sortDirection: "desc",
+						value: "0",
+					},	
+					{
+						id: "35",
+						crmFieldName: "Category",
+						crmFieldType: "lookup",
+						sortDirection: "desc",
+						value: "140012",
 					},				
 				]
 			},
@@ -108,10 +139,87 @@ class TableDataStore extends EventEmitter {
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
 						sortDirection: "asc",
-						value: "true",
+						value: "1",
+					},
+					{
+						id: "32",
+						crmFieldName: "isAboriginal",
+						crmFieldType: "boolean",
+						sortDirection: "desc",
+						value: "0",
+					},	
+					{
+						id: "33",
+						crmFieldName: "Category",
+						crmFieldType: "lookup",
+						sortDirection: "desc",
+						value: "140013",
 					},					
 				]
-			},				
+			},
+
+		]
+
+		this.twoOptionsData = [
+											
+			{
+				crmFieldId: "123",
+				crmFieldName: "isActive",				
+				value: "0",
+				label: "No",
+			},
+			{
+				crmFieldId: "123",
+				crmFieldName: "isActive",
+				value: "1",
+				label: "Yes",
+			},
+			{
+				crmFieldId: "124",
+				crmFieldName: "isAboriginal",				
+				value: "0",
+				label: "No",
+			},
+			{
+				crmFieldId: "124",
+				crmFieldName: "isAboriginal",
+				value: "1",
+				label: "Yes",
+			},		
+		]
+
+		this.lookupData = [
+			
+			{
+				crmFieldId: "4324",
+				crmFieldName: "Category",
+				value: "140012",
+				label: "Category 1",
+			},
+			{
+				
+				crmFieldId: "4324",
+				crmFieldName: "Category",
+				value: "140013",
+				label: "Category 2",
+			},
+			{
+				
+				crmFieldId: "4324",
+				crmFieldName: "Category",
+				value: "140014",
+				label: "Category 3",
+			},
+			{
+				
+				crmFieldId: "4324",
+				crmFieldName: "Category",
+				value: "140015",
+				label: "Category 4",
+			},
+
+
+
 		]
 		
 	}
@@ -228,6 +336,17 @@ class TableDataStore extends EventEmitter {
 			}
 		});		
 	}
+
+	getLookupData() {
+		return this.lookupData;
+	}
+
+	
+
+	getTwoOptionsData() {
+		return this.twoOptionsData;
+	}
+
 
 	handleActions(action) {
 		switch(action.type) {			

@@ -17,6 +17,8 @@ export default class Home extends React.Component {
 	    this.state = {            
 	        headers: TableDataStore.getHeaders(),
           tableData: TableDataStore.getAll(),
+          lookupData: TableDataStore.getLookupData(),
+          twoOptionsData: TableDataStore.getTwoOptionsData(),
           searchText: "",
           isEditing: TableDataStore.isEditing,
           isDirty: TableRowDataStore.isDirty,                
@@ -26,7 +28,9 @@ export default class Home extends React.Component {
 	toggleState() {
 		  this.setState({
           headers: TableDataStore.getHeaders(),           
-          tableData: TableDataStore.getAll(),      
+          tableData: TableDataStore.getAll(), 
+          lookupData: TableDataStore.getLookupData(),
+          twoOptionsData: TableDataStore.getTwoOptionsData(),     
           searchText: "", 
           isEditing: TableDataStore.isEditing,  
           isDirty: TableRowDataStore.isDirty,             
@@ -89,6 +93,8 @@ export default class Home extends React.Component {
     const { headers } = this.state;      
     const { tableData } = this.state;
     const { rowValues } = this.state;
+    const { lookupData } = this.state;
+    const { twoOptionsData } = this.state;
        
     const TableHeaderComponents = headers.map((header) => { 
         return <TableHeader key={header.key} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
@@ -130,7 +136,7 @@ export default class Home extends React.Component {
           <thead>
             <tr>{TableHeaderComponents}</tr>            
           </thead>          
-               <TableBody tableData={tableData} />          
+               <TableBody tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} />          
           <tfoot>
             <tr>{/*TableFooterComponents*/}</tr>            
           </tfoot>

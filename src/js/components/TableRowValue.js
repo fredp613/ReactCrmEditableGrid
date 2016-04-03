@@ -82,6 +82,7 @@ export default class TableRow extends React.Component {
 	}
 
 	render() {
+		console.log(this.props.lookupData)
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important" 
@@ -98,10 +99,22 @@ export default class TableRow extends React.Component {
 						field = <input type="text" value={this.state.currentValue} onChange={this.handleChange.bind(this)} />	    				    			
 	    			break;
 	    			case "boolean":
-		    			field = <select defaultValue={this.props.value =="true" ? "Yes" : "No"} onChange={this.handleChange.bind(this)}>
-		    				<option value="Yes">Yes</option>
-		    				<option value="No">No</option>
-		    			</select>
+	    				field = <select defaultValue={this.props.value} onChange={this.handleChange.bind(this)}> 	    							
+		    						{this.props.twoOptionsData.map((topt) => {
+		    							if (this.props.fieldName == topt.crmFieldName) {
+		    								return <option value={topt.value}>{topt.label}</option>		
+		    							}		    							
+		    						})}
+	    						</select>		    			
+		    		break;
+		    		case "lookup":
+		    			field =	<select defaultValue={this.props.value} onChange={this.handleChange.bind(this)}> 
+		    						{this.props.lookupData.map((lu) => {
+		    							if (this.props.fieldName == lu.crmFieldName) {
+			    							return <option value={lu.value}>{lu.label}</option>		
+		    							}		    									    							
+		    						})}
+	    						</select>
 	    			break;
 	    		}    		
 	    	}

@@ -48,8 +48,7 @@ export default class TableHeader extends React.Component {
 		} else {					
 			TableDataActions.toggleQuickSort(fieldName, "asc");
 		}	
-		this.setState({});
-				
+		this.setState({});			
 	}	
 
 	render() {
