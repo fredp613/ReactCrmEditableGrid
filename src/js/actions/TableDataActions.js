@@ -16,16 +16,19 @@ import dispatcher from "../dispatcher";
 		})
 	}
 
-	export function updateDirtyRecords() {
+	export function updateDirtyRecords() {			
+		
 		dispatcher.dispatch({
-			type: "UPDATE_DIRTY_RECORDS",			
+			type: "UPDATE_DIRTY_RECORDS",	
+			// validDirtyRecords: newData,		
 		});
 	}
 
-	export function appendDirtyRecords(parentId, fieldName, value) {
+	export function appendDirtyRecords(parentId, fieldId, fieldName, value) {
 		dispatcher.dispatch({
 			type: "APPEND_DIRTY_RECORDS",
 			parentId: parentId,
+			fieldId: fieldId,
 			fieldName: fieldName,
 			value: value,
 		});

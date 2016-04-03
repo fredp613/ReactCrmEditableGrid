@@ -85,14 +85,16 @@ export default class TableRow extends React.Component {
 	handleChange(e) {		
 		const newValue = e.target.value;
 		TableRowDataActions.toggleDirtyMode(true);
-		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldName, newValue)			
+		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue)			
+		console.log(TableDataStore.dirtyRecords);
 		this.setState({
 			currentValue: newValue
 		});
 	}
 
+	
 	render() {				
-
+		
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important" 
@@ -100,9 +102,11 @@ export default class TableRow extends React.Component {
     	const gkey = Date.now();
     	var field;
 
+
     	if (this.state.isEditing) {
-    		if (!this.state.isEditingComponent) {	
-    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.value}</a> 
+    		
+    		if (!this.state.isEditingComponent) {	    			
+    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.fieldLabel}</a> 
 	    	} else {
 	    		switch(this.props.fieldType) {
 	    			case "crmShortText":    				
@@ -110,7 +114,7 @@ export default class TableRow extends React.Component {
 	    			break;
 	    			case "boolean":
 	    				field = <select defaultValue={this.props.value} onChange={this.handleChange.bind(this)}> 	    							
-		    						{this.props.twoOptionsData.map((topt) => {
+		    						{this.props.twoOptionsData.map((topt) => {		    							
 		    							if (this.props.fieldName == topt.crmFieldName) {
 		    								return <option value={topt.value}>{topt.label}</option>		
 		    							}		    							
@@ -129,7 +133,7 @@ export default class TableRow extends React.Component {
 	    		}    		
 	    	}
     	} else {
-    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.value}</a> 
+    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.fieldLabel}</a> 
     	}
     	
 		return(

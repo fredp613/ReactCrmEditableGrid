@@ -16,6 +16,7 @@ class TableDataStore extends EventEmitter {
 		this.isEditing = false;	
 		this.saveRequired = false;
 		this.dirtyRecords = [];
+
 		//Quick sort 1 to 1 for sort name and sort direction
 		this.newSortDirection = "";
 		this.newSortFieldName = "";	
@@ -31,6 +32,7 @@ class TableDataStore extends EventEmitter {
 			2  | jn         | Doe
 			3  | jn         | smith
 
+		record json shoudl be row (recorid) -> values (all fields of view and their values) 
 		**/
 
 		this.tableData = [
@@ -81,14 +83,14 @@ class TableDataStore extends EventEmitter {
 				crmRecordId: "4312123",
 				values: [
 					{
-						id: "3",
+						id: "5",
 						crmFieldName: "firstName",
 						crmFieldType: "crmShortText",
 						sortDirection: "desc",
 						value: "Jane",
 					},
 					{
-						id: "4",
+						id: "6",
 						crmFieldName: "lastName",
 						crmFieldType: "crmShortText",
 						sortDirection: "desc",
@@ -122,35 +124,35 @@ class TableDataStore extends EventEmitter {
 				crmRecordId: "4312124",
 				values: [
 					{
-						id: "5",
+						id: "7f",
 						crmFieldName: "firstName",
 						crmFieldType: "crmShortText",
 						sortDirection: "desc",
 						value: "Mike",
 					},
 					{
-						id: "6",
+						id: "68",
 						crmFieldName: "lastName",
 						crmFieldType: "crmShortText",
 						sortDirection: "desc",
 						value: "Jones",
 					},
 					{
-						id: "31",
+						id: "313232",
 						crmFieldName: "isActive",
 						crmFieldType: "boolean",
 						sortDirection: "asc",
 						value: "1",
 					},
 					{
-						id: "32",
+						id: "32asdfasdf",
 						crmFieldName: "isAboriginal",
 						crmFieldType: "boolean",
 						sortDirection: "desc",
 						value: "0",
 					},	
 					{
-						id: "33",
+						id: "33trerefsdf",
 						crmFieldName: "Category",
 						crmFieldType: "lookup",
 						sortDirection: "desc",
@@ -348,35 +350,49 @@ class TableDataStore extends EventEmitter {
 	}
 
 
-	appendDirtyRecords(parentId, fieldName, value) {
+	appendDirtyRecords(parentId, fieldId, fieldName, value) {
 		
 		const revised = {
 			parentId: parentId,
+			fieldId: fieldId,
 			fieldName: fieldName,
 			value: value,
 		}
 		var tmpArr = [];
-		const foundObject = _.find(this.dirtyRecords, ['parentId', parentId])
+		const foundObject = _.find(this.dirtyRecords, ['fieldId', fieldId])
 		if (!foundObject) {
 			this.dirtyRecords.push(revised)
 		} else {
 			for (var i=0;i<=this.dirtyRecords.length - 1;i++) {
 				const dirtyRecord = this.dirtyRecords[i];
-				if (dirtyRecord.parentId == parentId) {
+				if (dirtyRecord.fieldId == fieldId) {
 					dirtyRecord.value = value;
 				}
 
 				tmpArr.push(dirtyRecord)
 			}
 			this.dirtyRecords = tmpArr
-		}
-		// this.emit('change') 
+		}		
 							
 	}
 	updateDirtyRecords() {
-		console.log("PARENT RECORDS TO BE UPDATED:");
-		console.log(this.dirtyRecords)
+		
+		this.tableData = this.tableData.map((td) => {
+			td.values.map((val)=> {
+				const foundObject = _.find(this.dirtyRecords, ['fieldId', val.id])			
+				if (foundObject) {										
+					val.value = foundObject.value;														
+				}
+			})			
+			return td;			
+		})		
+
 		this.emit("change");
+	}
+
+	testf(d) {
+		this.tableData = d;
+		this.emit('change');
 	}
 
 	handleActions(action) {
@@ -392,10 +408,12 @@ class TableDataStore extends EventEmitter {
 				this.toggleQuickSort(action.sortFieldName, action.sortDirection)								
 				break;	
 			case "UPDATE_DIRTY_RECORDS":
+				// this.testf(action.validDirtyRecords);
+				// this.emit('change')
 				this.updateDirtyRecords();								
 				break;
 			case "APPEND_DIRTY_RECORDS":
-				this.appendDirtyRecords(action.parentId, action.fieldName, action.value)
+				this.appendDirtyRecords(action.parentId, action.fieldId, action.fieldName, action.value)
 				break;			
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			

@@ -5,17 +5,51 @@ import TableRowValue from "../components/TableRowValue";
 
 export default class TableRow extends React.Component {
 	
+
+	getLabelForValue(fieldType, fieldName, value) {
+		switch(fieldType) {
+			case "boolean":
+				return this.props.twoOptionsData.map((to)=>{
+						if (to.crmFieldName == fieldName) {
+							if (to.value == value) {
+							return to.label;
+						}	
+					}					
+				})
+			break;
+			case "lookup":
+				return this.props.lookupData.map((to)=>{
+							if (to.crmFieldName == fieldName) {
+								if (to.value == value) {
+								return to.label;
+							}	
+						}					
+					})
+			break;
+			default:
+				return value;
+			break;
+		}
+
+	}
 		
 	render() {	
+		
 
 		const rowValueComponents = this.props.childValues.map((child) => {
+			const fieldLabel = this.getLabelForValue(child.crmFieldType, child.crmFieldName, child.value)
+
 			if (child.crmFieldType == "lookup") {
-				return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} lookupData={this.props.lookupData}/>
+				return <TableRowValue key={child.id} parentId={this.props.parentId} fieldId={child.id} value={child.value} 
+				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData}/>
 			}
 			if (child.crmFieldType == "boolean") {
-				return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName} twoOptionsData={this.props.twoOptionsData}/>	
+				return <TableRowValue key={child.id} parentId={this.props.parentId} fieldId={child.id} value={child.value} 
+				fieldType={child.crmFieldType} fieldName={child.crmFieldName} 
+				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData}/>	
 			}
-			return <TableRowValue key={child.id} parentId={this.props.parentId} value={child.value} fieldType={child.crmFieldType} fieldName={child.crmFieldName}/>
+			return <TableRowValue key={child.id} parentId={this.props.parentId} fieldId={child.id} value={child.value} 
+			fieldType={child.crmFieldType} fieldLabel={fieldLabel} fieldName={child.crmFieldName}/>
 		})
 		
 		return(

@@ -6,6 +6,7 @@ import * as TableRowDataActions from "../actions/TableRowDataActions";
 import TableHeader from "../components/tableHeader";
 import TableFooter from "../components/tableFooter";
 import TableBody from "../components/tableBody";
+import lodash from "lodash";
 
 
 
@@ -13,7 +14,7 @@ export default class Home extends React.Component {
   
 	constructor() {
 	    super();
-           
+      this.lodash = require('lodash');           
 	    this.state = {            
 	        headers: TableDataStore.getHeaders(),
           tableData: TableDataStore.getAll(),
@@ -84,10 +85,33 @@ export default class Home extends React.Component {
       TableRowDataActions.toggleDirtyMode(false)        
   }
 
-  handeSaveBtnClick() {    
+  handeSaveBtnClick() {  
+
+      // var newData = [];
+      // for (var i=0;i<=this.state.tableData.length - 1;i++) {
+      //   var td = this.state.tableData[i];
+      //   console.log(td)
+      //   var foundObject = this.lodash.find(this.state.dirtyRecords, ['parentId', td.id])
+      //   if (foundObject) {
+      //      for (var y=0;y<=td.values.length - 1;y++) {
+      //       console.log("found object: " + foundObject);
+      //         var value = td.values[y];
+      //         if (value.crmFieldName == foundObject.fieldName) {
+      //           value.value = foundObject.value
+      //         }
+
+      //      }   
+      //   }
+      //   newData.push(td);
+       
+
+      // }
+
+      // console.log(newData)
+      // TableDataActions.updateDirtyRecords(newData);
       TableDataActions.updateDirtyRecords();
-      TableRowDataActions.toggleDirtyMode(false)        
-      TableDataActions.toggleEditingMode(false)          
+      TableRowDataActions.toggleDirtyMode(false);      
+      TableDataActions.toggleEditingMode(false);         
 
   }
 
@@ -110,45 +134,70 @@ export default class Home extends React.Component {
     //     return <TableFooter key={footer.key} fieldName={footer.headerName}  />;            
     // });  
 
+       
+    const textInputStyle = {
+      // paddingTop:"10px",
+      marginLeft: "15px"
+    }
+
+    const textContainerStyle = {
+      paddingTop: "10px"
+    }
+
+    const buttonStyle = {
+      marginTop: "10px",
+      marginRight: "5px"
+      // marginRight: "15px"
+    }
+
     var cancelBtn;
     if (this.state.isEditing) {      
-      cancelBtn = <button class="btn btn-default" onClick={this.handeCancelBtnClick.bind(this)}>Cancel</button>
+      cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
     } 
     var saveBtn;
     if (this.state.isDirty) {          
-      saveBtn = <button class="btn btn-default" onClick={this.handeSaveBtnClick.bind(this)}>Save Changes</button>
-    }      
+      saveBtn = <button class="col-md-2 btn btn-success" onClick={this.handeSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+    }   
+
+
+
+    
 
     return (
-      <div class='row-fluid'> 
-                  
-      	<div class="input-group col-md-5 col-xs-offset-9">           
-	         <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} />           
-         		 <span class="input-group-btn">                          		 
-                 <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
-                			<span class="glyphicon glyphicon-search"></span>
-            		</button>
-          	</span>
-        </div>    
-		    <br/>
-        <div class='row-fluid'>        
-          
-          <table class='table table-stripped table-bordered table-hover table-condensed'>         
-          <thead>
-            <tr>{TableHeaderComponents}</tr>            
-          </thead>          
-               <TableBody tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} />          
-          <tfoot>
-            <tr>{/*TableFooterComponents*/}</tr>            
-          </tfoot>
-        
-        </table>
-        {cancelBtn}{saveBtn} 
+        <div>  
+            <div class="row-fluid">                                 
+                
+                <button class="col-md-1 btn btn-info" style={buttonStyle}>add</button>                
+                {cancelBtn}
+                {saveBtn} 
+              	<div class="input-group col-md-4" style={textContainerStyle} >                                    
+        	         <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} style={textInputStyle} />           
+                 		 <span class="input-group-btn">                          		 
+                         <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
+                        			<span class="glyphicon glyphicon-search"></span>
+                    		</button>                       
+                  	</span>
+               </div>
+            </div>    
+    		    <br/>
+            <div class='row-fluid'>        
+              
+              <table class='table table-stripped table-bordered table-hover table-condensed'>         
+              <thead>
+                <tr>{TableHeaderComponents}</tr>            
+              </thead>          
+                   <TableBody tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} />          
+              <tfoot>
+                <tr>{/*TableFooterComponents*/}</tr>            
+              </tfoot>
+            
+            </table>
+            
 
-        </div>
-      	
-      	
-          
+            </div>
+        	
+        	
+            
       </div>
     );
   }
