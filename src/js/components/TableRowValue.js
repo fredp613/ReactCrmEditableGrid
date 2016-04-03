@@ -82,12 +82,10 @@ export default class TableRow extends React.Component {
 		console.log("updating the following records: " + this.dirtyParentIds);
 	}
 
-	handleChange(e) {
-		console.log("changed")
+	handleChange(e) {		
 		const newValue = e.target.value;
 		TableRowDataActions.toggleDirtyMode(true);
-		TableDataActions.updateDirtyRecords(this.props.parentId, this.props.fieldName, newValue)	
-		console.log(TableDataStore.dirtyRecords)				
+		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldName, newValue)			
 		this.setState({
 			currentValue: newValue
 		});
@@ -143,44 +141,3 @@ export default class TableRow extends React.Component {
 
 }
 
-
-
-// 				id: "11",
-// 				crmRecordId: "431212",
-// 				values: [
-// 					{
-// 						id: "1",
-// 						crmFieldName: "firstName",
-// 						crmFieldType: "crmShortText",
-// 						sortDirection: "desc",
-// 						value: "John",
-// 					},
-// 					{
-// 						id: "2",
-// 						crmFieldName: "lastName",
-// 						crmFieldType: "crmShortText",
-// 						sortDirection: "desc",
-// 						value: "Smith",
-// 					},					
-// 					{
-// 						id: "3",
-// 						crmFieldName: "isActive",
-// 						crmFieldType: "boolean",
-// 						sortDirection: "asc",
-// 						value: "1",
-// 					},		
-// 					{
-// 						id: "37",
-// 						crmFieldName: "isAboriginal",
-// 						crmFieldType: "boolean",
-// 						sortDirection: "desc",
-// 						value: "1",
-// 					},	
-// 					{
-// 						id: "38",
-// 						crmFieldName: "Category",
-// 						crmFieldType: "lookup",
-// 						sortDirection: "desc",
-// 						value: "140012",
-// 					},				
-// 				],

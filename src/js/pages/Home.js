@@ -85,7 +85,7 @@ export default class Home extends React.Component {
   }
 
   handeSaveBtnClick() {    
-      TableDataActions.updateRequest();
+      TableDataActions.updateDirtyRecords();
       TableRowDataActions.toggleDirtyMode(false)        
       TableDataActions.toggleEditingMode(false)          
 
@@ -115,8 +115,7 @@ export default class Home extends React.Component {
       cancelBtn = <button class="btn btn-default" onClick={this.handeCancelBtnClick.bind(this)}>Cancel</button>
     } 
     var saveBtn;
-    if (this.state.isDirty) {  
-      console.log("state dirty")    
+    if (this.state.isDirty) {          
       saveBtn = <button class="btn btn-default" onClick={this.handeSaveBtnClick.bind(this)}>Save Changes</button>
     }      
 

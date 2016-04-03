@@ -240,8 +240,7 @@ class TableDataStore extends EventEmitter {
 				}
 			}
 			newArr.push(firstNode);
-		}
-		console.log(newArr)
+		}		
 
 		if (this.newSortDirection == "asc") {
 			newArr.sort(function (a, b) {			
@@ -349,7 +348,7 @@ class TableDataStore extends EventEmitter {
 	}
 
 
-	updateDirtyRecords(parentId, fieldName, value) {
+	appendDirtyRecords(parentId, fieldName, value) {
 		
 		const revised = {
 			parentId: parentId,
@@ -374,7 +373,11 @@ class TableDataStore extends EventEmitter {
 		// this.emit('change') 
 							
 	}
-
+	updateDirtyRecords() {
+		console.log("PARENT RECORDS TO BE UPDATED:");
+		console.log(this.dirtyRecords)
+		this.emit("change");
+	}
 
 	handleActions(action) {
 		switch(action.type) {			
@@ -388,12 +391,11 @@ class TableDataStore extends EventEmitter {
 			case "TOGGLE_QUICK_SORT":
 				this.toggleQuickSort(action.sortFieldName, action.sortDirection)								
 				break;	
-			case "UPDATE_REQUEST":
-				this.saveRequired = true;
-				this.emit('change');
-				break;
 			case "UPDATE_DIRTY_RECORDS":
-				this.updateDirtyRecords(action.parentId, action.fieldName, action.value)
+				this.updateDirtyRecords();								
+				break;
+			case "APPEND_DIRTY_RECORDS":
+				this.appendDirtyRecords(action.parentId, action.fieldName, action.value)
 				break;			
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			

@@ -16,15 +16,15 @@ import dispatcher from "../dispatcher";
 		})
 	}
 
-	export function updateRequest() {
+	export function updateDirtyRecords() {
 		dispatcher.dispatch({
-			type: "UPDATE_REQUEST",			
+			type: "UPDATE_DIRTY_RECORDS",			
 		});
 	}
 
-	export function updateDirtyRecords(parentId, fieldName, value) {
+	export function appendDirtyRecords(parentId, fieldName, value) {
 		dispatcher.dispatch({
-			type: "UPDATE_DIRTY_RECORDS",
+			type: "APPEND_DIRTY_RECORDS",
 			parentId: parentId,
 			fieldName: fieldName,
 			value: value,
