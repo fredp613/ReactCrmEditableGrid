@@ -370,9 +370,16 @@ class TableDataStore extends EventEmitter {
 							
 	}
 	updateDirtyRecords() {
-		
-		this.tableData = this.tableData.map((td) => {
-			td.values.map((val)=> {
+		console.log(this.tableData)
+
+		this.tableData = this.tableData.map((td, index) => {
+			var vals;
+			if (td.values) {
+				vals = td.values
+			} else {				
+				vals = td[1]				
+			}
+			vals.map((val)=> {
 				const foundObject = _.find(this.dirtyRecords, ['fieldId', val.id])			
 				if (foundObject) {										
 					val.value = foundObject.value;														
