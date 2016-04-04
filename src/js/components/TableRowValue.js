@@ -14,70 +14,69 @@ export default class TableRow extends React.Component {
 			isEditing: TableDataStore.isEditing,	
 			isDirty: TableRowDataStore.isDirty,
 			saveRequired: TableDataStore.saveRequired,
-			currentValue: "",
+			currentValue: null,
 			isEditingComponent: false,
 			dirtyParentIds: [],		
 		}
 	}	
 
-	componentWillMount() {
+	// componentWillMount() {
 		
-		TableDataStore.on('change', () => {           
-        	 this.setState({
-        	 	isEditing: TableDataStore.isEditing,
-        	 	isDirty: TableRowDataStore.isDirty,
-        	 	saveRequired: TableDataStore.saveRequired,	
-				currentValue: "",
-				isEditingComponent: false,
-				dirtyParentIds: [],	        	 	
-        	 });
-        });
+	// 	TableDataStore.on('change', () => {           
+ //        	 this.setState({
+ //        	 	isEditing: TableDataStore.isEditing,
+ //        	 	isDirty: TableRowDataStore.isDirty,
+ //        	 	saveRequired: TableDataStore.saveRequired,	
+	// 			currentValue: null,
+	// 			isEditingComponent: false,
+	// 			dirtyParentIds: [],	        	 	
+ //        	 });
+ //        });
 
-        TableRowDataStore.on('change', () => {           
-        	 this.setState({        	 	
-        	 	isDirty: TableRowDataStore.isDirty,						        	 	
-        	 });
-        });
+ //        TableRowDataStore.on('change', () => {           
+ //        	 this.setState({        	 	
+ //        	 	isDirty: TableRowDataStore.isDirty,						        	 	
+ //        	 });
+ //        });
 
-	}
+	// }
 	
+	// componentWillUnmount() {
+	// 	TableDataStore.removeListener('change', () => {
+ //        	 this.setState({
+	// 			isEditing: TableDataStore.isEditing,
+ //        	 	isDirty: TableRowDataStore.isDirty,
+ //        	 	saveRequired: TableDataStore.saveRequired,	
+	// 			currentValue: null,
+	// 			isEditingComponent: false,
+	// 			dirtyParentIds: [],	        	 	
+ //        	 });
+ //        });	
+ //        TableRowDataStore.removeListener('change', () => {           
+ //        	 this.setState({        	 	
+ //        	 	isDirty: TableRowDataStore.isDirty,		        	 	
+ //        	 });
+ //        });
+	// }
 
-	componentWillUnmount() {
-		TableDataStore.removeListener('change', () => {
-        	 this.setState({
-				isEditing: TableDataStore.isEditing,
-        	 	isDirty: TableRowDataStore.isDirty,
-        	 	saveRequired: TableDataStore.saveRequired,	
-				currentValue: "",
-				isEditingComponent: false,
-				dirtyParentIds: [],	        	 	
-        	 });
-        });	
-        TableRowDataStore.removeListener('change', () => {           
-        	 this.setState({        	 	
-        	 	isDirty: TableRowDataStore.isDirty,		        	 	
-        	 });
-        });
-	}
+	// componentDidMount() {
+	// 	TableDataStore.on('change', () => {           
+ //        	 this.setState({
+ //        	 	isEditing: TableDataStore.isEditing,
+ //        	 	isDirty: TableRowDataStore.isDirty,
+ //        	 	saveRequired: TableDataStore.saveRequired,	
+	// 			currentValue: null,
+	// 			isEditingComponent: false,
+	// 			dirtyParentIds: [],	        	 	
+ //        	 });
+ //        });
 
-	componentDidMount() {
-		TableDataStore.on('change', () => {           
-        	 this.setState({
-        	 	isEditing: TableDataStore.isEditing,
-        	 	isDirty: TableRowDataStore.isDirty,
-        	 	saveRequired: TableDataStore.saveRequired,	
-				currentValue: "",
-				isEditingComponent: false,
-				dirtyParentIds: [],	        	 	
-        	 });
-        });
-
-        TableRowDataStore.on('change', () => {           
-        	 this.setState({        	 	
-        	 	isDirty: TableRowDataStore.isDirty,						        	 	
-        	 });
-        });
-	}
+ //        TableRowDataStore.on('change', () => {           
+ //        	 this.setState({        	 	
+ //        	 	isDirty: TableRowDataStore.isDirty,						        	 	
+ //        	 });
+ //        });
+	// }
 	
 
 	handleMouseOver(value, ft) {
@@ -113,10 +112,9 @@ export default class TableRow extends React.Component {
 	handleChange(e) {		
 		const newValue = e.target.value;
 		TableRowDataActions.toggleDirtyMode(true);
-		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue)			
-		console.log(TableDataStore.dirtyRecords);
+		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue)					
 		this.setState({
-			currentValue: newValue
+			currentValue: e.target.value
 		});
 	}
 
@@ -165,7 +163,7 @@ export default class TableRow extends React.Component {
 
 
     	// if (this.state.isEditing) {
-    		const currentVal = this.state.currentValue != "" ? this.state.currentValue : this.props.value		    			
+    		const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
 			const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
 			
     		if (!this.state.isEditingComponent) {	    	

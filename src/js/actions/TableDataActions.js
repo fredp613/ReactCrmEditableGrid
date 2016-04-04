@@ -8,13 +8,22 @@ import dispatcher from "../dispatcher";
 		});
 	}
 
-	export function toggleQuickSort(sortFieldName, sortDirection) {
+	export function toggleQuickSort(sortFieldName, sortDirection, isGrouped) {
 		dispatcher.dispatch({
 			type: "TOGGLE_QUICK_SORT",
 			sortFieldName,
-			sortDirection,
+			sortDirection,						
+			isGrouped,
 		})
 	}
+
+	// export function toggleGrouping(fieldName){
+	// 	dispatcher.dispatch({
+	// 		type: "TOGGLE_GROUPING",
+	// 		fieldName: fieldName,			
+	// 	})
+	// }
+	
 
 	export function updateDirtyRecords() {			
 		

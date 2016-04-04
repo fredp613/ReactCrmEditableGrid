@@ -43,18 +43,21 @@ export default class TableHeader extends React.Component {
    }
 
 	
-	handleSort(fieldName, sortDirection) {		
+	handleSort(fieldName, isGrouped) {		
+		console.log(isGrouped)
 		if (this.props.sortDirection == "asc") {				
-			TableDataActions.toggleQuickSort(fieldName, "desc");
+			TableDataActions.toggleQuickSort(fieldName, "desc", isGrouped);
 		} else {					
-			TableDataActions.toggleQuickSort(fieldName, "asc");
+			TableDataActions.toggleQuickSort(fieldName, "asc", isGrouped);
 		}	
 		this.setState({});			
 	}	
 
-	handleGroupBtnAction(groupFieldName) {
-   		TableDataStore.transformDataForGrouping(groupFieldName) 
-	}
+	// handleGroupBtnAction(fieldName) {
+	// 	this.handleSort(fieldName, "desc");
+ //   		TableDataActions.toggleGrouping(fieldName);
+ //   		this.setState({});
+	// }
 
 	render() {
 		const linkStyle = {
@@ -67,9 +70,9 @@ export default class TableHeader extends React.Component {
     	var sortIndicatorTag;
     	var advancedSearchTag;
     	if (dirtyRecords.length == 0) {    		
-    		headerNameTag = <a style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName)}>{this.props.fieldName}</a>
-    		sortIndicatorTag = <a class={"glyphicon glyphicon-menu-" + sortDirection} style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName)} />				
-    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} onClick={this.handleGroupBtnAction.bind(this,this.props.fieldName)} />
+    		headerNameTag = <a style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName, false)}>{this.props.fieldName}</a>
+    		sortIndicatorTag = <a class={"glyphicon glyphicon-menu-" + sortDirection} style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName,false)} />				
+    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName,true)} />
     	} else {
     		headerNameTag = <span>{this.props.fieldName}</span>
     	}

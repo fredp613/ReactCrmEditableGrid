@@ -1,19 +1,58 @@
 import React from "react"
-import TableDataStore from "../stores/tableDataStore";
+import TableDataStore from "../stores/TableDataStore";
+import TableDataActions from "../actions/TableDataActions";
 import TableRow from "../components/TableRow";
 
 export default class TableBody extends React.Component {
 	
-	
+	constructor() {
+		super();
+		this.state = {
+			groupShowing: true,
+		}
+	}
+
+	handleGroupingClick() {
+		console.log("show or hide child rows");
+		if (!this.state.groupShowing) {
+			this.setState({
+				groupShowing: true,
+			})	
+		} else {
+			this.setState({
+				groupShowing: false,
+			})	
+		}
+		
+	}
+
 	render() {		
-		      	
-    	const TableRowComponents = this.props.tableData.map((data, index)=> {      		  		    		
-			return <TableRow key={data.id} parentId={data.id} childValues={data.values} lookupData={this.props.lookupData} twoOptionsData={this.props.twoOptionsData} />	    		
-    	});
+			
+		const isGrouped = this.props.isGrouped;
+
+		console.log(this.props.tableData)
+		const colSpan = TableDataStore.getHeaders().length;
+		
+		const rowHoverStyle = {      		
+      		cursor: "pointer"
+    	};
+
+
+		var groupRow;
+		if (isGrouped) {
+			groupRow = <tr style={rowHoverStyle} onClick={this.handleGroupingClick.bind(this)}><td colSpan={colSpan}><strong>{this.props.groupRowData.sortFieldName}: {this.props.groupRowData.sortedValue}</strong></td></tr>
+		}
+
+		const rows = this.props.tableData.map((data, index, arr)=> {       		  			
+			return  (<TableRow key={index}  
+		   		lookupData={this.props.lookupData} isVisible={this.state.groupShowing} twoOptionsData={this.props.twoOptionsData} {...data}  />)					   	 		   							   		   		
+		});
+	
     	    	    	
 		return(	
-			<tbody>
-				{TableRowComponents}
+			<tbody>	
+				{groupRow}
+				{rows}											
 			</tbody>						
 			
 		);

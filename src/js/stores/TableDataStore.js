@@ -16,46 +16,17 @@ class TableDataStore extends EventEmitter {
 		this.isEditing = false;	
 		this.saveRequired = false;
 		this.dirtyRecords = [];
-		this.tableDataGrouped = [];
+		this.tableData = [];
+		this.isGrouped = false;
 
 		//Quick sort 1 to 1 for sort name and sort direction
 		this.newSortDirection = "";
 		this.newSortFieldName = "";	
 		/////////////////////////////////////////////////////
 
-		
-		//in crm this is 2 recrods, taking the three fields in the view
-		//field Name would be the header (field display name)
-		/**
-			id | first name | last name 
-			----------------------------
-			1  | john       | Jane
-			2  | jn         | Doe
-			3  | jn         | smith
-
-		record json shoudl be row (recorid) -> values (all fields of view and their values) 
-		grouping should look like
-		{"Result":[
-			    {"ML":[
-			        {"TeamName":"Team 1","League":"League 1"},
-			        {"TeamName":"Team 2","League":"League 2"},
-			        {"TeamName":"Team 3","League":"League 3"}
-			    ]},
-			    {"3A":[
-			        {"TeamName":"Team 4","League":"League 1"},
-			        {"TeamName":"Team 5","League":"League 2"},
-			        {"TeamName":"Team 6","League":"League 3"}
-			    ]},
-			    {"2A":[
-			        {"TeamName":"Team 7","League":"League 1"},
-			        {"TeamName":"Team 8","League":"League 2"},
-			        {"TeamName":"Team 9","League":"League 3"}
-			    ]}
-			]}
-		**/
-		this.tableData = [			
+		this.tableDataFromTheOutside = [			
 			{
-				id: "1",
+				id: "1z",
 				crmRecordId: "431212",
 				crmFieldName: "firstName",
 				crmFieldType: "crmShortText",
@@ -64,7 +35,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},
 			{
-				id: "2",
+				id: "2x",
 				crmRecordId: "431212",
 				crmFieldName: "lastName",
 				crmFieldType: "crmShortText",
@@ -73,7 +44,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},					
 			{
-				id: "3",
+				id: "3x",
 				crmRecordId: "431212",
 				crmFieldName: "isActive",
 				crmFieldType: "boolean",
@@ -82,7 +53,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},		
 			{
-				id: "37",
+				id: "371",
 				crmRecordId: "431212",
 				crmFieldName: "isAboriginal",
 				crmFieldType: "boolean",
@@ -91,7 +62,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},	
 			{
-				id: "38",
+				id: "382",
 				crmRecordId: "431212",
 				crmFieldName: "Category",
 				crmFieldType: "lookup",
@@ -100,7 +71,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},	
 			{
-				id: "5",
+				id: "5xxxx",
 				crmRecordId: "4312123",
 				crmFieldName: "firstName",
 				crmFieldType: "crmShortText",
@@ -109,7 +80,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},
 			{
-				id: "6",
+				id: "6121213x",
 				crmRecordId: "4312123",
 				crmFieldName: "lastName",
 				crmFieldType: "crmShortText",
@@ -118,7 +89,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},		
 			{
-				id: "30",
+				id: "30fgfg",
 				crmRecordId: "4312123",
 				crmFieldName: "isActive",
 				crmFieldType: "boolean",
@@ -127,7 +98,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},	
 			{
-				id: "34",
+				id: "3443565",
 				crmRecordId: "4312123",
 				crmFieldName: "isAboriginal",
 				crmFieldType: "boolean",
@@ -136,7 +107,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},	
 			{
-				id: "35",
+				id: "35xxxxxx",
 				crmRecordId: "4312123",
 				crmFieldName: "Category",
 				crmFieldType: "lookup",
@@ -145,7 +116,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},
 			{
-				id: "7f",
+				id: "7f1111",
 				crmRecordId: "4312124",
 				crmFieldName: "firstName",
 				crmFieldType: "crmShortText",
@@ -163,7 +134,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},
 			{
-				id: "313232",
+				id: "3132x32",
 				crmRecordId: "4312124",
 				crmFieldName: "isActive",
 				crmFieldType: "boolean",
@@ -172,7 +143,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},
 			{
-				id: "32asdfasdf",
+				id: "32axsdfasdf",
 				crmRecordId: "4312124",
 				crmFieldName: "isAboriginal",
 				crmFieldType: "boolean",
@@ -181,7 +152,7 @@ class TableDataStore extends EventEmitter {
 				grouping: "",
 			},	
 			{
-				id: "33trerefsdf",
+				id: "33trxerefsdf",
 				crmRecordId: "4312124",
 				crmFieldName: "Category",
 				crmFieldType: "lookup",
@@ -191,135 +162,7 @@ class TableDataStore extends EventEmitter {
 			},			
 			
 		]
-		
-
-		this.tableDataOld = [
-
-			{
-				id: "11",
-				crmRecordId: "431212",
-				values: [
-					{
-						id: "1",
-						crmFieldName: "firstName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "John",
-					},
-					{
-						id: "2",
-						crmFieldName: "lastName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "Smith",
-					},					
-					{
-						id: "3",
-						crmFieldName: "isActive",
-						crmFieldType: "boolean",
-						sortDirection: "asc",
-						value: "0",
-					},		
-					{
-						id: "37",
-						crmFieldName: "isAboriginal",
-						crmFieldType: "boolean",
-						sortDirection: "desc",
-						value: "1",
-					},	
-					{
-						id: "38",
-						crmFieldName: "Category",
-						crmFieldType: "lookup",
-						sortDirection: "desc",
-						value: "140012",
-					},				
-				],
-			},
-			{
-				id: "22",
-				crmRecordId: "4312123",
-				values: [
-					{
-						id: "5",
-						crmFieldName: "firstName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "Jane",
-					},
-					{
-						id: "6",
-						crmFieldName: "lastName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "JonesU",
-					},		
-					{
-						id: "30",
-						crmFieldName: "isActive",
-						crmFieldType: "boolean",
-						sortDirection: "asc",
-						value: "0",
-					},	
-					{
-						id: "34",
-						crmFieldName: "isAboriginal",
-						crmFieldType: "boolean",
-						sortDirection: "desc",
-						value: "0",
-					},	
-					{
-						id: "35",
-						crmFieldName: "Category",
-						crmFieldType: "lookup",
-						sortDirection: "desc",
-						value: "140012",
-					},				
-				]
-			},
-			{
-				id: "33",
-				crmRecordId: "4312124",
-				values: [
-					{
-						id: "7f",
-						crmFieldName: "firstName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "Mike",
-					},
-					{
-						id: "68",
-						crmFieldName: "lastName",
-						crmFieldType: "crmShortText",
-						sortDirection: "desc",
-						value: "Jones",
-					},
-					{
-						id: "313232",
-						crmFieldName: "isActive",
-						crmFieldType: "boolean",
-						sortDirection: "asc",
-						value: "1",
-					},
-					{
-						id: "32asdfasdf",
-						crmFieldName: "isAboriginal",
-						crmFieldType: "boolean",
-						sortDirection: "desc",
-						value: "0",
-					},	
-					{
-						id: "33trerefsdf",
-						crmFieldName: "Category",
-						crmFieldType: "lookup",
-						sortDirection: "desc",
-						value: "140013",
-					},					
-				]
-			},
-
-		]
+				
 
 		this.twoOptionsData = [
 											
@@ -386,9 +229,38 @@ class TableDataStore extends EventEmitter {
 	}
 
 
-
 	getAll() {
-		return this.tableData;
+		//perfomr initial grouping here - by crm record Id
+		var bodyData = [];
+		this.tableDataFromTheOutside.map((td, index)=> {
+	      const foundObject = _.find(bodyData, ['groupValue', td.crmRecordId])
+	      var arrValues = [];
+	      this.tableDataFromTheOutside.map((td1)=>{
+	        if (td1.crmRecordId == td.crmRecordId) {
+	          arrValues.push(td1);
+	        }
+	      })
+	      if (!foundObject) {
+	         bodyData.push({
+	         	 id: index,
+	             groupField: "",
+	             groupValue:td.crmRecordId,
+	             values: arrValues
+	         })
+	      }
+	    });
+	    bodyData.map((bd)=>{
+	    	bd.values.map((value)=>{
+	    		if (value.crmFieldName == this.newSortFieldName) {
+	    			bd.sortedValue = value.value;
+	    			bd.sortFieldName = value.crmFieldName;
+	    		}
+	    	})
+	    	return bd;
+	    })
+	    this.tableData = bodyData;
+	    
+		return bodyData;
 	}
 
 
@@ -397,24 +269,28 @@ class TableDataStore extends EventEmitter {
 		//find nodes with crmfieldname that is being sorted in the new sorted
 		//extract its value and add a new field called sortedValue
 		//then sort array completed using the sorted value field and return it
+		// this.tableData = this.getAll()
+		this.getAll();
 		var newArr = [];
+
 		for (var i=0;i<=this.tableData.length - 1;i++) {
-			var firstNode = this.tableData[i];			
+			var firstNode = this.tableData[i];					
 			for (var y=0;y<=firstNode.values.length - 1;y++) {
-				var val = firstNode.values[y];
+				var val = firstNode.values[y];				
 				if (val.crmFieldName == this.newSortFieldName) {
 					firstNode.sortedValue = val.value;
+					firstNode.sortFieldName = val.crmFieldName;
 				}
 			}
 			newArr.push(firstNode);
 		}		
 
-		if (this.newSortDirection == "asc") {
+		if (this.newSortDirection == "asc") {			
 			newArr.sort(function (a, b) {			
-				if (a.sortedValue > b.sortedValue) {
+				if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
 			    	return 1;
 			  	}
-			    if (a.sortedValue < b.sortedValue) {
+			    if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
 			    	return -1;
 			    }						
 			  // a must be equal to b
@@ -422,10 +298,10 @@ class TableDataStore extends EventEmitter {
 			});
 		} else {
 			newArr.sort(function (a, b) {			
-				if (a.sortedValue < b.sortedValue) {
+				if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
 			    	return 1;
 			  	}
-			    if (a.sortedValue > b.sortedValue) {
+			    if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
 			    	return -1;
 			    }
 						 
@@ -439,76 +315,34 @@ class TableDataStore extends EventEmitter {
 	}
 		
 	getHeaders() {	
-		if (this.newSortDirection != "") {			
-			return this.getMutadedHeaderNames();
+		if (this.newSortDirection != "") {	
+
+			var arr = this.tableDataFromTheOutside.map((td)=>{
+						if (td.crmFieldName == this.newSortFieldName) {
+							td.sortDirection = this.newSortDirection
+						} else {
+							td.sortDirection = "desc";
+						}
+						return {key: td.id, headerName: td.crmFieldName, sortDirection:td.sortDirection}
+
+					 });					
+			return _.uniqBy(arr, "headerName");
 		}
-		return _.uniqBy(this.getHeaderNames(), "headerName")
-	}
-
-	
-	getMutadedHeaderNames() {
-		var headers = _.uniqBy(this.getHeaderNames(), "headerName");
-		var newHeaders = [];
-		for (var i=0;i<=headers.length-1;i++) {
-			var header = headers[i];			
-			if (header.headerName == this.newSortFieldName) {
-				header.sortDirection = this.newSortDirection;
-			} else {
-				header.sortDirection = "desc";				
-			}
-			newHeaders.push(header);
-		}		
-		return newHeaders;
-	}
-
-	getHeaderNames() {						
-		return this.getHeadersCleaned().map((header, index) => {			
-			return {
-				headerName: header.crmFieldName,
-				key: index,
-				sortDirection: header.sortDirection,
-			};
-		})		
-	}
-
-
-	getHeadersCleaned() {
-		for (var i=0;i<=this.tableData.length - 1;i++) {			
-			var values = this.tableData[i].values
-			for (var y=0;y<=values.length - 1;y++) {				
-				this.headers.push(values[y])
-			}							
-		}
-		return this.headers;		
-	}
-	getValueObjects() {
-		for (var i=0;i<=this.tableData.length - 1;i++) {			
-			var vals = this.tableData[i].values
-			for (var y=0;y<=vals.length - 1;y++) {				
-				this.values.push(vals[y])
-			}							
-		}
-		return this.values;		
-	}
-
-	getRowDataByParentId(id) {			
-		return this.rowData = this.tableData.filter(function(row, index){						
-			if (row.id == id) {				
-				return row;				
-			}
-		});		
+		
+		return _.uniqBy(this.tableDataFromTheOutside, "crmFieldName").map((header)=> {
+			return {key: header.id, headerName: header.crmFieldName, sortDirection: header.sortDirection};
+		})				
 	}
 
 	getLookupData() {
 		return this.lookupData;
 	}
 
-	
 
 	getTwoOptionsData() {
 		return this.twoOptionsData;
 	}
-
+ 
 
 	appendDirtyRecords(parentId, fieldId, fieldName, value) {
 		
@@ -556,58 +390,28 @@ class TableDataStore extends EventEmitter {
 		this.dirtyRecords = [];
 		this.emit("change");		
 	}
-	toggleQuickSort(fieldName, direction) {				
+	toggleQuickSort(fieldName, direction, isGrouped) {				
 		this.newSortFieldName = fieldName;
 		this.newSortDirection = direction;	
+		this.isGrouped = isGrouped
 		//temporary, get rid of this its redundant since the server will return a sroted array
-		this.tableData = this.getNewSortedTableData();
-		/////////////////////////////////////////////////////////////////////////////////////
+		this.tableData = this.getNewSortedTableData();		
+		if (this.isGrouped) {
+			var arr = [];		
+
+				arr = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
+					// console.log(td)
+					return td;
+				})
+				console.log(arr)
+			this.tableData = arr;
+		}
+				
 		this.emit("change");
 	}
 
-	findByAttributeValue(value) {
-		// var arr = [];
-		// this.tableData.map((td)=> {
-		// 	td.values.map((val) => {
-		// 		if (val.value == value) {
-		// 			val.crmRecordId = td.crmRecordId					
-		// 			arr.push(val)
-		// 		}
-		// 	})
-		// })
 
-		// return arr;
-	}
 	
-	transformDataForGrouping(groupingAttribute) {
-		// var newArr = [];		
-		// //"firstName"
-		// this.tableData.map((td)=>{
-		// 	td.values.map((val)=> {
-		// 		if (groupingAttribute == val.crmFieldName) {
-		// 			//firstName = firstName so grab value
-		// 			//Find all elements in array with this firstName value					
-		// 			const foundObject = _.find(newArr, ['groupingValue', val.value])
-		// 				if (!foundObject) {
-		// 					newArr.push({
-
-		// 					groupingAttribute: val.crmFieldName,
-		// 					groupingValue: val.value,						
-		// 					//find anyting this table data with this value
-		// 					groupValues: this.findByAttributeValue(val.value)							
-		// 				})	
-		// 			}					
-		// 		}
-		// 	})
-
-		// })
-		// console.log(newArr);
-		// this.tableDataGrouped = newArr;
-		console.log(_.groupBy(this.tableDataFinal, "grouping"));
-
-	}
-
-
 
 
 	handleActions(action) {
@@ -620,11 +424,9 @@ class TableDataStore extends EventEmitter {
 				this.toggleEditingMode(action.isEditing)
 				break;
 			case "TOGGLE_QUICK_SORT":
-				this.toggleQuickSort(action.sortFieldName, action.sortDirection)								
-				break;	
-			case "UPDATE_DIRTY_RECORDS":
-				// this.testf(action.validDirtyRecords);
-				// this.emit('change')
+				this.toggleQuickSort(action.sortFieldName, action.sortDirection, action.isGrouped)								
+				break;							
+			case "UPDATE_DIRTY_RECORDS":				
 				this.updateDirtyRecords();								
 				break;
 			case "APPEND_DIRTY_RECORDS":
@@ -634,10 +436,6 @@ class TableDataStore extends EventEmitter {
 				break;			
 		}
 	}
-
-
-	
-
 
 }
 

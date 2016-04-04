@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import TableDataStore from "../stores/TableDataStore";
 import TableRowDataStore from "../stores/TableRowDataStore";
 import * as TableDataActions from "../actions/TableDataActions";
@@ -18,6 +18,7 @@ export default class Home extends React.Component {
 	    this.state = {            
 	        headers: TableDataStore.getHeaders(),
           tableData: TableDataStore.getAll(),
+          isGrouped: TableDataStore.isGrouped,
           lookupData: TableDataStore.getLookupData(),
           twoOptionsData: TableDataStore.getTwoOptionsData(),
           searchText: "",
@@ -30,8 +31,9 @@ export default class Home extends React.Component {
 	toggleState() {
 		  this.setState({
           headers: TableDataStore.getHeaders(),           
-          tableData: TableDataStore.getAll(), 
+          tableData: TableDataStore.tableData, 
           lookupData: TableDataStore.getLookupData(),
+          isGrouped: TableDataStore.isGrouped,
           twoOptionsData: TableDataStore.getTwoOptionsData(),  
           dirtyRecords: TableDataStore.dirtyRecords,                   
           searchText: "", 
@@ -43,7 +45,8 @@ export default class Home extends React.Component {
 
 	componentWillMount() {
       // this.toggleState();                     
-        TableDataStore.on('change', () => {                 
+        TableDataStore.on('change', () => { 
+
         	 this.toggleState();
         });
         TableRowDataStore.on('change', () => {
@@ -93,30 +96,44 @@ export default class Home extends React.Component {
 
   }
 
-  
+
 
 
 
 
   render() {
-    
+
+    var _ = require("lodash");
   	const { searchText } = this.state;  	
     const { headers } = this.state;      
     const { tableData } = this.state;
     const { rowValues } = this.state;
     const { lookupData } = this.state;
     const { twoOptionsData } = this.state;
-       
-    const TableHeaderComponents = headers.map((header) => { 
-        return <TableHeader key={header.key} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
-    }); 
-   
-       
-    // const TableFooterComponents = headers.map((footer) => {                         
-    //     return <TableFooter key={footer.key} fieldName={footer.headerName}  />;            
-    // });  
+    const { isGrouped } = this.state;    
+    console.log(tableData)   
+    
 
-       
+    const TableHeaderComponents = headers.map((header,index) => { 
+        return <TableHeader key={index} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
+    }); 
+
+    var TableBodyComponents;
+
+    if (isGrouped) {
+        TableBodyComponents = tableData.map((td, index)=> {
+          console.log("groupings:" + tableData[index][1])
+           return (                    
+                    <TableBody key={index} tableData={tableData[index][1]} 
+                    lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={true} groupRowData={tableData[index][1][0]} />
+                  )
+        })
+    } else {
+      console.log("not grouped:" + tableData)
+        TableBodyComponents = <TableBody key="1" tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={false} />          
+    }
+
+   
     const textInputStyle = {
       // paddingTop:"10px",
       marginLeft: "15px"
@@ -133,19 +150,13 @@ export default class Home extends React.Component {
     }
 
     var cancelBtn;
-    //no need for this feature since we are using hover
-    // if (this.state.isDirty) {      
-      // cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
-    // } 
+    
     var saveBtn;
     if (this.state.isDirty) {          
       saveBtn = <button class="col-md-2 btn btn-success" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
       cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
     }   
 
-
-
-    
 
     return (
         <div>  
@@ -170,10 +181,14 @@ export default class Home extends React.Component {
               <thead>
                 <tr>{TableHeaderComponents}</tr>            
               </thead>          
-                   <TableBody tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} />          
-              <tfoot>
+               <tfoot>
                 <tr>{/*TableFooterComponents*/}</tr>            
               </tfoot>
+
+                  {TableBodyComponents}
+
+              
+             
             
             </table>
             
