@@ -46,8 +46,8 @@ export default class TableRow extends React.Component {
 		TableDataStore.removeListener('change', () => {
         	 this.setState({
 				isEditing: TableDataStore.isEditing,
-				isDirty: TableRowDataStore.isDirty,	
-				saveRequired: TableDataStore.saveRequired,
+        	 	isDirty: TableRowDataStore.isDirty,
+        	 	saveRequired: TableDataStore.saveRequired,	
 				currentValue: "",
 				isEditingComponent: false,
 				dirtyParentIds: [],	        	 	
@@ -59,9 +59,28 @@ export default class TableRow extends React.Component {
         	 });
         });
 	}
+
+	componentDidMount() {
+		TableDataStore.on('change', () => {           
+        	 this.setState({
+        	 	isEditing: TableDataStore.isEditing,
+        	 	isDirty: TableRowDataStore.isDirty,
+        	 	saveRequired: TableDataStore.saveRequired,	
+				currentValue: "",
+				isEditingComponent: false,
+				dirtyParentIds: [],	        	 	
+        	 });
+        });
+
+        TableRowDataStore.on('change', () => {           
+        	 this.setState({        	 	
+        	 	isDirty: TableRowDataStore.isDirty,						        	 	
+        	 });
+        });
+	}
 	
 
-	handleClick(value, ft) {
+	handleMouseOver(value, ft) {
 		
 		if (!this.state.isEditing) {
 			TableDataActions.toggleEditingMode(true);
@@ -78,6 +97,15 @@ export default class TableRow extends React.Component {
 		} 
 	}
 
+	handleMouseOut(e) {		
+		this.setState({
+			isEditingComponent: false,
+			currentValue: e.target.value,
+		})
+	}
+
+
+
 	updateRecords() {
 		console.log("updating the following records: " + this.dirtyParentIds);
 	}
@@ -92,9 +120,38 @@ export default class TableRow extends React.Component {
 		});
 	}
 
+	getLabelForValue(fieldType, fieldName, value) {
+		switch(fieldType) {
+			case "boolean":
+				return this.props.twoOptionsData.map((to)=>{
+						if (to.crmFieldName == fieldName) {
+							if (to.value == value) {
+							return to.label;
+						}	
+					}					
+				})
+			break;
+			case "lookup":
+				return this.props.lookupData.map((to)=>{
+							if (to.crmFieldName == fieldName) {
+								if (to.value == value) {
+								return to.label;
+							}	
+						}					
+					})
+			break;
+			default:
+				return value;
+			break;
+		}
+
+	}
+
+	
+
 	
 	render() {				
-		
+
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important" 
@@ -102,42 +159,50 @@ export default class TableRow extends React.Component {
     	const gkey = Date.now();
     	var field;
 
+    	const maxwidth = {
+    		maxWidth:"40px"
+    	}
 
-    	if (this.state.isEditing) {
-    		
-    		if (!this.state.isEditingComponent) {	    			
-    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.fieldLabel}</a> 
+
+    	// if (this.state.isEditing) {
+    		const currentVal = this.state.currentValue != "" ? this.state.currentValue : this.props.value		    			
+			const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
+			
+    		if (!this.state.isEditingComponent) {	    	
+    			
+    			field = <a class={this.props.fieldType} style={tdStyle}     			
+    			onMouseOver={this.handleMouseOver.bind(this, this.state.currentValue, this.props.fieldType)}>{currentValLabel}</a> 
 	    	} else {
 	    		switch(this.props.fieldType) {
 	    			case "crmShortText":    				
-						field = <input type="text" value={this.state.currentValue} onChange={this.handleChange.bind(this)} />	    				    			
+						field = <input type="text" value={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)}/>
 	    			break;
 	    			case "boolean":
-	    				field = <select defaultValue={this.props.value} onChange={this.handleChange.bind(this)}> 	    							
+	    				field = <select defaultValue={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)} > 	    							
 		    						{this.props.twoOptionsData.map((topt) => {		    							
 		    							if (this.props.fieldName == topt.crmFieldName) {
-		    								return <option value={topt.value}>{topt.label}</option>		
+		    								return <option key={topt.value} value={topt.value}>{topt.label}</option>		
 		    							}		    							
 		    						})}
-	    						</select>		    			
+	    						</select>	    			
 		    		break;
 		    		case "lookup":
-		    			field =	<select defaultValue={this.props.value} onChange={this.handleChange.bind(this)}> 
+		    			field =	<select defaultValue={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)} > 
 		    						{this.props.lookupData.map((lu) => {
 		    							if (this.props.fieldName == lu.crmFieldName) {
-			    							return <option value={lu.value}>{lu.label}</option>		
+			    							return <option key={lu.value} value={lu.value}>{lu.label}</option>		
 		    							}		    									    							
 		    						})}
 	    						</select>
 	    			break;
 	    		}    		
 	    	}
-    	} else {
-    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleClick.bind(this, this.props.value, this.props.fieldType)}>{this.props.fieldLabel}</a> 
-    	}
+    	// } else {
+    	// 	field = <a class={this.props.fieldType} style={tdStyle} onMouseOver={this.handleMouseOver.bind(this, this.props.value, this.props.fieldType)} >{this.props.fieldLabel}</a> 
+    	// }
     	
 		return(
-			<td>	
+			<td style={maxwidth}>	
 				{field}
 			</td>
 		);

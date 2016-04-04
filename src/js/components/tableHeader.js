@@ -12,7 +12,8 @@ export default class TableHeader extends React.Component {
 	    this.state = {     	    	       	      
           newSortDirection: TableDataStore.newSortDirection,
           newSortFieldName: TableDataStore.newSortFieldName,  
-          recordIsCurrentlyDirty: TableDataStore.isEditing,              
+          dirtyRecords: TableDataStore.dirtyRecords, 
+
 	    }    
 	}
 
@@ -22,7 +23,7 @@ export default class TableHeader extends React.Component {
 			this.setState({				
 				 newSortDirection: TableDataStore.newSortDirection,
           		 newSortFieldName: TableDataStore.newSortFieldName,  
-          		 recordIsCurrentlyDirty: TableDataStore.isEditing,              
+          		 dirtyRecords: TableDataStore.dirtyRecords,              
 			});
 		})		
 	}
@@ -32,7 +33,7 @@ export default class TableHeader extends React.Component {
 			this.setState({				
 				 newSortDirection: TableDataStore.newSortDirection,
           		 newSortFieldName: TableDataStore.newSortFieldName, 
-          		 recordIsCurrentlyDirty: TableDataStore.isEditing,               
+          		 dirtyRecords: TableDataStore.dirtyRecords,               
 			});
 		})
 		
@@ -51,20 +52,24 @@ export default class TableHeader extends React.Component {
 		this.setState({});			
 	}	
 
+	handleGroupBtnAction(groupFieldName) {
+   		TableDataStore.transformDataForGrouping(groupFieldName) 
+	}
+
 	render() {
 		const linkStyle = {
       		outline: "none",
       		cursor: "pointer"
     	};
-    	const { recordIsCurrentlyDirty } = this.state;
+    	const { dirtyRecords } = this.state;
     	const sortDirection = this.props.sortDirection == "asc" ? "up" : "down";
     	var headerNameTag; 
     	var sortIndicatorTag;
     	var advancedSearchTag;
-    	if (!recordIsCurrentlyDirty) {    		
+    	if (dirtyRecords.length == 0) {    		
     		headerNameTag = <a style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName)}>{this.props.fieldName}</a>
     		sortIndicatorTag = <a class={"glyphicon glyphicon-menu-" + sortDirection} style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName)} />				
-    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle}  />
+    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} onClick={this.handleGroupBtnAction.bind(this,this.props.fieldName)} />
     	} else {
     		headerNameTag = <span>{this.props.fieldName}</span>
     	}

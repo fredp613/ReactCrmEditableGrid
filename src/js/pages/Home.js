@@ -76,7 +76,7 @@ export default class Home extends React.Component {
 		this.setState({searchText:e.target.value})
 	}
 
-	handleSearchButtonAction() {		
+	handleSearchButtonAction() {  	   
 		this.setState({searchText:""})
 	}
 
@@ -85,35 +85,17 @@ export default class Home extends React.Component {
       TableRowDataActions.toggleDirtyMode(false)        
   }
 
-  handeSaveBtnClick() {  
-
-      // var newData = [];
-      // for (var i=0;i<=this.state.tableData.length - 1;i++) {
-      //   var td = this.state.tableData[i];
-      //   console.log(td)
-      //   var foundObject = this.lodash.find(this.state.dirtyRecords, ['parentId', td.id])
-      //   if (foundObject) {
-      //      for (var y=0;y<=td.values.length - 1;y++) {
-      //       console.log("found object: " + foundObject);
-      //         var value = td.values[y];
-      //         if (value.crmFieldName == foundObject.fieldName) {
-      //           value.value = foundObject.value
-      //         }
-
-      //      }   
-      //   }
-      //   newData.push(td);
-       
-
-      // }
-
-      // console.log(newData)
-      // TableDataActions.updateDirtyRecords(newData);
+  handleSaveBtnClick() {  
+     
       TableDataActions.updateDirtyRecords();
       TableRowDataActions.toggleDirtyMode(false);      
       TableDataActions.toggleEditingMode(false);         
 
   }
+
+  
+
+
 
 
   render() {
@@ -151,12 +133,14 @@ export default class Home extends React.Component {
     }
 
     var cancelBtn;
-    if (this.state.isEditing) {      
-      cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
-    } 
+    //no need for this feature since we are using hover
+    // if (this.state.isDirty) {      
+      // cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
+    // } 
     var saveBtn;
     if (this.state.isDirty) {          
-      saveBtn = <button class="col-md-2 btn btn-success" onClick={this.handeSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+      saveBtn = <button class="col-md-2 btn btn-success" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+      cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
     }   
 
 
