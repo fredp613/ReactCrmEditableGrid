@@ -370,7 +370,6 @@ class TableDataStore extends EventEmitter {
 							
 	}
 	updateDirtyRecords() {
-		console.log(this.tableData)
 
 		this.tableData = this.tableData.map((td, index) => {
 			var vals;
@@ -407,10 +406,8 @@ class TableDataStore extends EventEmitter {
 			var arr = [];		
 
 				arr = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
-					// console.log(td)
 					return td;
 				})
-				console.log(arr)
 			this.tableData = arr;
 		}
 				

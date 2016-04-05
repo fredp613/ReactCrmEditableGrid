@@ -46,14 +46,14 @@ export default class TableRow extends React.Component {
 
 			if (child.crmFieldType == "lookup") {
 				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
-				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData}/>
+				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData} isEditing={this.props.isEditing}/>
 			}
 			if (child.crmFieldType == "boolean") {
-				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
+				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} isEditing={this.props.isEditing}
 				fieldType={child.crmFieldType} fieldName={child.crmFieldName} 
 				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData}/>	
 			}
-			return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
+			return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} isEditing={this.props.isEditing}
 			fieldType={child.crmFieldType} fieldLabel={fieldLabel} fieldName={child.crmFieldName}/>
 		})
 		

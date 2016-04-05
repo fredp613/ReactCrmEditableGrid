@@ -1,4 +1,4 @@
-  import React from "react";
+import React from "react";
 import TableDataStore from "../stores/TableDataStore";
 import TableRowDataStore from "../stores/TableRowDataStore";
 import * as TableDataActions from "../actions/TableDataActions";
@@ -44,7 +44,7 @@ export default class Home extends React.Component {
 
 
 	componentWillMount() {
-      // this.toggleState();                     
+      this.toggleState();                     
         TableDataStore.on('change', () => { 
 
         	 this.toggleState();
@@ -55,6 +55,20 @@ export default class Home extends React.Component {
           })
         })
         
+    }
+
+    componentDidMount() {
+      // this.toggleState();  
+        this.toggleState();                   
+        TableDataStore.on('change', () => { 
+
+           this.toggleState();
+        });
+        TableRowDataStore.on('change', () => {
+          this.setState({
+            isDirty: TableRowDataStore.isDirty,
+          })
+        })
     }
 
     componentWillUnmount() {        
@@ -73,9 +87,7 @@ export default class Home extends React.Component {
       return true;
    }
 
-	handleSearchTextChange(e) {
-		console.log(e.target.value);
-		
+	handleSearchTextChange(e) {	
 		this.setState({searchText:e.target.value})
 	}
 
@@ -110,10 +122,7 @@ export default class Home extends React.Component {
     const { rowValues } = this.state;
     const { lookupData } = this.state;
     const { twoOptionsData } = this.state;
-    const { isGrouped } = this.state;    
-    console.log(tableData)   
-    
-
+    const { isGrouped } = this.state;      
     const TableHeaderComponents = headers.map((header,index) => { 
         return <TableHeader key={index} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
     }); 
@@ -122,15 +131,14 @@ export default class Home extends React.Component {
 
     if (isGrouped) {
         TableBodyComponents = tableData.map((td, index)=> {
-          console.log("groupings:" + tableData[index][1])
+
            return (                    
                     <TableBody key={index} tableData={tableData[index][1]} 
-                    lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={true} groupRowData={tableData[index][1][0]} />
+                    lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={true} groupRowData={tableData[index][1][0]} isEditing={this.state.isEditing} />
                   )
         })
     } else {
-      console.log("not grouped:" + tableData)
-        TableBodyComponents = <TableBody key="1" tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={false} />          
+        TableBodyComponents = <TableBody key="1" tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={false} isEditing={this.state.isEditing} />          
     }
 
    

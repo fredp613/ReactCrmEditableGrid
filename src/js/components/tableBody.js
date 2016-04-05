@@ -29,8 +29,6 @@ export default class TableBody extends React.Component {
 	render() {		
 			
 		const isGrouped = this.props.isGrouped;
-
-		console.log(this.props.tableData)
 		const colSpan = TableDataStore.getHeaders().length;
 		
 		const rowHoverStyle = {      		
@@ -45,7 +43,7 @@ export default class TableBody extends React.Component {
 
 		const rows = this.props.tableData.map((data, index, arr)=> {       		  			
 			return  (<TableRow key={index}  
-		   		lookupData={this.props.lookupData} isVisible={this.state.groupShowing} twoOptionsData={this.props.twoOptionsData} {...data}  />)					   	 		   							   		   		
+		   		lookupData={this.props.lookupData} isVisible={this.state.groupShowing} twoOptionsData={this.props.twoOptionsData} isEditing={this.props.isEditing} {...data}  />)					   	 		   							   		   		
 		});
 	
     	    	    	

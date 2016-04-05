@@ -10,100 +10,53 @@ export default class TableRow extends React.Component {
 	
 	constructor() {
 		super();
-		this.state = {
-			isEditing: TableDataStore.isEditing,	
-			isDirty: TableRowDataStore.isDirty,
-			saveRequired: TableDataStore.saveRequired,
+		this.state = {	
+			isEditing: TableDataStore.isEditing,
 			currentValue: null,
 			isEditingComponent: false,
 			dirtyParentIds: [],		
 		}
 	}	
 
-	// componentWillMount() {
-		
-	// 	TableDataStore.on('change', () => {           
- //        	 this.setState({
- //        	 	isEditing: TableDataStore.isEditing,
- //        	 	isDirty: TableRowDataStore.isDirty,
- //        	 	saveRequired: TableDataStore.saveRequired,	
-	// 			currentValue: null,
-	// 			isEditingComponent: false,
-	// 			dirtyParentIds: [],	        	 	
- //        	 });
- //        });
+	componentWillMount() {
+		TableDataStore.on('change', ()=> {			
+			this.state.currentValue = null;
+			this.state.isEditingComponent = false;
+			this.state.dirtyParentIds = [];
+			this.state.isEditing = TableDataStore.isEditing
+		})
+	}
 
- //        TableRowDataStore.on('change', () => {           
- //        	 this.setState({        	 	
- //        	 	isDirty: TableRowDataStore.isDirty,						        	 	
- //        	 });
- //        });
+	componentWillUnmount() {
+		TableDataStore.removeListener('change', ()=> {	
+			this.state.isEditingComponent = false;	
+			this.state.currentValue = null;	
+			this.state.dirtyParentIds = [];
+			this.state.isEditing = TableDataStore.isEditing				
+		})
+	}	
 
-	// }
-	
-	// componentWillUnmount() {
-	// 	TableDataStore.removeListener('change', () => {
- //        	 this.setState({
-	// 			isEditing: TableDataStore.isEditing,
- //        	 	isDirty: TableRowDataStore.isDirty,
- //        	 	saveRequired: TableDataStore.saveRequired,	
-	// 			currentValue: null,
-	// 			isEditingComponent: false,
-	// 			dirtyParentIds: [],	        	 	
- //        	 });
- //        });	
- //        TableRowDataStore.removeListener('change', () => {           
- //        	 this.setState({        	 	
- //        	 	isDirty: TableRowDataStore.isDirty,		        	 	
- //        	 });
- //        });
-	// }
+	handleCellClick(value, ft) {		
 
-	// componentDidMount() {
-	// 	TableDataStore.on('change', () => {           
- //        	 this.setState({
- //        	 	isEditing: TableDataStore.isEditing,
- //        	 	isDirty: TableRowDataStore.isDirty,
- //        	 	saveRequired: TableDataStore.saveRequired,	
-	// 			currentValue: null,
-	// 			isEditingComponent: false,
-	// 			dirtyParentIds: [],	        	 	
- //        	 });
- //        });
-
- //        TableRowDataStore.on('change', () => {           
- //        	 this.setState({        	 	
- //        	 	isDirty: TableRowDataStore.isDirty,						        	 	
- //        	 });
- //        });
-	// }
-	
-
-	handleMouseOver(value, ft) {
-		
-		if (!this.state.isEditing) {
+		if (!this.props.isEditing) {
 			TableDataActions.toggleEditingMode(true);
 		}
-
+		
 		const val = value		
-		if (!this.state.isEditingComponent) {
-						
-			this.setState({			
-				isEditingComponent: true,
-				currentValue: val,
-			})
-
+		if (!this.state.isEditingComponent) {								
+			this.state.isEditingComponent = true
+			this.state.currentValue = val
+			this.state.dirtyParentIds = []			
 		} 
 	}
 
-	handleMouseOut(e) {		
+	handleRowCancelClick(e) {				
 		this.setState({
+			isEditing: true,
 			isEditingComponent: false,
 			currentValue: e.target.value,
 		})
 	}
-
-
 
 	updateRecords() {
 		console.log("updating the following records: " + this.dirtyParentIds);
@@ -112,7 +65,7 @@ export default class TableRow extends React.Component {
 	handleChange(e) {		
 		const newValue = e.target.value;
 		TableRowDataActions.toggleDirtyMode(true);
-		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue)					
+		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue);					
 		this.setState({
 			currentValue: e.target.value
 		});
@@ -146,37 +99,34 @@ export default class TableRow extends React.Component {
 	}
 
 	
-
-	
-	render() {				
-
+	render() {		
+				
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important" 
     	}; 
     	const gkey = Date.now();
-    	var field;
+    	
 
     	const maxwidth = {
     		maxWidth:"40px"
     	}
 
+    	// const isEditing = this.props.isEditing;
 
-    	// if (this.state.isEditing) {
-    		const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
-			const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
-			
-    		if (!this.state.isEditingComponent) {	    	
-    			
-    			field = <a class={this.props.fieldType} style={tdStyle}     			
-    			onMouseOver={this.handleMouseOver.bind(this, this.state.currentValue, this.props.fieldType)}>{currentValLabel}</a> 
+    	var field;
+    	const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
+		const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
+    	if (this.props.isEditing) {    					
+    		if (!this.state.isEditingComponent) {	    	    			
+    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleCellClick.bind(this, currentVal, this.props.fieldType)}>{currentValLabel}</a> 
 	    	} else {
 	    		switch(this.props.fieldType) {
 	    			case "crmShortText":    				
-						field = <input type="text" value={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)}/>
+						field = <input type="text" value={currentVal} onChange={this.handleChange.bind(this)}/>
 	    			break;
 	    			case "boolean":
-	    				field = <select defaultValue={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)} > 	    							
+	    				field = <select defaultValue={currentVal} onChange={this.handleChange.bind(this)} > 	    							
 		    						{this.props.twoOptionsData.map((topt) => {		    							
 		    							if (this.props.fieldName == topt.crmFieldName) {
 		    								return <option key={topt.value} value={topt.value}>{topt.label}</option>		
@@ -185,7 +135,7 @@ export default class TableRow extends React.Component {
 	    						</select>	    			
 		    		break;
 		    		case "lookup":
-		    			field =	<select defaultValue={currentVal} onChange={this.handleChange.bind(this)} onMouseOut = {this.handleMouseOut.bind(this)} > 
+		    			field =	<select defaultValue={currentVal} onChange={this.handleChange.bind(this)}  > 
 		    						{this.props.lookupData.map((lu) => {
 		    							if (this.props.fieldName == lu.crmFieldName) {
 			    							return <option key={lu.value} value={lu.value}>{lu.label}</option>		
@@ -195,9 +145,9 @@ export default class TableRow extends React.Component {
 	    			break;
 	    		}    		
 	    	}
-    	// } else {
-    	// 	field = <a class={this.props.fieldType} style={tdStyle} onMouseOver={this.handleMouseOver.bind(this, this.props.value, this.props.fieldType)} >{this.props.fieldLabel}</a> 
-    	// }
+    	} else {
+    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleCellClick.bind(this, currentVal, this.props.fieldType)}>{currentValLabel}</a> 
+    	}
     	
 		return(
 			<td style={maxwidth}>	
