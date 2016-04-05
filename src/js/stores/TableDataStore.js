@@ -223,12 +223,7 @@ class TableDataStore extends EventEmitter {
 
 
 	handleActions(action) {
-		switch(action.type) {		
-			case "TOGGLE_INITIAL_TABLE_STATE":				
-				this.isGrouped = false;
-				this.getAll();				
-				this.emit("change")	
-				break;
+		switch(action.type) {					
 			case "RECEIVE_TABLE_DATA": 				
 				this.footers = action.tableData;
 				this.emit("change");

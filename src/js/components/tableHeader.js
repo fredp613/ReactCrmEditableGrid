@@ -14,7 +14,6 @@ export default class TableHeader extends React.Component {
           newSortFieldName: TableDataStore.newSortFieldName,  
           dirtyRecords: TableDataStore.dirtyRecords, 
           cancelGroupBtnActivated: false,
-
 	    }    
 	}
 
@@ -58,8 +57,8 @@ export default class TableHeader extends React.Component {
 
 	handleCancelGroupBtnClick(fieldName) {
 		this.setState({cancelGroupBtnActivated:false});
-		// TableDataActions.toggleQuickSort(fieldName, "desc", false);
-		TableDataActions.toggleInitialTableState();
+		TableDataActions.toggleQuickSort(fieldName, "desc", false);
+	
 	}
 
 	render() {

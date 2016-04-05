@@ -24,6 +24,28 @@
   <!-- Custom Fonts -->
   <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <style type="text/css">
+    .home-transition-enter {
+        opacity: 0.01;
+        transition: opacity .3s ease-in;
+      }
+
+      .home-transition-enter.home-transition-enter-active {
+        opacity: 1;
+      }
+
+      .home-transition-leave {
+        opacity: 1;
+        transition: opacity .3s ease-in;
+      }
+
+      .home-transition-leave.home-transition-leave-active {
+        opacity: 0.01;
+      }
+
+  </style>
+
 </head>
 
 <body style='padding-top:65px'>    

@@ -16,18 +16,7 @@ import dispatcher from "../dispatcher";
 			isGrouped,
 		})
 	}
-
-	// export function toggleGrouping(fieldName){
-	// 	dispatcher.dispatch({
-	// 		type: "TOGGLE_GROUPING",
-	// 		fieldName: fieldName,			
-	// 	})
-	// }
-	export function toggleInitialTableState() {
-		dispatcher.dispatch({
-			type: "TOGGLE_INITIAL_TABLE_STATE"			
-		})
-	}
+	
 
 	export function updateDirtyRecords() {			
 		

@@ -7,16 +7,20 @@ import TableHeader from "../components/tableHeader";
 import TableFooter from "../components/tableFooter";
 import TableBody from "../components/tableBody";
 import lodash from "lodash";
-
+import ReactTransitionGroup  from "react-addons-transition-group"
+import ReactCSSTransitionGroup  from "react-addons-css-transition-group"
+// import ReactTransitionGroup  from "react-addons-transition-group"
+ 
 
 
 export default class Home extends React.Component {
   
-	constructor() {
-	    super();
-      this.lodash = require('lodash');           
-	    this.state = {            
-	        headers: TableDataStore.getHeaders(),
+  constructor() {
+      super();
+      this.lodash = require('lodash');
+             
+      this.state = {            
+          headers: TableDataStore.getHeaders(),
           tableData: TableDataStore.getAll(),
           isGrouped: TableDataStore.isGrouped,
           lookupData: TableDataStore.getLookupData(),
@@ -25,11 +29,11 @@ export default class Home extends React.Component {
           isEditing: TableDataStore.isEditing,
           isDirty: TableRowDataStore.isDirty,
           dirtyRecords: TableDataStore.dirtyRecords,                
-	    }    
-	}
+      }    
+  }
    
-	toggleState() {
-		  this.setState({
+  toggleState() {
+      this.setState({
           headers: TableDataStore.getHeaders(),           
           tableData: TableDataStore.tableData, 
           lookupData: TableDataStore.getLookupData(),
@@ -39,15 +43,13 @@ export default class Home extends React.Component {
           searchText: "", 
           isEditing: TableDataStore.isEditing,  
           isDirty: TableRowDataStore.isDirty,             
-      });		
-	}
+      });   
+  }
 
 
-	componentWillMount() {
-      this.toggleState();                     
+  componentWillMount() {                    
         TableDataStore.on('change', () => { 
-
-        	 this.toggleState();
+           this.toggleState();
         });
         TableRowDataStore.on('change', () => {
           this.setState({
@@ -58,8 +60,7 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
-      // this.toggleState();  
-        this.toggleState();                   
+                 
         TableDataStore.on('change', () => { 
 
            this.toggleState();
@@ -73,7 +74,7 @@ export default class Home extends React.Component {
 
     componentWillUnmount() {        
         TableDataStore.removeListener('change', () => {           
-        	 this.toggleState();
+           this.toggleState();
         });
          TableRowDataStore.removeListener('change', () => {
           this.setState({
@@ -83,17 +84,15 @@ export default class Home extends React.Component {
         
     }
     
-   shouldComponentUpdate() {
-      return true;
-   }
 
-	handleSearchTextChange(e) {	
-		this.setState({searchText:e.target.value})
-	}
 
-	handleSearchButtonAction() {  	   
-		this.setState({searchText:""})
-	}
+  handleSearchTextChange(e) { 
+    this.setState({searchText:e.target.value})
+  }
+
+  handleSearchButtonAction() {       
+    this.setState({searchText:""})
+  }
 
   handeCancelBtnClick() {      
       TableDataActions.toggleEditingMode(false)    
@@ -114,7 +113,7 @@ export default class Home extends React.Component {
   render() {
 
     var _ = require("lodash");
-  	const { searchText } = this.state;  	
+    const { searchText } = this.state;    
     const { headers } = this.state;      
     const { tableData } = this.state;
     const { rowValues } = this.state;
@@ -141,47 +140,57 @@ export default class Home extends React.Component {
 
    
     const textInputStyle = {
-      // paddingTop:"10px",
-      marginLeft: "15px"
+      paddingTop:"10px",
+      // marginLeft: "15px"
     }
 
-    const textContainerStyle = {
+    const textContainerStyle = {      
       paddingTop: "10px"
     }
 
     const buttonStyle = {
       marginTop: "10px",
-      marginRight: "5px"
-      // marginRight: "15px"
+      marginRight: "10px",      
     }
 
-    var cancelBtn;
-    
+    var cancelBtn;    
     var saveBtn;
+    var component;
     if (this.state.isDirty) {          
-      saveBtn = <button class="col-md-2 btn btn-success" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
-      cancelBtn = <button class="col-md-1 btn btn-danger" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
-    }   
-
+      saveBtn = <button class="btn btn-success home-transition col-lg-1 col-md-1 col-sm-1 col-xs-1" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+      cancelBtn = <button class="btn btn-danger home-transition col-lg-1 col-md-1 col-sm-1 col-xs-1" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
+      component = <div class="thing">The Thing</div>;
+    } 
 
     return (
-        <div>  
-            <div class="row-fluid">                                 
-                
-                <button class="col-md-1 btn btn-info" style={buttonStyle}>add</button>                
-                {cancelBtn}
-                {saveBtn} 
-              	<div class="input-group col-md-4" style={textContainerStyle} >                                    
-        	         <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} style={textInputStyle} />           
-                 		 <span class="input-group-btn">                          		 
-                         <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
-                        			<span class="glyphicon glyphicon-search"></span>
-                    		</button>                       
-                  	</span>
-               </div>
+        <div class="container-fluid">  
+            <div class="row">                                 
+                    
+
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><button class=" btn btn-info" style={buttonStyle}>add record</button> </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 input-group home-search-container" style={textContainerStyle} >                                    
+                       <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} style={textInputStyle} />           
+                         <span class="input-group-btn">                              
+                             <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
+                                  <span class="glyphicon glyphicon-search"></span>
+                            </button>                       
+                        </span>
+                   </div>
+                   
+                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+                                  {cancelBtn}
+                                  {saveBtn}
+                             </ReactCSSTransitionGroup> 
+                       </div>
+    
+                 
+   
+
             </div>    
-    		    <br/>
-            <div class='row-fluid'>        
+            <br/>
+            <div class='row'>        
               
               <table class='table table-stripped table-bordered table-hover table-condensed'>         
               <thead>
@@ -200,8 +209,8 @@ export default class Home extends React.Component {
             
 
             </div>
-        	
-        	
+          
+          
             
       </div>
     );
