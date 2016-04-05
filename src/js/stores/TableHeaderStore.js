@@ -7,21 +7,28 @@ class TableHeaderStore extends EventEmitter {
 	constructor() {
 		super();
 		this.sortDirection = "down";
+		this.cancelGroupButtonActive = false;
 		
-	}
-			
-	handleActions(action) {
-		switch(action.type) {						
-			case "TOGGLE_QUICK_SORT":			
-				this.toggleQuickSort(action.sortDirection)								
-				break;					
-		}
 	}
 
 	toggleQuickSort(sortDirection) {
 		this.sortDirection = sortDirection
 		this.emit("change");		
 	}
+
+			
+	handleActions(action) {
+		switch(action.type) {						
+			case "TOGGLE_QUICK_SORT":			
+				this.toggleQuickSort(action.sortDirection)								
+				break;
+			case "TOGGLE_CANCEL_GROUP_BTN":			
+				this.toggleCancelGroupBtn()								
+				break;					
+		}
+	}
+
+	
 
 }
 

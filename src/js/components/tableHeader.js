@@ -13,6 +13,7 @@ export default class TableHeader extends React.Component {
           newSortDirection: TableDataStore.newSortDirection,
           newSortFieldName: TableDataStore.newSortFieldName,  
           dirtyRecords: TableDataStore.dirtyRecords, 
+          cancelGroupBtnActivated: false,
 
 	    }    
 	}
@@ -23,7 +24,8 @@ export default class TableHeader extends React.Component {
 			this.setState({				
 				 newSortDirection: TableDataStore.newSortDirection,
           		 newSortFieldName: TableDataStore.newSortFieldName,  
-          		 dirtyRecords: TableDataStore.dirtyRecords,              
+          		 dirtyRecords: TableDataStore.dirtyRecords,  
+          		 cancelGroupBtnActivated: false,            
 			});
 		})		
 	}
@@ -33,31 +35,32 @@ export default class TableHeader extends React.Component {
 			this.setState({				
 				 newSortDirection: TableDataStore.newSortDirection,
           		 newSortFieldName: TableDataStore.newSortFieldName, 
-          		 dirtyRecords: TableDataStore.dirtyRecords,               
+          		 dirtyRecords: TableDataStore.dirtyRecords, 
+          		 cancelGroupBtnActivated: false,              
 			});
 		})
 		
 	}
-	 shouldComponentUpdate() {
-      return true;
-   }
 
 	
 	handleSort(fieldName, isGrouped) {		
-		console.log(isGrouped)
 		if (this.props.sortDirection == "asc") {				
 			TableDataActions.toggleQuickSort(fieldName, "desc", isGrouped);
 		} else {					
 			TableDataActions.toggleQuickSort(fieldName, "asc", isGrouped);
 		}	
-		this.setState({});			
+		if (isGrouped) {
+			console.log("grouped")
+			this.setState({cancelGroupBtnActivated: true});	
+		}
+
 	}	
 
-	// handleGroupBtnAction(fieldName) {
-	// 	this.handleSort(fieldName, "desc");
- //   		TableDataActions.toggleGrouping(fieldName);
- //   		this.setState({});
-	// }
+	handleCancelGroupBtnClick(fieldName) {
+		this.setState({cancelGroupBtnActivated:false});
+		// TableDataActions.toggleQuickSort(fieldName, "desc", false);
+		TableDataActions.toggleInitialTableState();
+	}
 
 	render() {
 		const linkStyle = {
@@ -65,14 +68,27 @@ export default class TableHeader extends React.Component {
       		cursor: "pointer"
     	};
     	const { dirtyRecords } = this.state;
+    	const { cancelGroupBtnActivated } = this.state;
+
     	const sortDirection = this.props.sortDirection == "asc" ? "up" : "down";
     	var headerNameTag; 
     	var sortIndicatorTag;
     	var advancedSearchTag;
+    	var cancelGroupBtnTag;
     	if (dirtyRecords.length == 0) {    		
     		headerNameTag = <a style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName, false)}>{this.props.fieldName}</a>
-    		sortIndicatorTag = <a class={"glyphicon glyphicon-menu-" + sortDirection} style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName,false)} />				
-    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName,true)} />
+    		
+    		sortIndicatorTag = <a class={"glyphicon glyphicon-menu-" + sortDirection} 
+    		style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName,false)} />				
+    		
+    		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} 
+    		onClick={this.handleSort.bind(this,this.props.fieldName,true)} />
+
+    		if (cancelGroupBtnActivated) {
+    			cancelGroupBtnTag = <a class='glyphicon glyphicon-remove' style={linkStyle} 
+    			onClick={this.handleCancelGroupBtnClick.bind(this, this.props.fieldName)} />
+    		}
+
     	} else {
     		headerNameTag = <span>{this.props.fieldName}</span>
     	}
@@ -81,7 +97,8 @@ export default class TableHeader extends React.Component {
 			<th> 
 				{headerNameTag}
 				{sortIndicatorTag}
-				{advancedSearchTag}				
+				{advancedSearchTag}
+				{cancelGroupBtnTag}				
 			</th>							
 		);
 	}

@@ -111,8 +111,6 @@ export default class Home extends React.Component {
 
 
 
-
-
   render() {
 
     var _ = require("lodash");

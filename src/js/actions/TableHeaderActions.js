@@ -5,5 +5,5 @@ export function toggleQuickSort(sortDirection) {
 		type: "TOGGLE_QUICK_SORT",
 		sortDirection,
 	});
+	
 }
-
