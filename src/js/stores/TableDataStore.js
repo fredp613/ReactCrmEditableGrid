@@ -135,7 +135,7 @@ class TableDataStore extends EventEmitter {
 		
 		return _.uniqBy(initialData, "crmFieldName").map((header)=> {
 			return {key: header.id, headerName: header.crmFieldName, sortDirection: header.sortDirection};
-		})				
+		})				 
 	}
 
 	getLookupData() {
