@@ -23,8 +23,7 @@ export default class Layout extends React.Component {
     return (    
         <div class="container-fluid">
            
-              {/* <Header /> */}
-              <h1>Editable Grid</h1>
+              {/* <Header /> */}              
               {this.props.children}
               {/*<Footer />*/}            
              {/* <button class="btn btn-info" onClick={this.navigate.bind(this)}>Featured</button> */}          

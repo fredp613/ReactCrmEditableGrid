@@ -28,7 +28,8 @@ export default class Home extends React.Component {
           searchText: "",
           isEditing: TableDataStore.isEditing,
           isDirty: TableRowDataStore.isDirty,
-          dirtyRecords: TableDataStore.dirtyRecords,                
+          dirtyRecords: TableDataStore.dirtyRecords, 
+          isSearching: false,                         
       }    
   }
    
@@ -42,7 +43,8 @@ export default class Home extends React.Component {
           dirtyRecords: TableDataStore.dirtyRecords,                   
           searchText: "", 
           isEditing: TableDataStore.isEditing,  
-          isDirty: TableRowDataStore.isDirty,             
+          isDirty: TableRowDataStore.isDirty, 
+          isSearching: false,            
       });   
   }
 
@@ -83,11 +85,21 @@ export default class Home extends React.Component {
         })
         
     }
-    
+   
+   handleClearBtnClick() {
+      this.setState({isSearching:false})
+   } 
 
 
   handleSearchTextChange(e) { 
-    this.setState({searchText:e.target.value})
+    console.log("hi")
+    console.log(e.target.value)
+    if (e.target.value.length > 0) {
+        this.setState({searchText:e.target.value, isSearching:true})
+    } else {
+        this.setState({searchText:e.target.value, isSearching:false})
+    }
+    
   }
 
   handleSearchButtonAction() {       
@@ -107,9 +119,6 @@ export default class Home extends React.Component {
 
   }
 
-
-
-
   render() {
 
     var _ = require("lodash");
@@ -119,7 +128,12 @@ export default class Home extends React.Component {
     const { rowValues } = this.state;
     const { lookupData } = this.state;
     const { twoOptionsData } = this.state;
-    const { isGrouped } = this.state;      
+    const { isGrouped } = this.state;   
+    const { isSearching } = this.state;
+
+    const closeIconActive = isSearching ? "glyphicon glyphicon-remove-circle close-icon-active" : "glyphicon glyphicon-remove-circle close-icon-inactive";
+
+
     const TableHeaderComponents = headers.map((header,index) => { 
         return <TableHeader key={index} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
     }); 
@@ -140,56 +154,51 @@ export default class Home extends React.Component {
 
    
     const textInputStyle = {
-      paddingTop:"10px",
+      paddingTop:"10px",      
       // marginLeft: "15px"
     }
 
     const textContainerStyle = {      
-      paddingTop: "10px"
-    }
-
-    const buttonStyle = {
       marginTop: "10px",
-      marginRight: "10px",      
+      marginRight: "10px",
+      
     }
 
+    const buttonStyle = {  
+      marginTop: "10px",    
+      marginRight: "5px",            
+    }
+    
     var cancelBtn;    
     var saveBtn;
     var component;
     if (this.state.isDirty) {          
-      saveBtn = <button class="btn btn-success home-transition col-lg-1 col-md-1 col-sm-1 col-xs-1" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
-      cancelBtn = <button class="btn btn-danger home-transition col-lg-1 col-md-1 col-sm-1 col-xs-1" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>
-      component = <div class="thing">The Thing</div>;
+      saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+      cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
     } 
 
     return (
         <div class="container-fluid">  
-            <div class="row">                                 
-                    
-
-                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"><button class=" btn btn-info" style={buttonStyle}>add record</button> </div>
-
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 input-group home-search-container" style={textContainerStyle} >                                    
-                       <input type="text" class="form-control" onChange={this.handleSearchTextChange.bind(this)} value={searchText} style={textInputStyle} />           
-                         <span class="input-group-btn">                              
-                             <button class="btn btn-default" type="button" onClick={this.handleSearchButtonAction.bind(this)}>
-                                  <span class="glyphicon glyphicon-search"></span>
-                            </button>                       
-                        </span>
-                   </div>
-                   
-                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                                  {cancelBtn}
-                                  {saveBtn}
-                             </ReactCSSTransitionGroup> 
-                       </div>
-    
-                 
-   
-
+            <div class="row">                                                   
+                <form class="form-inline">
+                <div class="form-group">
+                   <div class="btn-group">                  
+                        <input type="text" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
+                        <button class={closeIconActive} type="reset" onClick={this.handleClearBtnClick.bind(this)}></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                  
+                  <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+                        {cancelBtn}
+                        {saveBtn} 
+                   </ReactCSSTransitionGroup> 
+                 </div>
+              </form>
+                                  
             </div>    
             <br/>
+
             <div class='row'>        
               
               <table class='table table-stripped table-bordered table-hover table-condensed'>         

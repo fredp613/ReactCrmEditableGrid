@@ -26,10 +26,15 @@
   <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 
   <style type="text/css">
-    .home-transition-enter {
+      .home-transition-enter {
         opacity: 0.01;
         transition: opacity .3s ease-in;
       }
+
+      .search-box,.close-icon {
+          position: relative;
+          padding: 10px;
+        }
 
       .home-transition-enter.home-transition-enter-active {
         opacity: 1;
@@ -43,6 +48,40 @@
       .home-transition-leave.home-transition-leave-active {
         opacity: 0.01;
       }
+
+      .close-icon-inactive {
+        position: absolute;
+        right: 5px;
+        outline: none;
+        background: transparent;
+        border-style: none;
+        top: 0;
+        bottom: 0;
+        height: 14px;
+        margin: auto;
+        font-size: 14px;       
+        color: #ccc;
+        padding:10px;
+      }
+
+      .close-icon-active {
+        position: absolute;
+        right: 5px;
+        outline: none;
+        background: transparent;
+        border-style: none;
+        top: 0;
+        bottom: 0;
+        height: 14px;
+        margin: auto;
+        font-size: 14px;       
+        padding:10px;        
+
+      }
+
+
+
+     
 
   </style>
 
