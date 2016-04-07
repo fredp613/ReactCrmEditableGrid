@@ -3,10 +3,12 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var path = require('path');
 
+
 module.exports = {
   context: path.join(__dirname, "src"),
   devtool: debug ? "inline-sourcemap" : null,
   entry: "./js/client.js",
+
   module: {
 
     loaders: [
@@ -18,28 +20,17 @@ module.exports = {
           presets: ['react', 'es2015', 'stage-0'],
           plugins: ['react-html-attrs', 'transform-class-properties', 'transform-decorators-legacy'],
         }
-      },
-       // Extract css files
-      {          
-          test: /\.css?$/,
-          loader: ExtractTextPlugin.extract(
-              'style', // backup loader when not building .css file
-              'css!sass' // loaders to preprocess CSS
-          )
-      },
+      },    
     ]
   },
   output: {
     path: __dirname + "/release/",
     filename: "client.min.js"
   },
-  plugins: debug ? [] : [
-    new ExtractTextPlugin('test.css'),
+  plugins: debug ? [] : [    
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-    
-     
+    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),         
   ],
   
 };

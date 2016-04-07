@@ -9,14 +9,13 @@ import TableBody from "../components/tableBody";
 import lodash from "lodash";
 import ReactTransitionGroup  from "react-addons-transition-group"
 import ReactCSSTransitionGroup  from "react-addons-css-transition-group"
-// import ReactTransitionGroup  from "react-addons-transition-group"
+import css from "style!css!../../css/app.css";
  
-
-
 export default class Home extends React.Component {
   
   constructor() {
       super();
+      
       this.lodash = require('lodash');
              
       this.state = {            
@@ -62,7 +61,9 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
-                 
+        
+        this.refs.searchInput.getDOMNode().focus(); 
+ 
         TableDataStore.on('change', () => { 
 
            this.toggleState();
@@ -88,6 +89,7 @@ export default class Home extends React.Component {
    
    handleClearBtnClick() {
       this.setState({isSearching:false})
+      this.refs.searchInput.focus();
    } 
 
 
@@ -106,16 +108,18 @@ export default class Home extends React.Component {
     this.setState({searchText:""})
   }
 
-  handeCancelBtnClick() {      
+  handeCancelBtnClick() {          
       TableDataActions.toggleEditingMode(false)    
       TableRowDataActions.toggleDirtyMode(false)        
+       this.refs.searchInput.focus(); 
   }
 
   handleSaveBtnClick() {  
      
       TableDataActions.updateDirtyRecords();
       TableRowDataActions.toggleDirtyMode(false);      
-      TableDataActions.toggleEditingMode(false);         
+      TableDataActions.toggleEditingMode(false);
+      this.refs.searchInput.focus();          
 
   }
 
@@ -183,7 +187,7 @@ export default class Home extends React.Component {
                 <form class="form-inline">
                 <div class="form-group">
                    <div class="btn-group">                  
-                        <input type="text" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
+                        <input type="text" ref="searchInput" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
                         <button class={closeIconActive} type="reset" onClick={this.handleClearBtnClick.bind(this)}></button>
                     </div>
                 </div>
