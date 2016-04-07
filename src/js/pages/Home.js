@@ -9,7 +9,7 @@ import TableBody from "../components/tableBody";
 import lodash from "lodash";
 import ReactTransitionGroup  from "react-addons-transition-group"
 import ReactCSSTransitionGroup  from "react-addons-css-transition-group"
-import css from "style!css!../../css/app.css";
+import css from "../../css/app.css";
  
 export default class Home extends React.Component {
   
