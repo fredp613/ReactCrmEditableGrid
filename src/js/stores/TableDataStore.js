@@ -179,22 +179,49 @@ class TableDataStore extends EventEmitter {
 							
 	}
 	updateDirtyRecords() {
+		if (this.isGrouped) {
+			this.tableData = this.modifiedTableData
 
-		this.tableData = this.tableData.map((td, index) => {
-			var vals;
-			if (td.values) {
-				vals = td.values
-			} else {				
-				vals = td[1]				
-			}
-			vals.map((val)=> {
-				const foundObject = _.find(this.dirtyRecords, ['fieldId', val.id])			
-				if (foundObject) {										
-					val.value = foundObject.value;														
+			this.tableData = this.tableData.map((td, index) => {
+				var vals;
+				if (td.values) {
+					vals = td.values
+				} else {				
+					vals = td[1]				
 				}
-			})			
-			return td;			
-		})		
+				vals.map((val)=> {
+					const foundObject = _.find(this.dirtyRecords, ['fieldId', val.id])			
+					if (foundObject) {										
+						val.value = foundObject.value;														
+					}
+				})			
+				return td;			
+			});
+
+			this.tableData = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
+				return td;
+			})
+
+		} else {
+
+			this.tableData = this.tableData.map((td, index) => {
+				var vals;
+				if (td.values) {
+					vals = td.values
+				} else {				
+					vals = td[1]				
+				}
+				vals.map((val)=> {
+					const foundObject = _.find(this.dirtyRecords, ['fieldId', val.id])			
+					if (foundObject) {										
+						val.value = foundObject.value;														
+					}
+				})			
+				return td;			
+			});
+
+		}
+				
 
 		this.emit("change");
 	}
@@ -210,6 +237,7 @@ class TableDataStore extends EventEmitter {
 		this.newSortDirection = direction;	
 		this.isGrouped = isGrouped
 		this.tableData = this.getNewSortedTableData(this.tableData)
+		this.modifiedTableData = this.tableData
 		//temporary, get rid of this its redundant since the server will return a sroted array			
 		if (this.isGrouped) {
 			
