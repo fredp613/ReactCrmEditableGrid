@@ -27,7 +27,7 @@ export default class TableBody extends React.Component {
 	}
 
 	render() {		
-			
+		
 		const isGrouped = this.props.isGrouped;
 		const colSpan = TableDataStore.getHeaders().length;
 		

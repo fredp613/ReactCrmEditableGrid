@@ -24,7 +24,12 @@ class TableDataStore extends EventEmitter {
 		this.newSortDirection = "";
 		this.newSortFieldName = "";	
 		/////////////////////////////////////////////////////
-		this.sampleData = new SampleData;
+		
+		this.sampledata = SampleData.tableDataFromTheOutside;
+		console.log(SampleData)
+		this.lookupData = SampleData.lookupData;
+		this.twoOptionsData = SampleData.twoOptionsData;
+		this.modifiedTableData = [];
 		
 		
 	}
@@ -33,7 +38,7 @@ class TableDataStore extends EventEmitter {
 	getAll() {
 		//perfomr initial grouping here - by crm record Id
 		var bodyData = [];
-		var initialData = this.sampleData.getTableDataFromTheOutside()
+		var initialData = this.sampledata
 		initialData.map((td, index)=> {
 	      const foundObject = _.find(bodyData, ['groupValue', td.crmRecordId])
 	      var arrValues = [];
@@ -118,10 +123,10 @@ class TableDataStore extends EventEmitter {
 	}
 		
 	getHeaders() {	
-		const initialData = this.sampleData.getTableDataFromTheOutside();
+		
 		if (this.newSortDirection != "") {	
 
-			var arr = initialData.map((td)=>{
+			var arr = this.sampledata.map((td)=>{
 						if (td.crmFieldName == this.newSortFieldName) {
 							td.sortDirection = this.newSortDirection
 						} else {
@@ -133,18 +138,18 @@ class TableDataStore extends EventEmitter {
 			return _.uniqBy(arr, "headerName");
 		}
 		
-		return _.uniqBy(initialData, "crmFieldName").map((header)=> {
+		return _.uniqBy(this.sampledata, "crmFieldName").map((header)=> {
 			return {key: header.id, headerName: header.crmFieldName, sortDirection: header.sortDirection};
 		})				 
 	}
 
 	getLookupData() {
-		return this.sampleData.getLookupData();
+		return this.lookupData;
 	}
 
 
 	getTwoOptionsData() {
-		return this.sampleData.getTwoOptionsData();
+		return this.twoOptionsData;
 	}
  
 
@@ -204,15 +209,15 @@ class TableDataStore extends EventEmitter {
 		this.newSortFieldName = fieldName;
 		this.newSortDirection = direction;	
 		this.isGrouped = isGrouped
-		//temporary, get rid of this its redundant since the server will return a sroted array
-		this.tableData = this.getNewSortedTableData();		
+		this.tableData = this.getNewSortedTableData(this.tableData)
+		//temporary, get rid of this its redundant since the server will return a sroted array			
 		if (this.isGrouped) {
-			var arr = [];		
-
-				arr = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
-					return td;
-				})
-			this.tableData = arr;
+			
+			console.log("is it def grouped")
+			this.tableData = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
+				return td;
+			})
+		
 		}
 				
 		this.emit("change");
@@ -251,7 +256,6 @@ const tableDataStore = new TableDataStore;
 dispatcher.register(tableDataStore.handleActions.bind(tableDataStore));
 window.dispatcher = dispatcher;
 export default tableDataStore;
-
 
 
 

@@ -1,15 +1,7 @@
-
-
-export default class SampleData {
+class SampleData {
 
 	constructor() {
-		this.tableDataFromTheOutside = [];
-		this.lookupData = [];
-		this.twoOptionsData = [];
-	}
-
-	getTableDataFromTheOutside() {
-		this.tableDataFromTheOutside = [			
+		this.tableDataFromTheOutside = [
 			{
 				id: "1z",
 				crmRecordId: "431212",
@@ -144,52 +136,16 @@ export default class SampleData {
 				sortDirection: "desc",
 				value: "140013",
 				grouping: "",
-			},			
-			
-		]
+			},
 
-		return this.tableDataFromTheOutside;
-	}
-	
-	getTwoOptionsData() {
-		this.twoOptionsData = [
-											
-			{
-				crmFieldId: "123",
-				crmFieldName: "isActive",				
-				value: "0",
-				label: "No",
-			},
-			{
-				crmFieldId: "123",
-				crmFieldName: "isActive",
-				value: "1",
-				label: "Yes",
-			},
-			{
-				crmFieldId: "124",
-				crmFieldName: "isAboriginal",				
-				value: "0",
-				label: "No",
-			},
-			{
-				crmFieldId: "124",
-				crmFieldName: "isAboriginal",
-				value: "1",
-				label: "Yes",
-			},		
-		]
-		return this.twoOptionsData;
-	}	
 
-	getLookupData() {
+		];
 		this.lookupData = [
-			
 			{
-				crmFieldId: "4324",
-				crmFieldName: "Category",
-				value: "140012",
-				label: "Category 1",
+			crmFieldId: "4324",
+			crmFieldName: "Category",
+			value: "140012",
+			label: "Category 1",
 			},
 			{
 				
@@ -213,12 +169,39 @@ export default class SampleData {
 				label: "Category 4",
 			},
 
+		];
+
+		this.twoOptionsData = [
+			{
+				crmFieldId: "123",
+				crmFieldName: "isActive",				
+				value: "0",
+				label: "No",
+			},
+			{
+				crmFieldId: "123",
+				crmFieldName: "isActive",
+				value: "1",
+				label: "Yes",
+			},
+			{
+				crmFieldId: "124",
+				crmFieldName: "isAboriginal",				
+				value: "0",
+				label: "No",
+			},
+			{
+				crmFieldId: "124",
+				crmFieldName: "isAboriginal",
+				value: "1",
+				label: "Yes",
+			},
 
 
-		]
-
-		return this.lookupData;
-	}	
-		
+		];
+	}
 
 }
+
+const sampleData = new SampleData;
+export default sampleData;

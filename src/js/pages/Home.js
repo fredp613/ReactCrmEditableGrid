@@ -22,8 +22,8 @@ export default class Home extends React.Component {
           headers: TableDataStore.getHeaders(),
           tableData: TableDataStore.getAll(),
           isGrouped: TableDataStore.isGrouped,
-          lookupData: TableDataStore.getLookupData(),
-          twoOptionsData: TableDataStore.getTwoOptionsData(),
+          lookupData: TableDataStore.lookupData,
+          twoOptionsData: TableDataStore.twoOptionsData,
           searchText: "",
           isEditing: TableDataStore.isEditing,
           isDirty: TableRowDataStore.isDirty,
@@ -36,9 +36,9 @@ export default class Home extends React.Component {
       this.setState({
           headers: TableDataStore.getHeaders(),           
           tableData: TableDataStore.tableData, 
-          lookupData: TableDataStore.getLookupData(),
+          lookupData: TableDataStore.lookupData,
           isGrouped: TableDataStore.isGrouped,
-          twoOptionsData: TableDataStore.getTwoOptionsData(),  
+          twoOptionsData: TableDataStore.twoOptionsData,  
           dirtyRecords: TableDataStore.dirtyRecords,                   
           searchText: "", 
           isEditing: TableDataStore.isEditing,  
@@ -63,10 +63,9 @@ export default class Home extends React.Component {
     componentDidMount() {
         
         this.refs.searchInput.getDOMNode().focus(); 
- 
         TableDataStore.on('change', () => { 
 
-           this.toggleState();
+           // this.toggleState();
         });
         TableRowDataStore.on('change', () => {
           this.setState({
@@ -77,7 +76,7 @@ export default class Home extends React.Component {
 
     componentWillUnmount() {        
         TableDataStore.removeListener('change', () => {           
-           this.toggleState();
+           // this.toggleState();
         });
          TableRowDataStore.removeListener('change', () => {
           this.setState({
