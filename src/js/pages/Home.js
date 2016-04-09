@@ -62,7 +62,7 @@ export default class Home extends React.Component {
 
     componentDidMount() {
         
-        this.refs.searchInput.getDOMNode().focus(); 
+        this.refs.searchInput.focus(); 
         TableDataStore.on('change', () => { 
 
            // this.toggleState();

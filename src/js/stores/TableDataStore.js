@@ -25,8 +25,7 @@ class TableDataStore extends EventEmitter {
 		this.newSortFieldName = "";	
 		/////////////////////////////////////////////////////
 		
-		this.sampledata = SampleData.tableDataFromTheOutside;
-		console.log(SampleData)
+		this.sampledata = SampleData.tableDataFromTheOutside;		
 		this.lookupData = SampleData.lookupData;
 		this.twoOptionsData = SampleData.twoOptionsData;
 		this.modifiedTableData = [];
@@ -241,7 +240,7 @@ class TableDataStore extends EventEmitter {
 		//temporary, get rid of this its redundant since the server will return a sroted array			
 		if (this.isGrouped) {
 			
-			console.log("is it def grouped")
+			
 			this.tableData = _.toPairs(_.groupBy(this.tableData, "sortedValue")).map((td)=> {
 				return td;
 			})

@@ -48,8 +48,7 @@ export default class TableHeader extends React.Component {
 		} else {					
 			TableDataActions.toggleQuickSort(fieldName, "asc", isGrouped);
 		}	
-		if (isGrouped) {
-			console.log("grouped")
+		if (isGrouped) {			
 			this.setState({cancelGroupBtnActivated: true});	
 		}
 

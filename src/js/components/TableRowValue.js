@@ -37,7 +37,7 @@ export default class TableRow extends React.Component {
 	}	
 
 	handleCellClick(value, ft) {		
-		console.log("clicked")
+		
 		if (!this.props.isEditing) {
 			TableDataActions.toggleEditingMode(true);
 		}
