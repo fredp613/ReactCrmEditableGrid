@@ -1,53 +1,56 @@
 import dispatcher from "../dispatcher";
 
+export const TOGGLE_EDITING_MODE = "TOGGLE_EDITING_MODE";
+export const TOGGLE_QUICK_SORT = "TOGGLE_QUICK_SORT";
+export const UPDATE_DIRTY_RECORDS = "UPDATE_DIRTY_RECORDS";
+export const FETCH_TABLE_DATA_ERROR = "FETCH_TABLE_DATA_ERROR";
+export const RECEIVE_TABLE_DATA = "RECEIVE_TABLE_DATA";
+export const APPEND_DIRTY_RECORDS = "APPEND_DIRTY_RECORDS";
 	
-	export function toggleEditingMode(isEditing) {
-		dispatcher.dispatch({
-			type: "TOGGLE_EDITING_MODE",
+export function toggleEditingMode(isEditing) {
+	dispatcher.dispatch({
+		type: TOGGLE_EDITING_MODE,
+		payload: {
 			isEditing,
-		});
-	}
+		}
+	});
+}
 
-	export function toggleQuickSort(sortFieldName, sortDirection, isGrouped) {
-		dispatcher.dispatch({
-			type: "TOGGLE_QUICK_SORT",
-			sortFieldName,
-			sortDirection,						
-			isGrouped,
-		})
-	}
-	
+export function toggleQuickSort(sortFieldName, sortDirection, isGrouped) {	
+		return {
+				type: TOGGLE_QUICK_SORT,
+				payload: {
+					sortFieldName,
+					sortDirection,						
+					isGrouped,
+				}
+			}					
+}
 
-	export function updateDirtyRecords() {			
+
+export function updateDirtyRecords() {			
 		
-		dispatcher.dispatch({
-			type: "UPDATE_DIRTY_RECORDS",	
-			// validDirtyRecords: newData,		
-		});
-	}
+		return {
+			type: UPDATE_DIRTY_RECORDS,		
+		}
+		
+}
 
-	export function appendDirtyRecords(parentId, fieldId, fieldName, value) {
-		dispatcher.dispatch({
-			type: "APPEND_DIRTY_RECORDS",
+export function appendDirtyRecords(parentId, fieldId, fieldName, value) {
+	return {
+		type: APPEND_DIRTY_RECORDS,
+		payload: {
 			parentId: parentId,
 			fieldId: fieldId,
 			fieldName: fieldName,
 			value: value,
-		});
-	}
-
-	export function fetchTableData() {
-	// axios("http://someurl.com/somdataendpoint").then((data)=> {
-	// 	console.log("got some data");
-	// })
-
-	setTimeout(()=> {
-		dispatcher.dispatch({type: "RECEIVE_TABLE_DATA", 
-		});
-
-		if (false) {
-			dispatcher.dispatch({type: "FETCH_TABLE_DATA_ERROR"});	
 		}
-		
-	}, 1000);
+	}		
+}
+
+export function fetchTableData() {
+// axios("http://someurl.com/somdataendpoint").then((data)=> {
+// 	console.log("got some data");
+// })
+
 }

@@ -26,27 +26,56 @@ export default class TableBody extends React.Component {
 		
 	}
 
+	componentDidMount() {
+		
+	}
+
 	render() {		
 		
 		const isGrouped = this.props.isGrouped;
 		const colSpan = TableDataStore.getHeaders().length;
 		
+		
 		const rowHoverStyle = {      		
       		cursor: "pointer"
     	};
-
+    	
 
 		var groupRow;
-		if (isGrouped) {
-			groupRow = <tr style={rowHoverStyle} onClick={this.handleGroupingClick.bind(this)}><td colSpan={colSpan}><strong>{this.props.groupRowData.sortFieldName}: {this.props.groupRowData.sortedValue}</strong></td></tr>
-		}
 
-		const rows = this.props.tableData.map((data, index, arr)=> {       		  			
+
+		if (this.props.tableDataGroup.length > 0 && isGrouped) {			
+			groupRow = <tr style={rowHoverStyle} onClick={this.handleGroupingClick.bind(this)}><td colSpan={colSpan}><strong>Group Row</strong></td></tr>
+		} 
+		
+		
+		// if (this.props.isSorting) {
+			// console.log("is sorting")			
+		const sortedData = this.props.dataForTable.sort((a, b) => {
+			if (this.props.sortDirection === "asc") {
+				if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
+			    	return 1;
+			  	}
+			    if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
+			    	return -1;
+			    }						
+			  // a must be equal to b
+			  return 0;
+			} else {
+				if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
+			    	return 1;
+			  	}
+			    if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
+			    	return -1;
+			    }
+			}			
+		});  
+		
+		const rows = sortedData.map((data, index, arr)=> {       		  			
 			return  (<TableRow key={index}  
-		   		lookupData={this.props.lookupData} isVisible={this.state.groupShowing} twoOptionsData={this.props.twoOptionsData} isEditing={this.props.isEditing} {...data}  />)					   	 		   							   		   		
-		});
-	
-    	    	    	
+		   		{...this.props} isVisible={this.state.groupShowing} {...data}  />)					   	 		   							   		   		
+		})
+	    	    	    	
 		return(	
 			<tbody>	
 				{groupRow}

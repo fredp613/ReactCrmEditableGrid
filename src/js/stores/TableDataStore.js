@@ -1,11 +1,12 @@
 import { EventEmitter } from "events";
 import dispatcher from "../dispatcher";
 import lodash from "lodash";
-import SampleData from "../sampledata/SampleData"
+import SampleData from "../sampledata/SampleData";
+import rootReducer from "../reducers/TableDataReducer";
 
 
 class TableDataStore extends EventEmitter {
-	constructor() {
+	constructor(rootReducer) {
 		super();
 		//libs
 		this._ = require("lodash");
@@ -51,6 +52,9 @@ class TableDataStore extends EventEmitter {
 	         	 id: index,
 	             groupField: "",
 	             groupValue:td.crmRecordId,
+	             sortedValue: "",
+	             sortFieldName: "",
+	             sortDirection: "desc",
 	             values: arrValues
 	         })
 	      }
@@ -257,20 +261,20 @@ class TableDataStore extends EventEmitter {
 	handleActions(action) {
 		switch(action.type) {					
 			case "RECEIVE_TABLE_DATA": 				
-				this.footers = action.tableData;
+				this.footers = action.payload.tableData;
 				this.emit("change");
 				break;
 			case "TOGGLE_EDITING_MODE":			
-				this.toggleEditingMode(action.isEditing)
+				this.toggleEditingMode(action.payload.isEditing)
 				break;
 			case "TOGGLE_QUICK_SORT":
-				this.toggleQuickSort(action.sortFieldName, action.sortDirection, action.isGrouped)								
+				this.toggleQuickSort(action.payload.sortFieldName, action.payload.sortDirection, action.payload.isGrouped)								
 				break;							
 			case "UPDATE_DIRTY_RECORDS":				
 				this.updateDirtyRecords();								
 				break;
 			case "APPEND_DIRTY_RECORDS":
-				this.appendDirtyRecords(action.parentId, action.fieldId, action.fieldName, action.value)
+				this.appendDirtyRecords(action.payload.parentId, action.payload.fieldId, action.payload.fieldName, action.payload.value)
 				break;			
 			case "FETCH_TABLE_DATA_ERROR": 
 				break;			

@@ -9,83 +9,21 @@ import TableBody from "../components/tableBody";
 import lodash from "lodash";
 import ReactTransitionGroup  from "react-addons-transition-group"
 import ReactCSSTransitionGroup  from "react-addons-css-transition-group"
+import { connect } from 'react-redux';
 import css from "../../css/app.css";
+import _ from "lodash"
  
-export default class Home extends React.Component {
+class Home extends React.Component {
   
   constructor() {
       super();
-      
-      this.lodash = require('lodash');
-             
-      this.state = {            
-          headers: TableDataStore.getHeaders(),
-          tableData: TableDataStore.getAll(),
-          isGrouped: TableDataStore.isGrouped,
-          lookupData: TableDataStore.lookupData,
-          twoOptionsData: TableDataStore.twoOptionsData,
-          searchText: "",
-          isEditing: TableDataStore.isEditing,
-          isDirty: TableRowDataStore.isDirty,
-          dirtyRecords: TableDataStore.dirtyRecords, 
-          isSearching: false,                         
-      }    
+      this.state = {
+        searchText: "",
+        isSearching: "",               
+      }
+                          
   }
-   
-  toggleState() {
-      this.setState({
-          headers: TableDataStore.getHeaders(),           
-          tableData: TableDataStore.tableData, 
-          lookupData: TableDataStore.lookupData,
-          isGrouped: TableDataStore.isGrouped,
-          twoOptionsData: TableDataStore.twoOptionsData,  
-          dirtyRecords: TableDataStore.dirtyRecords,                   
-          searchText: "", 
-          isEditing: TableDataStore.isEditing,  
-          isDirty: TableRowDataStore.isDirty, 
-          isSearching: false,            
-      });   
-  }
-
-
-  componentWillMount() {                    
-        TableDataStore.on('change', () => { 
-           this.toggleState();
-        });
-        TableRowDataStore.on('change', () => {
-          this.setState({
-            isDirty: TableRowDataStore.isDirty,
-          })
-        })
-        
-    }
-
-    componentDidMount() {
-        
-        this.refs.searchInput.focus(); 
-        TableDataStore.on('change', () => { 
-
-           // this.toggleState();
-        });
-        TableRowDataStore.on('change', () => {
-          this.setState({
-            isDirty: TableRowDataStore.isDirty,
-          })
-        })
-    }
-
-    componentWillUnmount() {        
-        TableDataStore.removeListener('change', () => {           
-           // this.toggleState();
-        });
-         TableRowDataStore.removeListener('change', () => {
-          this.setState({
-            isDirty: TableRowDataStore.isDirty,
-          })
-        })
-        
-    }
-   
+     
    handleClearBtnClick() {
       this.setState({isSearching:false})
       this.refs.searchInput.focus();
@@ -93,8 +31,7 @@ export default class Home extends React.Component {
 
 
   handleSearchTextChange(e) { 
-    console.log("hi")
-    console.log(e.target.value)
+    
     if (e.target.value.length > 0) {
         this.setState({searchText:e.target.value, isSearching:true})
     } else {
@@ -108,53 +45,86 @@ export default class Home extends React.Component {
   }
 
   handeCancelBtnClick() {          
-      TableDataActions.toggleEditingMode(false)    
-      TableRowDataActions.toggleDirtyMode(false)        
+      this.props.dispatch.toggleEditingMode(false)    
+      // TableRowDataActions.toggleDirtyMode(false)        
        this.refs.searchInput.focus(); 
   }
 
   handleSaveBtnClick() {  
      
-      TableDataActions.updateDirtyRecords();
-      TableRowDataActions.toggleDirtyMode(false);      
-      TableDataActions.toggleEditingMode(false);
+      this.props.dispatch.updateDirtyRecords();
+      // TableRowDataActions.toggleDirtyMode(false);      
+      this.props.dispatch.toggleEditingMode(false);
       this.refs.searchInput.focus();          
 
   }
 
   render() {
 
-    var _ = require("lodash");
+
+
+
+    
     const { searchText } = this.state;    
-    const { headers } = this.state;      
-    const { tableData } = this.state;
-    const { rowValues } = this.state;
-    const { lookupData } = this.state;
-    const { twoOptionsData } = this.state;
-    const { isGrouped } = this.state;   
+    
+    const { tableData } = this.props;
+    const { rowValues } = this.props;
+    const { lookupData } = this.props;
+    const { dirtyRecords } = this.props;
+    const { twoOptionsData } = this.props;
+    const { isGrouped } = this.props;   
     const { isSearching } = this.state;
 
     const closeIconActive = isSearching ? "glyphicon glyphicon-remove-circle close-icon-active" : "glyphicon glyphicon-remove-circle close-icon-inactive";
 
+    
+    const headers  = _.uniqBy(this.props.tableData[0].values, "crmFieldName").map((v)=>{ 
+       
+       v.fieldName = v.crmFieldName
 
-    const TableHeaderComponents = headers.map((header,index) => { 
-        return <TableHeader key={index} fieldName={header.headerName} sortDirection={header.sortDirection} />;            
-    }); 
+       this.props.tableData.map((data)=>{
+          if (data.sortFieldName == v.fieldName) {
+            v.sortDirection = data.sortDirection
+            v.isSorted = true;
+          } else {
+            if (data.sortDirection == "desc") {
+                v.sortDirection = "asc"
+            } else {
+                v.sortDirection = "desc"
+            }
+            v.isSorted = false;
+            
+          }
+       })
+       
+        return v  
+    });       
+    
+   
+
+   ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
 
     var TableBodyComponents;
-
-    if (isGrouped) {
-        TableBodyComponents = tableData.map((td, index)=> {
+    if (isGrouped == true) {            
+      TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
 
            return (                    
-                    <TableBody key={index} tableData={tableData[index][1]} 
-                    lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={true} groupRowData={tableData[index][1][0]} isEditing={this.state.isEditing} />
+                    <TableBody key={index} dataForTable={this.props.tableDataGroup[index][1]} isGrouped={true} groupRowData={this.props.tableDataGroup[index][1][0]} isEditing={this.state.isEditing} {...this.props} />
                   )
         })
-    } else {
-        TableBodyComponents = <TableBody key="1" tableData={tableData} lookupData={lookupData} twoOptionsData={twoOptionsData} isGrouped={false} isEditing={this.state.isEditing} />          
-    }
 
+    } else {
+      TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} isEditing={this.state.isEditing} {...this.props} />                    
+    }        
+  ///////////////////////////////////////////////////////////////////////////////////////////////////    
+    
+    const TableHeaderComponents = headers.map((header,index) => { 
+        return <TableHeader key={index} {...header} dispatch={this.props.dispatch} dirtyRecords={dirtyRecords} isGrouped={isGrouped} />;            
+    }); 
+
+   
+    
+    
    
     const textInputStyle = {
       paddingTop:"10px",      
@@ -228,3 +198,12 @@ export default class Home extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(Home);
+
+
+
