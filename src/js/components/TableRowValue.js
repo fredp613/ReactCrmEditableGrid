@@ -65,26 +65,10 @@ export default class TableRow extends React.Component {
 	
 	render() {	
 		
-		
-
-	// parentId: action.payload.parentId,
-	// fieldId: action.payload.fieldId,
-	// fieldName: action.payload.fieldName,
-	// value: action.payload.value,
-		// const t = this.props.dirtyRecords.map((dr)=>{
-		// 	console.log(this.props.parentId)
-		// 	console.log(dr.parentId)
-		// 	if (this.props.parentId == dr.parentId) {
-		// 		console.log("-----------RED--------------")
-		// 		return "red";
-		// 	}
-		// 	console.log("-----------BLACK--------------")
-		// 	return "black";
-		// })
 
 		const currentRecordIsDirty = this.props.dirtyRecords.filter((val)=>{																						
-								return val.parentId === this.props.parentId
-							})
+			return val.parentId === this.props.parentId
+		})
 		
 		var color;
 		if (currentRecordIsDirty.length > 0) {

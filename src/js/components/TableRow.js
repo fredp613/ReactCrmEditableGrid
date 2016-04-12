@@ -56,6 +56,18 @@ export default class TableRow extends React.Component {
 		const isVisible = {
 			display: visibility,
 		}
+		var currentRecordIsDirty = [];
+		this.props.dirtyRecords.map((val)=>{	
+			currentRecordIsDirty = this.props.values.filter((value)=> {
+				console.log(value.crmRecordId + " " + val.parentId)
+				return val.parentId == value.crmRecordId
+			});																											
+		});
+		
+		var classForRow = "";
+		if (currentRecordIsDirty.length > 0) {			
+			classForRow = "success"
+		}
 
 				
 		const rowValueComponents = this.props.values.map((child, index) => {

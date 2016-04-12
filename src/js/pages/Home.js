@@ -189,7 +189,7 @@ class Home extends React.Component {
 
             <div class='row'>        
               
-              <table class='table table-stripped table-bordered table-hover'>         
+              <table class='table table-stripped table-hover'>         
               <thead>
                 <tr>{TableHeaderComponents}</tr>            
               </thead>          
