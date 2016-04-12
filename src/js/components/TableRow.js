@@ -5,6 +5,12 @@ import TableRowValue from "../components/TableRowValue";
 
 export default class TableRow extends React.Component {
 	
+	constructor() {
+		super();
+		this.state = {
+			isHovering: false,
+		}
+	}
 
 	getLabelForValue(fieldType, fieldName, value) {
 		switch(fieldType) {
@@ -33,6 +39,17 @@ export default class TableRow extends React.Component {
 
 	}
 
+	handleHover(e) {
+						
+		this.setState({isHovering:true})		
+	}
+
+	handleHoverDeactivate(e) {
+		// if (!this.props.dirtyRecords.length > 0) {
+			this.setState({isHovering:false})
+		// }		
+	}
+
 	render() {	
 
 		const visibility = this.props.isVisible ? "" : "none"
@@ -46,19 +63,19 @@ export default class TableRow extends React.Component {
 
 			if (child.crmFieldType == "lookup") {
 				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
-				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData} isEditing={this.props.isEditing}/>
+				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData} isHovering={this.state.isHovering} {...this.props} />
 			}
 			if (child.crmFieldType == "boolean") {
-				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} isEditing={this.props.isEditing}
+				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
 				fieldType={child.crmFieldType} fieldName={child.crmFieldName} 
-				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData}/>	
+				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData} isHovering={this.state.isHovering} {...this.props} />	
 			}
-			return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} isEditing={this.props.isEditing}
-			fieldType={child.crmFieldType} fieldLabel={fieldLabel} fieldName={child.crmFieldName}/>
+			return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
+			fieldType={child.crmFieldType} fieldLabel={fieldLabel} fieldName={child.crmFieldName} isHovering={this.state.isHovering} {...this.props}/>
 		})
 		
 		return(			
-			<tr style={isVisible}>
+			<tr style={isVisible} onMouseEnter={this.handleHover.bind(this)} onMouseLeave={this.handleHoverDeactivate.bind(this)}>
 				{rowValueComponents}
 			</tr>
 		);

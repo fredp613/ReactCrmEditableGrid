@@ -16,12 +16,12 @@ let initialState = {
 	tableDataGroup: [],
 	lookupData: TableDataStore.lookupData,
 	twoOptionsData: TableDataStore.twoOptionsData,
-	searchText: "",
-	isEditing: TableDataStore.isEditing,
+	searchText: "",	
 	isDirty: TableRowDataStore.isDirty,
-	dirtyRecords: TableDataStore.dirtyRecords, 
+	dirtyRecords: [], 
 	isSearching: false,		
-	isGrouped: false,
+	isGrouped: false,	
+	isEditing: false,
 	
 }
 

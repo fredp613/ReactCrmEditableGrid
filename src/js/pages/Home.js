@@ -19,7 +19,8 @@ class Home extends React.Component {
       super();
       this.state = {
         searchText: "",
-        isSearching: "",               
+        isSearching: "", 
+        isEditing: false,              
       }
                           
   }
@@ -44,18 +45,18 @@ class Home extends React.Component {
     this.setState({searchText:""})
   }
 
-  handeCancelBtnClick() {          
-      this.props.dispatch.toggleEditingMode(false)    
-      // TableRowDataActions.toggleDirtyMode(false)        
+  handeCancelBtnClick() {      
        this.refs.searchInput.focus(); 
+       this.props.dispatch(TableDataActions.cancelDirtyRecords())
+      
   }
 
   handleSaveBtnClick() {  
      
-      this.props.dispatch.updateDirtyRecords();
-      // TableRowDataActions.toggleDirtyMode(false);      
-      this.props.dispatch.toggleEditingMode(false);
+      // this.props.dispatch.updateDirtyRecords();      
       this.refs.searchInput.focus();          
+      this.props.dispatch(TableDataActions.updateDirtyRecords())
+      
 
   }
 
@@ -109,17 +110,17 @@ class Home extends React.Component {
       TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
 
            return (                    
-                    <TableBody key={index} dataForTable={this.props.tableDataGroup[index][1]} isGrouped={true} groupRowData={this.props.tableDataGroup[index][1][0]} isEditing={this.state.isEditing} {...this.props} />
+                    <TableBody key={index}  dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
                   )
         })
 
     } else {
-      TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} isEditing={this.state.isEditing} {...this.props} />                    
+      TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} {...this.props} />                    
     }        
   ///////////////////////////////////////////////////////////////////////////////////////////////////    
     
     const TableHeaderComponents = headers.map((header,index) => { 
-        return <TableHeader key={index} {...header} dispatch={this.props.dispatch} dirtyRecords={dirtyRecords} isGrouped={isGrouped} />;            
+        return <TableHeader key={index} {...header} dirtyRecords={dirtyRecords} {...this.props} />;            
     }); 
 
    
@@ -145,7 +146,7 @@ class Home extends React.Component {
     var cancelBtn;    
     var saveBtn;
     var component;
-    if (this.state.isDirty) {          
+    if (this.props.dirtyRecords.length > 0) {          
       saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
       cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
     } 
@@ -174,7 +175,7 @@ class Home extends React.Component {
 
             <div class='row'>        
               
-              <table class='table table-stripped table-bordered table-hover table-condensed'>         
+              <table class='table table-stripped table-bordered table-hover'>         
               <thead>
                 <tr>{TableHeaderComponents}</tr>            
               </thead>          

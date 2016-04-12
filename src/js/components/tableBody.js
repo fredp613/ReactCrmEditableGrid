@@ -8,7 +8,7 @@ export default class TableBody extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			groupShowing: true,
+			groupShowing: true,			
 		}
 	}
 
@@ -28,6 +28,10 @@ export default class TableBody extends React.Component {
 
 	componentDidMount() {
 		
+	}
+
+	handleMouseOver() {
+		console.log("hi")
 	}
 
 	render() {		

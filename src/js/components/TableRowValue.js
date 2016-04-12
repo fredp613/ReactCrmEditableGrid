@@ -10,53 +10,15 @@ export default class TableRow extends React.Component {
 	
 	constructor() {
 		super();
-		this.state = {	
-			isEditing: TableDataStore.isEditing,
-			currentValue: null,
-			isEditingComponent: false,
-			dirtyParentIds: [],		
+		this.state = {				
+			currentValue: null,						
 		}
 	}	
 
 	componentWillMount() {
-		TableDataStore.on('change', ()=> {			
-			this.state.currentValue = null;
-			this.state.isEditingComponent = false;
-			this.state.dirtyParentIds = [];
-			this.state.isEditing = TableDataStore.isEditing
-		})
-	}
-
-	componentWillUnmount() {
-		TableDataStore.removeListener('change', ()=> {	
-			this.state.isEditingComponent = false;	
-			this.state.currentValue = null;	
-			this.state.dirtyParentIds = [];
-			this.state.isEditing = TableDataStore.isEditing				
-		})
-	}	
-
-	handleCellClick(value, ft) {		
-		
-		if (!this.props.isEditing) {
-			TableDataActions.toggleEditingMode(true);
-		}
-		
-		const val = value		
-		if (!this.state.isEditingComponent) {								
-			this.state.isEditingComponent = true
-			this.state.currentValue = val
-			this.state.dirtyParentIds = []			
-		} 
-		this.setState({})
-	}
-
-	handleRowCancelClick(e) {				
 		this.setState({
-			isEditing: true,
-			isEditingComponent: false,
-			currentValue: e.target.value,
-		})
+			currentValue: null,						
+		});
 	}
 
 	updateRecords() {
@@ -64,11 +26,12 @@ export default class TableRow extends React.Component {
 	}
 
 	handleChange(e) {		
+		e.preventDefault();
 		const newValue = e.target.value;
-		TableRowDataActions.toggleDirtyMode(true);
-		TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue);					
+		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue));
+						
 		this.setState({
-			currentValue: e.target.value
+			currentValue: e.target.value,									
 		});
 	}
 
@@ -100,55 +63,86 @@ export default class TableRow extends React.Component {
 	}
 
 	
-	render() {		
-				
+	render() {	
+		
+		
+
+	// parentId: action.payload.parentId,
+	// fieldId: action.payload.fieldId,
+	// fieldName: action.payload.fieldName,
+	// value: action.payload.value,
+		// const t = this.props.dirtyRecords.map((dr)=>{
+		// 	console.log(this.props.parentId)
+		// 	console.log(dr.parentId)
+		// 	if (this.props.parentId == dr.parentId) {
+		// 		console.log("-----------RED--------------")
+		// 		return "red";
+		// 	}
+		// 	console.log("-----------BLACK--------------")
+		// 	return "black";
+		// })
+
+		const currentRecordIsDirty = this.props.dirtyRecords.filter((val)=>{																						
+								return val.parentId === this.props.parentId
+							})
+		
+		var color;
+		if (currentRecordIsDirty.length > 0) {
+			color = "red"
+		} else {
+			color = "black"
+		}
+		
+
 		const tdStyle = {      			
       		cursor: "pointer",
-      		textDecoration: "none, !important" 
+      		textDecoration: "none, !important", 
+      		color: color,     		       		
     	}; 
+
     	const gkey = Date.now();
     	
 
     	const maxwidth = {
-    		maxWidth:"40px"
+    		maxWidth:"100px"
     	}
-
-    	// const isEditing = this.props.isEditing;
 
     	var field;
     	const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
 		const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
-    	if (this.props.isEditing) {    					
-    		if (!this.state.isEditingComponent) {	    	    			
-    			field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleCellClick.bind(this, currentVal, this.props.fieldType)}>{currentValLabel}</a> 
-	    	} else {
-	    		switch(this.props.fieldType) {
-	    			case "crmShortText":    				
-						field = <input type="text" value={currentVal} onChange={this.handleChange.bind(this)}/>
-	    			break;
-	    			case "boolean":
-	    				field = <select defaultValue={currentVal} onChange={this.handleChange.bind(this)} > 	    							
-		    						{this.props.twoOptionsData.map((topt) => {		    							
-		    							if (this.props.fieldName == topt.crmFieldName) {
-		    								return <option key={topt.value} value={topt.value}>{topt.label}</option>		
-		    							}		    							
-		    						})}
-	    						</select>	    			
-		    		break;
-		    		case "lookup":
-		    			field =	<select defaultValue={currentVal} onChange={this.handleChange.bind(this)}  > 
-		    						{this.props.lookupData.map((lu) => {
-		    							if (this.props.fieldName == lu.crmFieldName) {
-			    							return <option key={lu.value} value={lu.value}>{lu.label}</option>		
-		    							}		    									    							
-		    						})}
-	    						</select>
-	    			break;
-	    		}    		
-	    	}
+    	
+    	   
+		if (!this.props.isHovering) {    								    		
+			field = <a class={this.props.fieldType} style={tdStyle}>{currentValLabel}</a> 
     	} else {
-    		field = <a class={this.props.fieldType} style={tdStyle} onClick={this.handleCellClick.bind(this, currentVal, this.props.fieldType)}>{currentValLabel}</a> 
+    		switch(this.props.fieldType) {
+    			case "crmShortText":    				
+					field = <input class="form-control" key="1" type="text" value={currentVal} onChange={this.handleChange.bind(this)}/>
+    			break;
+    			case "boolean":
+    				field = <select class="form-control" key="2" defaultValue={currentVal} onChange={this.handleChange.bind(this)} > 	    							
+	    						{this.props.twoOptionsData.map((topt) => {		    							
+	    							if (this.props.fieldName == topt.crmFieldName) {
+	    								return <option key={topt.value} value={topt.value}>{topt.label}</option>		
+	    							}		    							
+	    						})}
+    						</select>	    			
+	    		break;
+	    		case "lookup":
+	    			field =	<select class="form-control" key="3" defaultValue={currentVal} onChange={this.handleChange.bind(this)}  > 
+	    						{this.props.lookupData.map((lu) => {
+	    							if (this.props.fieldName == lu.crmFieldName) {
+		    							return <option key={lu.value} value={lu.value}>{lu.label}</option>		
+	    							}		    									    							
+	    						})}
+    						</select>
+    			break;
+    			default:
+    			  field = <a key="9" class={this.props.fieldType} style={tdStyle}>{currentValLabel}</a> 
+    			 break;
+    		}    		
     	}
+	
     	
 		return(
 			<td style={maxwidth}>	

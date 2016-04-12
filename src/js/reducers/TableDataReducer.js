@@ -6,13 +6,19 @@ import {
 	FETCH_TABLE_DATA_ERROR,
 	RECEIVE_TABLE_DATA,
 	APPEND_DIRTY_RECORDS,
+	CANCEL_DIRTY_RECORDS,
 
 } from "../actions/TableDataActions"
 
 				//.sort((a, b) => b.sortedValue - a.sortedValue)				
 
 export default function tableDataReducer(state, action) {	
-	switch (action.type) {		
+	switch (action.type) {	
+		case TOGGLE_EDITING_MODE:
+			return Object.assign({}, state, {
+				isEditing: action.payload.isEditing
+			}, ...state)
+
 		case TOGGLE_QUICK_SORT:
 			const newSortFieldName = action.payload.sortFieldName;
 			const newSortDirection = action.payload.sortDirection;	
@@ -35,10 +41,7 @@ export default function tableDataReducer(state, action) {
 
 				return Object.assign({}, state, {				
 					tableData: state.tableData.map((td)=>{						
-							const newSortedValue = td.values.filter((val)=>{								
-								// if (val.crmFieldName === newSortFieldName) {							
-								// 	return val.value	
-								// }						
+							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value})
@@ -50,10 +53,7 @@ export default function tableDataReducer(state, action) {
 			} else {
 				return Object.assign({}, state, {				
 					tableData: state.tableData.map((td)=>{						
-							const newSortedValue = td.values.filter((val)=>{								
-								// if (val.crmFieldName === newSortFieldName) {							
-								// 	return val.value	
-								// }						
+							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value})
@@ -68,25 +68,32 @@ export default function tableDataReducer(state, action) {
 				});
 
 			}
-
-							
-		
+									
 
 		case UPDATE_DIRTY_RECORDS:
-			return state;
+			return Object.assign({}, state, {
+				dirtyRecords: [],
+				isEditing: false,
+			}, ...state)
+		case CANCEL_DIRTY_RECORDS:
+			return Object.assign({}, state, {
+				dirtyRecords: [],
+				isEditing: false,
+			}, ...state)			
 		case FETCH_TABLE_DATA_ERROR:
 			return state;
 		case RECEIVE_TABLE_DATA:
 			return state;
 		case APPEND_DIRTY_RECORDS:
-			return Object.assign({}, state, {
-				dirtyRecords: [{
-						parentId: action.payload.parentId,
+			
+			 return Object.assign({}, state, {
+			        dirtyRecords: [{
+			          	parentId: action.payload.parentId,
 						fieldId: action.payload.fieldId,
 						fieldName: action.payload.fieldName,
-						value: action.payload.value,							
-					}, ...state.dirtyRecords]
-			});			
+						value: action.payload.value,
+			        }, ...state.dirtyRecords]
+			      })						
 		default:
 			return state;
 	}
