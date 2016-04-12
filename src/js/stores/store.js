@@ -20,6 +20,7 @@ export default function configureStore(
 		lookupData: SampleData.lookupData,
 		twoOptionsData: SampleData.twoOptionsData,
 		modifiedTableData: [],
+		userId: 13,
 	}) {
 	return finalCreateStore(reducer, initialState);	
 }

@@ -70,7 +70,6 @@ export default function tableDataReducer(state, action) {
 
 			}
 									
-
 		case UPDATE_DIRTY_RECORDS:
 			return Object.assign({}, state, {
 				dirtyRecords: [],
@@ -88,17 +87,17 @@ export default function tableDataReducer(state, action) {
 		case APPEND_DIRTY_RECORDS:
 				
 			 return Object.assign({}, state, {
-			        dirtyRecords: {
+			        dirtyRecords: [{
 			          	parentId: action.payload.parentId,
 						fieldId: action.payload.fieldId,
 						fieldName: action.payload.fieldName,
 						value: action.payload.value,
-			        }, ...state.dirtyRecords
+			        }, ...state.dirtyRecords]
 			      })	
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
 				userId: action.id,
-			}, ...state)					
+			}, ...state.userId)				
 		default:
 			return state;
 	}
