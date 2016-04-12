@@ -66,22 +66,10 @@ export default class TableRow extends React.Component {
 	render() {	
 		
 
-		const currentRecordIsDirty = this.props.dirtyRecords.filter((val)=>{																						
-			return val.parentId === this.props.parentId
-		})
-		
-		var color;
-		if (currentRecordIsDirty.length > 0) {
-			color = "red"
-		} else {
-			color = "black"
-		}
-		
-
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important", 
-      		color: color,     		       		
+      		color: "black",     		       		
     	}; 
 
     	const gkey = Date.now();
@@ -136,4 +124,3 @@ export default class TableRow extends React.Component {
 	}
 
 }
-

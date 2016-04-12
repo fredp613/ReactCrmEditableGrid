@@ -92,7 +92,7 @@ export default function tableDataReducer(state, action) {
 						fieldId: action.payload.fieldId,
 						fieldName: action.payload.fieldName,
 						value: action.payload.value,
-			        }, ...state.dirtyRecords]
+			        }, ...state]
 			      })	
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {

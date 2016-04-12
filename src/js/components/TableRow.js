@@ -55,22 +55,20 @@ export default class TableRow extends React.Component {
 		const visibility = this.props.isVisible ? "" : "none"
 		const isVisible = {
 			display: visibility,
-		}
-		var currentRecordIsDirty = [];
-		this.props.dirtyRecords.map((val)=>{	
-			currentRecordIsDirty = this.props.values.filter((value)=> {
-				console.log(value.crmRecordId + " " + val.parentId)
-				return val.parentId == value.crmRecordId
-			});																											
-		});
+		}		
 		
 		var classForRow = "";
-		if (currentRecordIsDirty.length > 0) {			
-			classForRow = "success"
-		}
-
 				
 		const rowValueComponents = this.props.values.map((child, index) => {
+			
+			const currentRecordIsDirty = this.props.dirtyRecords.filter((dirtyRecord)=>{					
+					return dirtyRecord.parentId == child.crmRecordId				
+			});
+						
+			if (currentRecordIsDirty.length > 0) {			
+				classForRow = "success"
+			}
+
 			const fieldLabel = this.getLabelForValue(child.crmFieldType, child.crmFieldName, child.value)
 
 			if (child.crmFieldType == "lookup") {
@@ -87,7 +85,7 @@ export default class TableRow extends React.Component {
 		})
 		
 		return(			
-			<tr style={isVisible} onMouseEnter={this.handleHover.bind(this)} onMouseLeave={this.handleHoverDeactivate.bind(this)}>
+			<tr class={classForRow} style={isVisible} onMouseEnter={this.handleHover.bind(this)} onMouseLeave={this.handleHoverDeactivate.bind(this)}>
 				{rowValueComponents}
 			</tr>
 		);
