@@ -18,7 +18,7 @@ export default function tableDataReducer(state, action) {
 		case TOGGLE_EDITING_MODE:
 			return Object.assign({}, state, {
 				isEditing: action.payload.isEditing
-			}, ...state)
+			}, ...state.isEditing)
 
 		case TOGGLE_QUICK_SORT:
 			const newSortFieldName = action.payload.sortFieldName;
@@ -50,7 +50,7 @@ export default function tableDataReducer(state, action) {
 					sortDirection: newSortDirection,	
 					isGrouped: false,	
 					tableDataGroup: [],					
-				});
+				}, ...state);
 			} else {
 				return Object.assign({}, state, {				
 					tableData: state.tableData.map((td)=>{						
@@ -66,7 +66,7 @@ export default function tableDataReducer(state, action) {
 									return Object.assign({}, state.tableDataGroup, {...td});
 					}),
 					isGrouped: true,		
-				});
+				}, ...state);
 
 			}
 									
@@ -92,7 +92,7 @@ export default function tableDataReducer(state, action) {
 						fieldId: action.payload.fieldId,
 						fieldName: action.payload.fieldName,
 						value: action.payload.value,
-			        }, ...state]
+			        }, ...state.dirtyRecords]
 			      })	
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
