@@ -69,15 +69,18 @@ export default class TableRow extends React.Component {
 		const tdStyle = {      			
       		cursor: "pointer",
       		textDecoration: "none, !important", 
-      		color: "black",     		       		
+      		color: "black", 
+      		paddingRight: "16px",
+    		paddingLeft: "16px",    		       		
     	}; 
 
     	const gkey = Date.now();
     	
 
     	const maxwidth = {
-    		maxWidth:"100px"
-    	}
+    		maxWidth:"150px",
+    		width: "150px",
+  		}  		    	
 
     	var field;
     	const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			

@@ -61,9 +61,9 @@ export default function tableDataReducer(state, action) {
 						}),
 
 					sortDirection: newSortDirection,
-					tableDataGroup: _.toPairs(_.groupBy(tableDataForGroup, "sortedValue")).map((td, index)=> {
+					tableDataGroup: _.toPairs(_.groupBy(state.tableData, "sortedValue")).map((td, index)=> {
 									td.id = index;
-									return Object.assign({}, state.tableDataGroup, {...td});
+									return Object.assign({}, td, {...state});
 					}),
 					isGrouped: true,		
 				}, ...state);

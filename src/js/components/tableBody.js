@@ -48,8 +48,9 @@ export default class TableBody extends React.Component {
 		var groupRow;
 
 
-		if (this.props.tableDataGroup.length > 0 && isGrouped) {			
-			groupRow = <tr style={rowHoverStyle} onClick={this.handleGroupingClick.bind(this)}><td colSpan={colSpan}><strong>Group Row</strong></td></tr>
+		if (this.props.tableDataGroup.length > 0 && isGrouped) {
+			console.log(this.props.groupRowData)			
+			groupRow = <tr style={rowHoverStyle} onClick={this.handleGroupingClick.bind(this)}><td colSpan={colSpan}><strong>{this.props.groupRowData.sortFieldName}: {this.props.groupRowData.sortedValue}</strong></td></tr>
 		} 
 		
 		

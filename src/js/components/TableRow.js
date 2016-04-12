@@ -54,7 +54,7 @@ export default class TableRow extends React.Component {
 
 		const visibility = this.props.isVisible ? "" : "none"
 		const isVisible = {
-			display: visibility,
+			display: visibility,		
 		}		
 		
 		var classForRow = "";
