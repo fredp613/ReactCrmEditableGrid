@@ -60,12 +60,22 @@ class Home extends React.Component {
 
   }
 
+  handleGenerateNewUserIdClick(e) {
+    e.preventDefault();    
+    // this.props.dispatch(TableDataActions.generateUserId())
+    this.props.dispatch(TableDataActions.generateUserIdIfOdd())
+
+  }
+
+  handleGenerateNewUserIdClickAsync(e) {
+    e.preventDefault();    
+    // this.props.dispatch(TableDataActions.generateUserId())
+    this.props.dispatch(TableDataActions.generateUserIdAsync())
+
+  }
+
   render() {
 
-
-
-
-    
     const { searchText } = this.state;    
     
     const { tableData } = this.props;
@@ -152,7 +162,11 @@ class Home extends React.Component {
     } 
 
     return (
+
         <div class="container-fluid">  
+          <strong>hi: {this.props.userId}</strong>
+          <button onClick={this.handleGenerateNewUserIdClick.bind(this)}>Generate</button>
+          <button onClick={this.handleGenerateNewUserIdClickAsync.bind(this)}>GenerateAsync</button>
             <div class="row">                                                   
                 <form class="form-inline">
                 <div class="form-group">

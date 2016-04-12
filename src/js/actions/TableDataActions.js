@@ -7,6 +7,7 @@ export const FETCH_TABLE_DATA_ERROR = "FETCH_TABLE_DATA_ERROR";
 export const RECEIVE_TABLE_DATA = "RECEIVE_TABLE_DATA";
 export const APPEND_DIRTY_RECORDS = "APPEND_DIRTY_RECORDS";
 export const CANCEL_DIRTY_RECORDS = "CANCEL_DIRTY_RECORDS";
+export const GENERATE_USER_ID = "GENERATE_USER_ID";
 	
 export function toggleEditingMode(isEditing) {
 	return {
@@ -60,3 +61,33 @@ export function fetchTableData() {
 // })
 
 }
+
+export function generateUserId() {
+	return {
+		type: GENERATE_USER_ID,
+		id: Math.round(Math.random()*100),
+	}
+}
+
+export function generateUserIdIfOdd() {
+	return (dispatch, getState) => {
+		const { userId } = getState();
+		 if (userId % 2 === 0) {
+		      return;
+		 }
+
+	    dispatch(generateUserId());
+	};
+}
+
+export function generateUserIdAsync() {
+	 return dispatch => {
+	    setTimeout(() => {
+	      // Yay! Can invoke sync or async actions with `dispatch`
+	      dispatch(generateUserId());
+	    }, 2000);
+	  };
+}
+
+
+

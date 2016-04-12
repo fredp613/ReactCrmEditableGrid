@@ -7,6 +7,7 @@ import {
 	RECEIVE_TABLE_DATA,
 	APPEND_DIRTY_RECORDS,
 	CANCEL_DIRTY_RECORDS,
+	GENERATE_USER_ID,
 
 } from "../actions/TableDataActions"
 
@@ -44,7 +45,7 @@ export default function tableDataReducer(state, action) {
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
-							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value})
+							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
 					sortDirection: newSortDirection,	
 					isGrouped: false,	
@@ -56,7 +57,7 @@ export default function tableDataReducer(state, action) {
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
-							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value})
+							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
 
 					sortDirection: newSortDirection,
@@ -82,18 +83,22 @@ export default function tableDataReducer(state, action) {
 			}, ...state)			
 		case FETCH_TABLE_DATA_ERROR:
 			return state;
-		case RECEIVE_TABLE_DATA:
+		case RECEIVE_TABLE_DATA: 
 			return state;
 		case APPEND_DIRTY_RECORDS:
-			
+				
 			 return Object.assign({}, state, {
-			        dirtyRecords: [{
+			        dirtyRecords: {
 			          	parentId: action.payload.parentId,
 						fieldId: action.payload.fieldId,
 						fieldName: action.payload.fieldName,
 						value: action.payload.value,
-			        }, ...state.dirtyRecords]
-			      })						
+			        }, ...state.dirtyRecords
+			      })	
+		case GENERATE_USER_ID:
+			return Object.assign({}, state, {
+				userId: action.id,
+			}, ...state)					
 		default:
 			return state;
 	}

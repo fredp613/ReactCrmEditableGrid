@@ -22,6 +22,7 @@ let initialState = {
 	isSearching: false,		
 	isGrouped: false,	
 	isEditing: false,
+	userId: 13,
 	
 }
 
