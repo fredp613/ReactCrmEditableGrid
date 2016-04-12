@@ -24,6 +24,7 @@ class Home extends React.Component {
       }
                           
   }
+
      
    handleClearBtnClick() {
       this.setState({isSearching:false})
@@ -47,6 +48,7 @@ class Home extends React.Component {
 
   handeCancelBtnClick() {      
        this.refs.searchInput.focus(); 
+        this.props.dispatch(TableDataActions.fetchCacheTableData())
        this.props.dispatch(TableDataActions.cancelDirtyRecords())
       
   }

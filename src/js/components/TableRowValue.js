@@ -71,7 +71,8 @@ export default class TableRow extends React.Component {
       		textDecoration: "none, !important", 
       		color: "black", 
       		paddingRight: "16px",
-    		paddingLeft: "16px",    		       		
+    		paddingLeft: "16px",     
+
     	}; 
 
     	const gkey = Date.now();

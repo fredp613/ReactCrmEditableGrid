@@ -5,11 +5,13 @@ import {
 	UPDATE_DIRTY_RECORDS,
 	FETCH_TABLE_DATA_ERROR,
 	RECEIVE_TABLE_DATA,
+	FETCH_CACHE_TABLE_DATA,
 	APPEND_DIRTY_RECORDS,
 	CANCEL_DIRTY_RECORDS,
 	GENERATE_USER_ID,
 
 } from "../actions/TableDataActions"
+import TableDataStore from "../stores/TableDataStore"
 
 				//.sort((a, b) => b.sortedValue - a.sortedValue)				
 
@@ -76,12 +78,20 @@ export default function tableDataReducer(state, action) {
 				isEditing: false,
 			}, ...state)
 		case CANCEL_DIRTY_RECORDS:
-			return Object.assign({}, state, {
+			return Object.assign({}, state, {	
+				...state.tableData,						
 				dirtyRecords: [],
 				isEditing: false,
-			}, ...state)			
+				tableDataGroup: [],
+			}, ...state);	
+					
 		case FETCH_TABLE_DATA_ERROR:
 			return state;
+		case FETCH_CACHE_TABLE_DATA:
+			console.log("hi-------------------------------")
+			return Object.assign({}, state, {				
+						tableData: action.payload.tableData,					
+					}, ...state);			
 		case RECEIVE_TABLE_DATA: 
 			return state;
 		case APPEND_DIRTY_RECORDS:

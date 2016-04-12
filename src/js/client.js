@@ -10,8 +10,7 @@ import TableRowDataStore from "./stores/TableRowDataStore"
 // import Archives from "./pages/Archives";
 // import Settings from "./pages/Settings";
 
-let initialState = {
-	headers: TableDataStore.getHeaders(),
+let initialState = {	
 	tableData: TableDataStore.getAll(),	
 	tableDataGroup: [],
 	lookupData: TableDataStore.lookupData,
