@@ -12,8 +12,7 @@ import {
 
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
-
-				//.sort((a, b) => b.sortedValue - a.sortedValue)				
+			
 
 export default function tableDataReducer(state, action) {	
 	switch (action.type) {	
@@ -78,12 +77,11 @@ export default function tableDataReducer(state, action) {
 				isEditing: false,
 			}, ...state)
 		case CANCEL_DIRTY_RECORDS:
-			return Object.assign({}, state, {	
-				...state.tableData,						
-				dirtyRecords: [],
-				isEditing: false,
-				tableDataGroup: [],
-			}, ...state);	
+			return Object.assign({}, state, {
+				tableData: state.tableData.map((data)=> {
+					return data.isDirty == true ? Object.assign({}, data, {isDirty:false, dirtyValue: ""}) : data
+				})
+			})
 					
 		case FETCH_TABLE_DATA_ERROR:
 			return state;
@@ -95,15 +93,12 @@ export default function tableDataReducer(state, action) {
 		case RECEIVE_TABLE_DATA: 
 			return state;
 		case APPEND_DIRTY_RECORDS:
-				
 			 return Object.assign({}, state, {
-			        dirtyRecords: [{
-			          	parentId: action.payload.parentId,
-						fieldId: action.payload.fieldId,
-						fieldName: action.payload.fieldName,
-						value: action.payload.value,
-			        }, ...state.dirtyRecords]
-			      })	
+		        tableData: state.tableData.map((data) => {			        	
+		          return data.groupValue === action.payload.crmRecordId ? 
+		            Object.assign({}, data, {isDirty: true, dirtyValue: action.payload.dirtyValue}) : data
+		        })
+		      })
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
 				userId: action.id,

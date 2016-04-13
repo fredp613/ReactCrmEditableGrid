@@ -39,15 +39,12 @@ export default class TableRow extends React.Component {
 
 	}
 
-	handleHover(e) {
-						
+	handleHover(e) {						
 		this.setState({isHovering:true})		
 	}
 
-	handleHoverDeactivate(e) {
-		// if (!this.props.dirtyRecords.length > 0) {
-			this.setState({isHovering:false})
-		// }		
+	handleHoverDeactivate(e) {		
+		this.setState({isHovering:false})	
 	}
 
 	render() {	
@@ -58,17 +55,12 @@ export default class TableRow extends React.Component {
 		}		
 		
 		var classForRow = "";
+		if (this.props.isDirty) {			
+				classForRow = "success"
+		}
 				
 		const rowValueComponents = this.props.values.map((child, index) => {
-			
-			const currentRecordIsDirty = this.props.dirtyRecords.filter((dirtyRecord)=>{					
-					return dirtyRecord.parentId == child.crmRecordId				
-			});
-						
-			if (currentRecordIsDirty.length > 0) {			
-				classForRow = "success"
-			}
-
+															
 			const fieldLabel = this.getLabelForValue(child.crmFieldType, child.crmFieldName, child.value)
 
 			if (child.crmFieldType == "lookup") {

@@ -10,16 +10,14 @@ let finalCreateStore = compose(
 
 export default function configureStore(
 	initialState = {
-		tableData: [],		
-		rowData: [],
-		headers: [],	
-		values: [],				
-		dirtyRecords: [],
-		tableData: [],						
-		sampledata: SampleData.tableDataFromTheOutside,		
-		lookupData: SampleData.lookupData,
-		twoOptionsData: SampleData.twoOptionsData,
-		modifiedTableData: [],
+		tableData: TableDataStore.getAll(),	
+		tableDataGroup: [],
+		lookupData: TableDataStore.lookupData,
+		twoOptionsData: TableDataStore.twoOptionsData,
+		searchText: "",		
+		isSearching: false,		
+		isGrouped: false,	
+		isEditing: false,
 		userId: 13,
 	}) {
 	return finalCreateStore(reducer, initialState);	

@@ -32,7 +32,6 @@ export function toggleQuickSort(sortFieldName, sortDirection, isGrouped) {
 			}					
 }
 
-
 export function updateDirtyRecords() {					
 		return {
 			type: UPDATE_DIRTY_RECORDS,		
@@ -45,14 +44,12 @@ export function cancelDirtyRecords() {
 		
 }
 
-export function appendDirtyRecords(parentId, fieldId, fieldName, value) {
+export function appendDirtyRecords(crmRecordId, dirtyValue) {
 	return {
 		type: APPEND_DIRTY_RECORDS,
 		payload: {
-			parentId: parentId,
-			fieldId: fieldId,
-			fieldName: fieldName,
-			value: value,
+			crmRecordId: crmRecordId,
+			dirtyValue: dirtyValue,			
 		}
 	}		
 }

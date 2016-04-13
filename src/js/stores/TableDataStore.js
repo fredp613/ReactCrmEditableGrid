@@ -55,7 +55,9 @@ class TableDataStore extends EventEmitter {
 	             sortedValue: "",
 	             sortFieldName: "",
 	             sortDirection: "desc",
-	             values: arrValues
+	             isDirty: false,
+	             dirtyValue: "",
+	             values: arrValues,
 	         })
 	      }
 	    });

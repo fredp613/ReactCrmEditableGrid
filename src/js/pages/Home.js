@@ -47,8 +47,7 @@ class Home extends React.Component {
   }
 
   handeCancelBtnClick() {      
-       this.refs.searchInput.focus(); 
-        this.props.dispatch(TableDataActions.fetchCacheTableData())
+       this.refs.searchInput.focus();         
        this.props.dispatch(TableDataActions.cancelDirtyRecords())
       
   }
@@ -132,7 +131,7 @@ class Home extends React.Component {
   ///////////////////////////////////////////////////////////////////////////////////////////////////    
     
     const TableHeaderComponents = headers.map((header,index) => { 
-        return <TableHeader key={index} {...header} dirtyRecords={dirtyRecords} {...this.props} />;            
+        return <TableHeader key={index} {...header} {...this.props} />;            
     }); 
 
    
@@ -158,7 +157,11 @@ class Home extends React.Component {
     var cancelBtn;    
     var saveBtn;
     var component;
-    if (this.props.dirtyRecords.length > 0) {          
+    
+    const hasDirty = this.props.tableData.filter((data)=>{      
+          return data.isDirty === true;        
+    })
+    if (hasDirty.length > 0) {              
       saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
       cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
     } 

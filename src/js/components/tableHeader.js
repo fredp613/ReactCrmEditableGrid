@@ -53,7 +53,7 @@ export default class TableHeader extends React.Component {
       		outline: "none",
       		cursor: "pointer"
     	};
-    	const { dirtyRecords } = this.props;
+    	
     	const { cancelButtonVisible } = this.state;
 
     	const sortClass = this.props.sortDirection == "asc" ? "up" : "down";
@@ -61,7 +61,15 @@ export default class TableHeader extends React.Component {
     	var sortIndicatorTag;
     	var advancedSearchTag;
     	var cancelGroupBtnTag;
-    	if (dirtyRecords.length == 0) {    		
+
+    	var hasDirty;
+	    this.props.tableData.map((data)=>{
+	      hasDirty = data.values.filter((value)=>{
+	          return value.isDirty  
+	      });
+	    })
+
+    	if (hasDirty.length == 0) {    		
     		headerNameTag = <a style={linkStyle} onClick={this.handleSort.bind(this,this.props.fieldName, false)}>{this.props.fieldName}</a>
     		
     		if (this.props.isSorted) {

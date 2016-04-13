@@ -21,18 +21,15 @@ export default class TableRow extends React.Component {
 		});
 	}
 
-	updateRecords() {
-		console.log("updating the following records: " + this.dirtyParentIds);
-	}
 
 	handleChange(e) {		
 		e.preventDefault();
 		const newValue = e.target.value;
-		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, this.props.fieldId, this.props.fieldName, newValue));
+		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, newValue));
 						
-		this.setState({
-			currentValue: e.target.value,									
-		});
+		// this.setState({
+		// 	currentValue: e.target.value,									
+		// });
 	}
 
 	getLabelForValue(fieldType, fieldName, value) {
@@ -84,7 +81,8 @@ export default class TableRow extends React.Component {
   		}  		    	
 
     	var field;
-    	const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
+    	// const currentVal = this.state.currentValue != null ? this.state.currentValue : this.props.value		    			
+    	const currentVal = this.props.isDirty == true ? this.props.dirtyValue : this.props.value
 		const currentValLabel = this.getLabelForValue(this.props.fieldType, this.props.fieldName, currentVal)
     	
     	   
