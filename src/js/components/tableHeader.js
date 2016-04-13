@@ -62,10 +62,12 @@ export default class TableHeader extends React.Component {
     	var advancedSearchTag;
     	var cancelGroupBtnTag;
 
-    	var hasDirty;
+    	var hasDirty = [];
 	    this.props.tableData.map((data)=>{
+	    	
 	      hasDirty = data.values.filter((value)=>{
-	          return value.isDirty  
+	      	
+	          return value.isDirty === true;  
 	      });
 	    })
 

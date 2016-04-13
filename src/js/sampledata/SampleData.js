@@ -10,6 +10,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "John",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "2x",
@@ -19,6 +21,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "Smith",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},					
 			{
 				id: "3x",
@@ -28,6 +32,8 @@ class SampleData {
 				sortDirection: "asc",
 				value: "0",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},		
 			{
 				id: "371",
@@ -37,6 +43,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "1",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},	
 			{
 				id: "382",
@@ -46,6 +54,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "140012",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},	
 			{
 				id: "5xxxx",
@@ -55,6 +65,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "Mike",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "6121213x",
@@ -64,6 +76,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "JonesU",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},		
 			{
 				id: "30fgfg",
@@ -73,6 +87,8 @@ class SampleData {
 				sortDirection: "asc",
 				value: "0",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},	
 			{
 				id: "3443565",
@@ -82,6 +98,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "0",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},	
 			{
 				id: "35xxxxxx",
@@ -91,6 +109,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "140012",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "7f1111",
@@ -100,6 +120,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "Mike",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "68",
@@ -109,6 +131,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "Jones",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "3132x32",
@@ -118,6 +142,8 @@ class SampleData {
 				sortDirection: "asc",
 				value: "1",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 			{
 				id: "32axsdfasdf",
@@ -127,6 +153,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "0",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},	
 			{
 				id: "33trxerefsdf",
@@ -136,6 +164,8 @@ class SampleData {
 				sortDirection: "desc",
 				value: "140013",
 				grouping: "",
+				isDirty: false,
+				dirtyValue: "",
 			},
 
 

@@ -54,9 +54,7 @@ class TableDataStore extends EventEmitter {
 	             groupValue:td.crmRecordId,
 	             sortedValue: "",
 	             sortFieldName: "",
-	             sortDirection: "desc",
-	             isDirty: false,
-	             dirtyValue: "",
+	             sortDirection: "desc",	             
 	             values: arrValues,
 	         })
 	      }
@@ -65,8 +63,10 @@ class TableDataStore extends EventEmitter {
 	    	bd.values.map((value)=>{
 	    		if (value.crmFieldName == this.newSortFieldName) {
 	    			bd.sortedValue = value.value;
-	    			bd.sortFieldName = value.crmFieldName;
+	    			bd.sortFieldName = value.crmFieldName;	    			
 	    		}
+	    		value.isDirty = false
+	            value.dirtyValue = ""
 	    	})
 	    	return bd;
 	    })

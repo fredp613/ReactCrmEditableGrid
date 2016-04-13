@@ -55,25 +55,26 @@ export default class TableRow extends React.Component {
 		}		
 		
 		var classForRow = "";
-		if (this.props.isDirty) {			
-				classForRow = "success"
-		}
 				
 		const rowValueComponents = this.props.values.map((child, index) => {
+
+			if (child.isDirty) {
+				classForRow = "success"
+			}
 															
 			const fieldLabel = this.getLabelForValue(child.crmFieldType, child.crmFieldName, child.value)
 
 			if (child.crmFieldType == "lookup") {
 				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
-				fieldType={child.crmFieldType} fieldName={child.crmFieldName} fieldLabel={fieldLabel} lookupData={this.props.lookupData} isHovering={this.state.isHovering} {...this.props} />
+				fieldType={child.crmFieldType} fieldName={child.crmFieldName} dirtyValue={child.dirtyValue} isDirty={child.isDirty} fieldLabel={fieldLabel} lookupData={this.props.lookupData} isHovering={this.state.isHovering} {...this.props} />
 			}
 			if (child.crmFieldType == "boolean") {
 				return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
 				fieldType={child.crmFieldType} fieldName={child.crmFieldName} 
-				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData} isHovering={this.state.isHovering} {...this.props} />	
+				fieldLabel={fieldLabel} twoOptionsData={this.props.twoOptionsData} dirtyValue={child.dirtyValue} isDirty={child.isDirty} isHovering={this.state.isHovering} {...this.props} />	
 			}
 			return <TableRowValue key={index} parentId={child.crmRecordId} fieldId={child.id} value={child.value} 
-			fieldType={child.crmFieldType} fieldLabel={fieldLabel} fieldName={child.crmFieldName} isHovering={this.state.isHovering} {...this.props}/>
+			fieldType={child.crmFieldType} fieldLabel={fieldLabel} dirtyValue={child.dirtyValue} isDirty={child.isDirty} fieldName={child.crmFieldName} isHovering={this.state.isHovering} {...this.props}/>
 		})
 		
 		return(			

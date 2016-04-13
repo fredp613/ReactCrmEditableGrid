@@ -44,12 +44,13 @@ export function cancelDirtyRecords() {
 		
 }
 
-export function appendDirtyRecords(crmRecordId, dirtyValue) {
+export function appendDirtyRecords(crmRecordId, dirtyValue, crmFieldName) {
 	return {
 		type: APPEND_DIRTY_RECORDS,
 		payload: {
 			crmRecordId: crmRecordId,
 			dirtyValue: dirtyValue,			
+			crmFieldName: crmFieldName,
 		}
 	}		
 }

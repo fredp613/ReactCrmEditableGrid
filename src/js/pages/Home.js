@@ -81,8 +81,7 @@ class Home extends React.Component {
     
     const { tableData } = this.props;
     const { rowValues } = this.props;
-    const { lookupData } = this.props;
-    const { dirtyRecords } = this.props;
+    const { lookupData } = this.props;    
     const { twoOptionsData } = this.props;
     const { isGrouped } = this.props;   
     const { isSearching } = this.state;
@@ -158,10 +157,18 @@ class Home extends React.Component {
     var saveBtn;
     var component;
     
-    const hasDirty = this.props.tableData.filter((data)=>{      
-          return data.isDirty === true;        
-    })
-    if (hasDirty.length > 0) {              
+    var hasDirty = false;
+    tableData.map((data)=>{
+        data.values.filter((value)=>{  
+            if (value.isDirty == true) {
+              hasDirty = true;
+            }  
+            return;
+        })
+    }) 
+      
+
+    if (hasDirty) {              
       saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
       cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
     } 
