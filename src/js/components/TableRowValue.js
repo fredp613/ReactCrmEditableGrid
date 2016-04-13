@@ -17,15 +17,10 @@ export default class TableRow extends React.Component {
 			
 	}
 
-
 	handleChange(e) {		
 		e.preventDefault();
 		const newValue = e.target.value;
-		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, newValue, this.props.fieldName));
-						
-		// this.setState({
-		// 	currentValue: this.props.dirtyValue,									
-		// });
+		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, newValue, this.props.fieldName));		
 	}
 
 	getLabelForValue(fieldType, fieldName, value) {
