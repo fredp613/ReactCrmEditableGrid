@@ -21,20 +21,17 @@ class Home extends React.Component {
         searchText: "",
         isSearching: "", 
         isEditing: false,                     
-      }
-                          
+      }                          
   }
 
   componentWillMount() {
     this.props.dispatch(TableDataActions.fetchData());    
   }
-
      
    handleClearBtnClick() {
       this.setState({isSearching:false})
       this.refs.searchInput.focus();
    } 
-
 
   handleSearchTextChange(e) { 
     
@@ -53,6 +50,7 @@ class Home extends React.Component {
   handeCancelBtnClick() {      
        this.refs.searchInput.focus();         
        this.props.dispatch(TableDataActions.cancelDirtyRecords())
+       this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
       
   }
 
@@ -61,6 +59,7 @@ class Home extends React.Component {
       // this.props.dispatch.updateDirtyRecords();      
       this.refs.searchInput.focus();          
       this.props.dispatch(TableDataActions.updateDirtyRecords())
+       this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
       
 
   }
@@ -81,15 +80,13 @@ class Home extends React.Component {
 
   render() {
 
-    const { searchText } = this.state;    
-    
+    const { searchText } = this.state;        
     const { tableData } = this.props;
     const { rowValues } = this.props;
     const { lookupData } = this.props;    
     const { twoOptionsData } = this.props;
     const { isGrouped } = this.props;   
     const { isSearching } = this.state;
-
     const closeIconActive = isSearching ? "glyphicon glyphicon-remove-circle close-icon-active" : "glyphicon glyphicon-remove-circle close-icon-inactive";
 
     if (this.props.dataLoadedFromServer && !this.props.dataLoadedFromServerError) {
@@ -108,8 +105,7 @@ class Home extends React.Component {
                 } else {
                     v.sortDirection = "desc"
                 }
-                v.isSorted = false;
-                
+                v.isSorted = false;                
               }
            })
            
@@ -137,11 +133,7 @@ class Home extends React.Component {
         
         const TableHeaderComponents = headers.map((header,index) => { 
             return <TableHeader key={index} {...header} {...this.props} />;            
-        }); 
-
-       
-        
-        
+        });  
        
         const textInputStyle = {
           paddingTop:"10px",      

@@ -9,12 +9,13 @@
 }
 
 .home-transition-enter.home-transition-enter-active {
-	opacity: 1;
+	opacity: 1;	
+	transition: opacity .2s linear;
 }
 
 .home-transition-leave {
 	opacity: 1;
-	transition: opacity .3s ease-in;
+	transition: opacity .2s linear;
 }
 
 .home-transition-leave.home-transition-leave-active {

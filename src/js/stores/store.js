@@ -19,8 +19,10 @@ let initialState = {
 	isGrouped: false,	
 	isEditing: false,	
 	dataLoadedFromServer: false,
-	dataLoadedFromServerWithError: false,
+	dataLoadedFromServerError: false,
 	userId: 13,
+	sortDirection: "desc",
+	sortFieldName: "",
 	
 }
 

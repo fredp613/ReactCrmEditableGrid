@@ -23,7 +23,9 @@ let initialState = {
 	dataLoadedFromServer: false,
 	dataLoadedFromServerError: false,
 	userId: 13,
-	
+	sortDirection: "desc",
+	sortFieldName: "",
+
 }
 
 let store = configureStore(initialState);

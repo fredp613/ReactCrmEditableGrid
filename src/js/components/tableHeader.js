@@ -7,26 +7,21 @@ export default class TableHeader extends React.Component {
 
 	constructor() {
 	    super();
-	    this.state = {
-	    	cancelButtonVisible: false,
-	    }
-           	      
+	 
+
 	}
 
 	componentWillMount() {
-		this.setState({
-			cancelButtonVisible: false,
-		})
+		
 	}
 
 	componentWillUnmount() {
-		this.setState({
-			cancelButtonVisible: false,
-		})
+		
 	}
 
 	
-	handleSort(fieldName, isGrouped) {		
+	handleSort(fieldName, isGrouped) {	
+
 		if (this.props.sortDirection == "asc") {				
 			this.props.dispatch(TableDataActions.toggleQuickSort(fieldName, "desc", isGrouped));
 		} else {					
@@ -34,14 +29,14 @@ export default class TableHeader extends React.Component {
 		}	
 		this.setState({
 			cancelButtonVisible: true,
-		})
-		
-		
+		})	
+		console.log(this.props)			
 	}	
 
 	handleCancelGroupBtnClick(fieldName) {
-		// this.setState({cancelGroupBtnActivated:false});
-		this.props.dispatch(TableDataActions.toggleQuickSort(fieldName, "desc", false));	
+		console.log(this.props.sortDirection)	
+		this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));	
+				
 		this.setState({
 			cancelButtonVisible: false,
 		})
@@ -53,8 +48,7 @@ export default class TableHeader extends React.Component {
       		outline: "none",
       		cursor: "pointer"
     	};
-    	
-    	const { cancelButtonVisible } = this.state;
+    	    
 
     	const sortClass = this.props.sortDirection == "asc" ? "up" : "down";
     	var headerNameTag; 
@@ -65,8 +59,7 @@ export default class TableHeader extends React.Component {
     	var hasDirty = [];
 	    this.props.tableData.map((data)=>{
 	    	
-	      hasDirty = data.values.filter((value)=>{
-	      	
+	      hasDirty = data.values.filter((value)=>{	      	
 	          return value.isDirty === true;  
 	      });
 	    })
@@ -82,11 +75,10 @@ export default class TableHeader extends React.Component {
     		advancedSearchTag = <a class='glyphicon glyphicon-filter' style={linkStyle} 
     		onClick={this.handleSort.bind(this,this.props.fieldName,true)} />
     		
-
     	} else {
     		headerNameTag = <span>{this.props.fieldName}</span>
     	}
-    	if (cancelButtonVisible) {
+    	if (this.props.isSorted && this.props.isGrouped) {
     			cancelGroupBtnTag = <a class='glyphicon glyphicon-remove' style={linkStyle} 
     			onClick={this.handleCancelGroupBtnClick.bind(this, this.props.fieldName)} />
     	}

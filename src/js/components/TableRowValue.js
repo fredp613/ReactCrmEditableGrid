@@ -20,7 +20,10 @@ export default class TableRow extends React.Component {
 	handleChange(e) {		
 		e.preventDefault();
 		const newValue = e.target.value;
-		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, newValue, this.props.fieldName));		
+		this.props.dispatch(TableDataActions.appendDirtyRecords(this.props.parentId, newValue, this.props.fieldName));	
+		if (this.props.isGrouped) {
+			this.props.dispatch(TableDataActions.groupTableData());			
+		}	
 	}
 
 	getLabelForValue(fieldType, fieldName, value) {

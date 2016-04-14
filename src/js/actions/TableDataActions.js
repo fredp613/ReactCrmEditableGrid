@@ -13,6 +13,7 @@ export const RECEIVE_TABLE_DATA = "RECEIVE_TABLE_DATA";
 export const APPEND_DIRTY_RECORDS = "APPEND_DIRTY_RECORDS";
 export const CANCEL_DIRTY_RECORDS = "CANCEL_DIRTY_RECORDS";
 export const GENERATE_USER_ID = "GENERATE_USER_ID";
+export const GROUP_TABLE_DATA = "GROUP_TABLE_DATA";
 	
 export function toggleEditingMode(isEditing) {
 	return {
@@ -22,6 +23,12 @@ export function toggleEditingMode(isEditing) {
 		}
 	}
 		
+}
+
+export function groupTableData() {
+	return {
+		type: GROUP_TABLE_DATA, 
+	}
 }
 
 export function toggleQuickSort(sortFieldName, sortDirection, isGrouped) {	
@@ -59,7 +66,7 @@ export function appendDirtyRecords(crmRecordId, dirtyValue, crmFieldName) {
 }
 
 export function fetchTableDataSuccess(data) {
-	const sampleData = TableDataStore.getAll(data)
+	const sampleData = TableDataStore.getAll(data)	
 	const lookupData = TableDataStore.getLookupData();
 	const twoOptionsData = TableDataStore.getTwoOptionsData();
 	 

@@ -9,6 +9,7 @@ import {
 	APPEND_DIRTY_RECORDS,
 	CANCEL_DIRTY_RECORDS,
 	GENERATE_USER_ID,
+	GROUP_TABLE_DATA,
 
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
@@ -49,8 +50,9 @@ export default function tableDataReducer(state, action) {
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
 					sortDirection: newSortDirection,	
+					sortFieldName: newSortFieldName,
 					isGrouped: false,	
-					tableDataGroup: [],					
+					tableDataGroup: [],			
 				}, ...state);
 			} else {
 				return Object.assign({}, state, {				
@@ -60,16 +62,23 @@ export default function tableDataReducer(state, action) {
 							})
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
-
-					sortDirection: newSortDirection,
 					tableDataGroup: _.toPairs(_.groupBy(state.tableData, "sortedValue")).map((td, index)=> {
 									td.id = index;
 									return Object.assign({}, td, {...state});
 					}),
+					sortDirection: newSortDirection,	
+					sortFieldName: newSortFieldName,
 					isGrouped: true,		
 				}, ...state);
 
 			}
+		case GROUP_TABLE_DATA:
+			return Object.assign({}, state, {									
+					tableDataGroup: _.toPairs(_.groupBy(state.tableData, "sortedValue")).map((td, index)=> {
+									td.id = index;
+									return Object.assign({}, td, {...state});
+					}),						
+				});
 									
 		case UPDATE_DIRTY_RECORDS:
 			return Object.assign({}, state, {
@@ -101,14 +110,25 @@ export default function tableDataReducer(state, action) {
 				dataLoadedFromServerError: true,
 			})
 			
-		case FETCH_TABLE_DATA:
-			
+		case FETCH_TABLE_DATA:	
+			const tdG = action.payload.tableData.map((td)=>{
+				
+				const newSortedValue = td.values.filter((val)=>{																				
+					return val.crmFieldName === td.sortFieldName
+				})
+
+				td.sortedValue = newSortedValue[0].value
+				return td;
+			})
+
 			return Object.assign({}, state, {				
-						tableData: action.payload.tableData,
+						tableData: tdG,
 						twoOptionsData: action.payload.twoOptionsData,
 						lookupData: action.payload.lookupData,					
 						dataLoadedFromServer: true,
 						dataLoadedFromServerError: false,
+						sortDirection: action.payload.tableData[0].sortDirection,	
+						sortFieldName: action.payload.tableData[0].sortFieldName,
 					});			
 		case RECEIVE_TABLE_DATA: 
 			return state;
