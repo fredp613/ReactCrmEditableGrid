@@ -1,11 +1,14 @@
 import dispatcher from "../dispatcher";
 import SampleData from "../sampledata/SampleData";
 import TableDataStore from '../stores/TableDataStore';
+import axios from "axios"
+
+
 export const TOGGLE_EDITING_MODE = "TOGGLE_EDITING_MODE";
 export const TOGGLE_QUICK_SORT = "TOGGLE_QUICK_SORT";
 export const UPDATE_DIRTY_RECORDS = "UPDATE_DIRTY_RECORDS";
 export const FETCH_TABLE_DATA_ERROR = "FETCH_TABLE_DATA_ERROR";
-export const FETCH_CACHE_TABLE_DATA = "FETCH_CACHE_TABLE_DATA";
+export const FETCH_TABLE_DATA = "FETCH_TABLE_DATA";
 export const RECEIVE_TABLE_DATA = "RECEIVE_TABLE_DATA";
 export const APPEND_DIRTY_RECORDS = "APPEND_DIRTY_RECORDS";
 export const CANCEL_DIRTY_RECORDS = "CANCEL_DIRTY_RECORDS";
@@ -55,15 +58,50 @@ export function appendDirtyRecords(crmRecordId, dirtyValue, crmFieldName) {
 	}		
 }
 
-export function fetchCacheTableData() {
-	const sampleData = TableDataStore.getAll();
-	
+export function fetchTableDataSuccess(data) {
+	const sampleData = TableDataStore.getAll(data)
+	const lookupData = TableDataStore.getLookupData();
+	const twoOptionsData = TableDataStore.getTwoOptionsData();
+	 
+
 	return {
-		type: FETCH_CACHE_TABLE_DATA,
+		type: FETCH_TABLE_DATA,
 		payload: {
 			tableData: sampleData,
+			lookupData: lookupData,
+			twoOptionsData: twoOptionsData,			
 		},
 	}
+}
+
+export function fetchTableDataError() {
+	return {
+		type: FETCH_TABLE_DATA_ERROR,		
+	}	
+}
+
+export function fetchData() {
+	return dispatch => {
+
+		axios.get('http://localhost:3000/')
+		  .then(function (response) {		    
+		  	
+		    dispatch(fetchTableDataSuccess(response.data));
+		  })
+		  .catch(function (response) {
+		    console.log(response);
+		    dispatch(fetchTableDataError());
+		  });
+		
+
+
+	    // setTimeout(() => {	      
+	      // dispatch(fetchCacheTableData());
+	    // }, 1500);
+	};
+}
+
+export function fetchTableData() {
 
 }
 

@@ -20,9 +20,13 @@ class Home extends React.Component {
       this.state = {
         searchText: "",
         isSearching: "", 
-        isEditing: false,              
+        isEditing: false,                     
       }
                           
+  }
+
+  componentWillMount() {
+    this.props.dispatch(TableDataActions.fetchData());    
   }
 
      
@@ -88,141 +92,155 @@ class Home extends React.Component {
 
     const closeIconActive = isSearching ? "glyphicon glyphicon-remove-circle close-icon-active" : "glyphicon glyphicon-remove-circle close-icon-inactive";
 
+    if (this.props.dataLoadedFromServer && !this.props.dataLoadedFromServerError) {
     
-    const headers  = _.uniqBy(this.props.tableData[0].values, "crmFieldName").map((v)=>{ 
+        const headers  = _.uniqBy(this.props.tableData[0].values, "crmFieldName").map((v)=>{ 
+           
+           v.fieldName = v.crmFieldName
+
+           this.props.tableData.map((data)=>{
+              if (data.sortFieldName == v.fieldName) {
+                v.sortDirection = data.sortDirection
+                v.isSorted = true;
+              } else {
+                if (data.sortDirection == "desc") {
+                    v.sortDirection = "asc"
+                } else {
+                    v.sortDirection = "desc"
+                }
+                v.isSorted = false;
+                
+              }
+           })
+           
+            return v  
+        });  
+        
+        
        
-       v.fieldName = v.crmFieldName
 
-       this.props.tableData.map((data)=>{
-          if (data.sortFieldName == v.fieldName) {
-            v.sortDirection = data.sortDirection
-            v.isSorted = true;
-          } else {
-            if (data.sortDirection == "desc") {
-                v.sortDirection = "asc"
-            } else {
-                v.sortDirection = "desc"
-            }
-            v.isSorted = false;
-            
-          }
-       })
+       ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
+
+        var TableBodyComponents;
+        if (isGrouped == true) {            
+          TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+
+               return (                    
+                        <TableBody key={index} headerCount={headers.length} dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
+                      )
+            })
+
+        } else {
+          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
+        }        
+      ///////////////////////////////////////////////////////////////////////////////////////////////////    
+        
+        const TableHeaderComponents = headers.map((header,index) => { 
+            return <TableHeader key={index} {...header} {...this.props} />;            
+        }); 
+
        
-        return v  
-    });       
-    
-   
+        
+        
+       
+        const textInputStyle = {
+          paddingTop:"10px",      
+          // marginLeft: "15px"
+        }
 
-   ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
+        const textContainerStyle = {      
+          marginTop: "10px",
+          marginRight: "10px",
+          
+        }
 
-    var TableBodyComponents;
-    if (isGrouped == true) {            
-      TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+        const buttonStyle = {  
+          marginTop: "10px",    
+          marginRight: "5px",            
+        }
+        
+        var cancelBtn;    
+        var saveBtn;
+        var component;
+        
+        var hasDirty = false;
+        tableData.map((data)=>{
+            data.values.filter((value)=>{  
+                if (value.isDirty == true) {
+                  hasDirty = true;
+                }  
+                return;
+            })
+        }) 
+          
 
-           return (                    
-                    <TableBody key={index}  dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
-                  )
-        })
+        if (hasDirty) {              
+          saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
+          cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
+        } 
 
-    } else {
-      TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} {...this.props} />                    
-    }        
-  ///////////////////////////////////////////////////////////////////////////////////////////////////    
-    
-    const TableHeaderComponents = headers.map((header,index) => { 
-        return <TableHeader key={index} {...header} {...this.props} />;            
-    }); 
+        return (
 
-   
-    
-    
-   
-    const textInputStyle = {
-      paddingTop:"10px",      
-      // marginLeft: "15px"
-    }
-
-    const textContainerStyle = {      
-      marginTop: "10px",
-      marginRight: "10px",
-      
-    }
-
-    const buttonStyle = {  
-      marginTop: "10px",    
-      marginRight: "5px",            
-    }
-    
-    var cancelBtn;    
-    var saveBtn;
-    var component;
-    
-    var hasDirty = false;
-    tableData.map((data)=>{
-        data.values.filter((value)=>{  
-            if (value.isDirty == true) {
-              hasDirty = true;
-            }  
-            return;
-        })
-    }) 
-      
-
-    if (hasDirty) {              
-      saveBtn = <button class="btn btn-success home-transition" onClick={this.handleSaveBtnClick.bind(this)} style={buttonStyle}>Save Changes</button>
-      cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
-    } 
-
-    return (
-
-        <div class="container-fluid">  
-          <strong>hi: {this.props.userId}</strong>
-          <button onClick={this.handleGenerateNewUserIdClick.bind(this)}>Generate</button>
-          <button onClick={this.handleGenerateNewUserIdClickAsync.bind(this)}>GenerateAsync</button>
-            <div class="row">                                                   
-                <form class="form-inline">
-                <div class="form-group">
-                   <div class="btn-group">                  
-                        <input type="text" ref="searchInput" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
-                        <button class={closeIconActive} type="reset" onClick={this.handleClearBtnClick.bind(this)}></button>
+            <div class="container-fluid">  
+              <strong>hi: {this.props.userId}</strong>
+              <button onClick={this.handleGenerateNewUserIdClick.bind(this)}>Generate</button>
+              <button onClick={this.handleGenerateNewUserIdClickAsync.bind(this)}>GenerateAsync</button>
+                <div class="row">                                                   
+                    <form class="form-inline">
+                    <div class="form-group">
+                       <div class="btn-group">                  
+                            <input type="text" ref="searchInput" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
+                            <button class={closeIconActive} type="reset" onClick={this.handleClearBtnClick.bind(this)}></button>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
+                    <div class="form-group">
+                      
+                      <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
+                            {cancelBtn}
+                            {saveBtn} 
+                       </ReactCSSTransitionGroup> 
+                     </div>
+                  </form>
+                                      
+                </div>    
+                <br/>
+
+                <div class='row'>        
                   
-                  <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                        {cancelBtn}
-                        {saveBtn} 
-                   </ReactCSSTransitionGroup> 
-                 </div>
-              </form>
-                                  
-            </div>    
-            <br/>
+                  <table class='table table-stripped table-hover'>         
+                  <thead>
+                    <tr>{TableHeaderComponents}</tr>            
+                  </thead>          
+                   <tfoot>
+                    <tr>{/*TableFooterComponents*/}</tr>            
+                  </tfoot>
 
-            <div class='row'>        
+                      {TableBodyComponents}
+
+                  
+                 
+                
+                </table>
+                
+
+                </div>
               
-              <table class='table table-stripped table-hover'>         
-              <thead>
-                <tr>{TableHeaderComponents}</tr>            
-              </thead>          
-               <tfoot>
-                <tr>{/*TableFooterComponents*/}</tr>            
-              </tfoot>
-
-                  {TableBodyComponents}
-
               
-             
-            
-            </table>
-            
+                
+          </div>
+        );
+      } else {
+        if (this.props.dataLoadedFromServerError) {
+          return (
+            <strong>ERROR LOADING DATA</strong>
 
-            </div>
-          
-          
-            
-      </div>
-    );
+          );  
+        }
+        return (
+          <strong>LOADING DATA</strong>
+
+        );
+      }
   }
 }
 

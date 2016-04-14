@@ -35,7 +35,8 @@ class TableDataStore extends EventEmitter {
 	}
 
 
-	getAll() {
+	getAll(data) {
+		this.sampledata = data;
 		//perfomr initial grouping here - by crm record Id
 		var bodyData = [];
 		var initialData = this.sampledata
@@ -127,26 +128,7 @@ class TableDataStore extends EventEmitter {
 
 	}
 		
-	getHeaders() {	
-		
-		if (this.newSortDirection != "") {	
-
-			var arr = this.sampledata.map((td)=>{
-						if (td.crmFieldName == this.newSortFieldName) {
-							td.sortDirection = this.newSortDirection
-						} else {
-							td.sortDirection = "desc";
-						}
-						return {key: td.id, headerName: td.crmFieldName, sortDirection:td.sortDirection}
-
-					 });					
-			return _.uniqBy(arr, "headerName");
-		}
-		
-		return _.uniqBy(this.sampledata, "crmFieldName").map((header)=> {
-			return {key: header.id, headerName: header.crmFieldName, sortDirection: header.sortDirection};
-		})				 
-	}
+	
 
 	getLookupData() {
 		return this.lookupData;

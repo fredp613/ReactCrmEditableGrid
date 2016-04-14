@@ -3,9 +3,9 @@ import {
 	TOGGLE_EDITING_MODE,
 	TOGGLE_QUICK_SORT,
 	UPDATE_DIRTY_RECORDS,
+	FETCH_TABLE_DATA,
 	FETCH_TABLE_DATA_ERROR,
-	RECEIVE_TABLE_DATA,
-	FETCH_CACHE_TABLE_DATA,
+	RECEIVE_TABLE_DATA,	
 	APPEND_DIRTY_RECORDS,
 	CANCEL_DIRTY_RECORDS,
 	GENERATE_USER_ID,
@@ -96,12 +96,20 @@ export default function tableDataReducer(state, action) {
 		        })
 		      })					
 		case FETCH_TABLE_DATA_ERROR:
-			return state;
-		case FETCH_CACHE_TABLE_DATA:
-			console.log("hi-------------------------------")
 			return Object.assign({}, state, {				
-						tableData: action.payload.tableData,					
-					}, ...state);			
+				dataLoadedFromServer: true,
+				dataLoadedFromServerError: true,
+			})
+			
+		case FETCH_TABLE_DATA:
+			
+			return Object.assign({}, state, {				
+						tableData: action.payload.tableData,
+						twoOptionsData: action.payload.twoOptionsData,
+						lookupData: action.payload.lookupData,					
+						dataLoadedFromServer: true,
+						dataLoadedFromServerError: false,
+					});			
 		case RECEIVE_TABLE_DATA: 
 			return state;
 		case APPEND_DIRTY_RECORDS:

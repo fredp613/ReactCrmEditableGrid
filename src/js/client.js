@@ -11,14 +11,17 @@ import TableRowDataStore from "./stores/TableRowDataStore"
 // import Settings from "./pages/Settings";
 
 let initialState = {	
-	tableData: TableDataStore.getAll(),	
-	tableDataGroup: [],
-	lookupData: TableDataStore.lookupData,
-	twoOptionsData: TableDataStore.twoOptionsData,
+	
+	tableData: [],
+	lookupData: [],
+	twoOptionsData: [],
+	tableDataGroup: [],		
 	searchText: "",		
 	isSearching: false,		
 	isGrouped: false,	
-	isEditing: false,
+	isEditing: false,	
+	dataLoadedFromServer: false,
+	dataLoadedFromServerError: false,
 	userId: 13,
 	
 }

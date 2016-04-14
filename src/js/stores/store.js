@@ -8,17 +8,22 @@ let finalCreateStore = compose(
 	applyMiddleware(thunk, logger())
 )(createStore);
 
-export default function configureStore(
-	initialState = {
-		tableData: TableDataStore.getAll(),	
-		tableDataGroup: [],
-		lookupData: TableDataStore.lookupData,
-		twoOptionsData: TableDataStore.twoOptionsData,
-		searchText: "",		
-		isSearching: false,		
-		isGrouped: false,	
-		isEditing: false,
-		userId: 13,
-	}) {
+let initialState = {	
+	
+	tableData: [],
+	lookupData: [],
+	twoOptionsData: [],
+	tableDataGroup: [],		
+	searchText: "",		
+	isSearching: false,		
+	isGrouped: false,	
+	isEditing: false,	
+	dataLoadedFromServer: false,
+	dataLoadedFromServerWithError: false,
+	userId: 13,
+	
+}
+
+export default function configureStore(initialState) {
 	return finalCreateStore(reducer, initialState);	
 }
