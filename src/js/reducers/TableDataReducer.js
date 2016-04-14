@@ -10,6 +10,8 @@ import {
 	CANCEL_DIRTY_RECORDS,
 	GENERATE_USER_ID,
 	GROUP_TABLE_DATA,
+	SELECT_PAGE_NUMBER,
+	MOVE_PAGE,
 
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
@@ -150,7 +152,17 @@ export default function tableDataReducer(state, action) {
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
 				userId: action.id,
-			}, ...state.userId)				
+			}, ...state.userId)	
+
+		case SELECT_PAGE_NUMBER:
+			return Object.assign({}, state, {
+				currentPage: parseInt(action.payload.pageNumber),
+			}, ...state.currentPage)
+		case MOVE_PAGE:
+			const currentPage = action.payload.direction ? (state.currentPage + 1) : (state.currentPage - 1)
+			return Object.assign({}, state, {
+				currentPage: currentPage,
+			}, ...state.currentPage)
 		default:
 			return state;
 	}

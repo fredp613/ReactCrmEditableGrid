@@ -25,6 +25,9 @@ let initialState = {
 	userId: 13,
 	sortDirection: "desc",
 	sortFieldName: "",
+	currentPage: 1,
+	numberOfPages: 15,
+	recordsPerPage: 2,
 
 }
 

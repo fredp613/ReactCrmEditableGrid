@@ -8,23 +8,24 @@ let finalCreateStore = compose(
 	applyMiddleware(thunk, logger())
 )(createStore);
 
-let initialState = {	
+// let initialState = {	
 	
-	tableData: [],
-	lookupData: [],
-	twoOptionsData: [],
-	tableDataGroup: [],		
-	searchText: "",		
-	isSearching: false,		
-	isGrouped: false,	
-	isEditing: false,	
-	dataLoadedFromServer: false,
-	dataLoadedFromServerError: false,
-	userId: 13,
-	sortDirection: "desc",
-	sortFieldName: "",
-	
-}
+// 	tableData: [],
+// 	lookupData: [],
+// 	twoOptionsData: [],
+// 	tableDataGroup: [],		
+// 	searchText: "",		
+// 	isSearching: false,		
+// 	isGrouped: false,	
+// 	isEditing: false,	
+// 	dataLoadedFromServer: false,
+// 	dataLoadedFromServerError: false,
+// 	userId: 13,
+// 	sortDirection: "desc",
+// 	sortFieldName: "",
+// 	currentPage: 1,	
+// 	numberOfPages: 0,
+// }
 
 export default function configureStore(initialState) {
 	return finalCreateStore(reducer, initialState);	

@@ -14,6 +14,9 @@ export const APPEND_DIRTY_RECORDS = "APPEND_DIRTY_RECORDS";
 export const CANCEL_DIRTY_RECORDS = "CANCEL_DIRTY_RECORDS";
 export const GENERATE_USER_ID = "GENERATE_USER_ID";
 export const GROUP_TABLE_DATA = "GROUP_TABLE_DATA";
+export const MOVE_PAGE = "MOVE_PAGE";
+export const SELECT_PAGE_NUMBER = "SELECT_PAGE_NUMBER";
+
 	
 export function toggleEditingMode(isEditing) {
 	return {
@@ -141,6 +144,24 @@ export function generateUserIdAsync() {
 	      dispatch(generateUserId());
 	    }, 2000);
 	  };
+}
+
+export function selectPageNumber(pageNumber) {
+	return {
+		type: SELECT_PAGE_NUMBER,
+		payload: {
+			pageNumber: pageNumber,			
+		},
+	}
+}
+
+export function movePage(direction) {
+	return {
+		type: MOVE_PAGE,
+		payload: {
+			direction: direction,
+		},
+	}
 }
 
 

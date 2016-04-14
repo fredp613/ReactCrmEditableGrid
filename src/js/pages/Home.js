@@ -6,12 +6,14 @@ import * as TableRowDataActions from "../actions/TableRowDataActions";
 import TableHeader from "../components/tableHeader";
 import TableFooter from "../components/tableFooter";
 import TableBody from "../components/tableBody";
+import Pager from "../components/Pager";
 import lodash from "lodash";
 import ReactTransitionGroup  from "react-addons-transition-group"
 import ReactCSSTransitionGroup  from "react-addons-css-transition-group"
 import { connect } from 'react-redux';
 import css from "../../css/app.css";
-import _ from "lodash"
+import _ from "lodash";
+
  
 class Home extends React.Component {
   
@@ -78,6 +80,8 @@ class Home extends React.Component {
 
   }
 
+ 
+
   render() {
 
     const { searchText } = this.state;        
@@ -129,11 +133,19 @@ class Home extends React.Component {
         } else {
           TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
         }        
-      ///////////////////////////////////////////////////////////////////////////////////////////////////    
-        
+      ///////////////////////////////////////////////////////////////////////////////////////////////////          
+
         const TableHeaderComponents = headers.map((header,index) => { 
             return <TableHeader key={index} {...header} {...this.props} />;            
         });  
+        console.log(this.props.numberOfPages)
+        var PagerComponents = [];
+
+        
+      
+            
+        
+             
        
         const textInputStyle = {
           paddingTop:"10px",      
@@ -209,17 +221,18 @@ class Home extends React.Component {
 
                       {TableBodyComponents}
 
-                  
-                 
-                
-                </table>
-                
-
+                </table>              
                 </div>
               
-              
+             
+      
+               <Pager key="32432432" {...this.props} />
+        
+            
                 
           </div>
+
+
         );
       } else {
         if (this.props.dataLoadedFromServerError) {
