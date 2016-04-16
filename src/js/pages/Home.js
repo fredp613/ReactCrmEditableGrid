@@ -80,8 +80,6 @@ class Home extends React.Component {
 
   }
 
- 
-
   render() {
 
     const { searchText } = this.state;        
@@ -120,33 +118,32 @@ class Home extends React.Component {
        
 
        ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
+       
+       let pageData = this.props.tableData 
+       let offset = this.props.currentPage - 1
+       let itemsPerPage = (this.props.recordsPerPage);
+       console.log(pageData.slice(offset, itemsPerPage))
+       
+       console.log(pageData)
 
         var TableBodyComponents;
         if (isGrouped == true) {            
-          TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+            TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
 
                return (                    
                         <TableBody key={index} headerCount={headers.length} dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
                       )
             })
-
         } else {
-          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
+          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={pageData.slice(offset, itemsPerPage)} headerCount={headers.length} {...this.props} />                    
         }        
       ///////////////////////////////////////////////////////////////////////////////////////////////////          
 
         const TableHeaderComponents = headers.map((header,index) => { 
             return <TableHeader key={index} {...header} {...this.props} />;            
-        });  
-        console.log(this.props.numberOfPages)
+        });          
         var PagerComponents = [];
 
-        
-      
-            
-        
-             
-       
         const textInputStyle = {
           paddingTop:"10px",      
           // marginLeft: "15px"

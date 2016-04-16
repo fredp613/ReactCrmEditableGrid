@@ -21,7 +21,7 @@ export default class Pager extends React.Component {
 
     var lis = [];
     for (var i=1;i<=this.props.numberOfPages;i++) {
-      console.log(this.props.currentPage + " - " + i)
+      
       if (this.props.currentPage === i) {
        lis.push(<li key={i} class="active"><a href="#" onClick={this.handlePageNumberClick.bind(this)}>{i}</a></li>);
       } else {
@@ -30,7 +30,7 @@ export default class Pager extends React.Component {
 
       
     }
-    console.log(lis)
+    
 
     var visiblePrev = {
       display:(this.props.currentPage === 1 ? "none" : ""),
