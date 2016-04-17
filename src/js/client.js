@@ -26,7 +26,7 @@ let initialState = {
 	sortDirection: "desc",
 	sortFieldName: "",
 	currentPage: 1,	
-	recordsPerPage: 1,
+	recordsPerPage: 10,
 
 }
 

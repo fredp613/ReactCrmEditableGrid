@@ -12,6 +12,7 @@ import {
 	GROUP_TABLE_DATA,
 	SELECT_PAGE_NUMBER,
 	MOVE_PAGE,
+	SET_RECORDS_PER_PAGE,
 
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
@@ -157,12 +158,19 @@ export default function tableDataReducer(state, action) {
 		case SELECT_PAGE_NUMBER:
 			return Object.assign({}, state, {
 				currentPage: parseInt(action.payload.pageNumber),
-			}, ...state.currentPage)
-		case MOVE_PAGE:
+			})
+		case MOVE_PAGE:	
 			const currentPage = action.payload.direction ? (state.currentPage + 1) : (state.currentPage - 1)
 			return Object.assign({}, state, {
-				currentPage: currentPage,
-			}, ...state.currentPage)
+				currentPage: parseInt(currentPage),
+			})	
+
+		case SET_RECORDS_PER_PAGE:
+			return Object.assign({}, state, {
+				currentPage: 1,
+				recordsPerPage: parseInt(action.payload.recordsPerPage),				
+			})
+			
 		default:
 			return state;
 	}

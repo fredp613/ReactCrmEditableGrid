@@ -13,7 +13,7 @@ export default class TableBody extends React.Component {
 	}
 
 	handleGroupingClick() {
-		console.log("show or hide child rows");
+		
 		if (!this.state.groupShowing) {
 			this.setState({
 				groupShowing: true,
@@ -81,9 +81,7 @@ export default class TableBody extends React.Component {
        	let offset =  (this.props.currentPage - 1) * this.props.recordsPerPage
        	let itemsPerPage = this.props.recordsPerPage;              	
        	let pagedData = sortedData.slice(offset, (itemsPerPage + offset));
-
-       	console.log(offset + " " + (itemsPerPage + offset))
-		
+       			
 		const rows = pagedData.map((data, index, arr)=> {       		  			
 			return  (<TableRow key={index}  
 		   		{...this.props} isVisible={this.state.groupShowing} {...data}  />)					   	 		   							   		   		

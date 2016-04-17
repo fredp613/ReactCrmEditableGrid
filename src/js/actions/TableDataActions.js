@@ -16,6 +16,7 @@ export const GENERATE_USER_ID = "GENERATE_USER_ID";
 export const GROUP_TABLE_DATA = "GROUP_TABLE_DATA";
 export const MOVE_PAGE = "MOVE_PAGE";
 export const SELECT_PAGE_NUMBER = "SELECT_PAGE_NUMBER";
+export const SET_RECORDS_PER_PAGE = "SET_RECORDS_PER_PAGE";
 
 	
 export function toggleEditingMode(isEditing) {
@@ -161,6 +162,15 @@ export function movePage(direction) {
 		payload: {
 			direction: direction,
 		},
+	}
+}
+
+export function setRecordsPerPage(number) {
+	return {
+		type: SET_RECORDS_PER_PAGE,
+		payload: {
+			recordsPerPage: number,
+		}
 	}
 }
 

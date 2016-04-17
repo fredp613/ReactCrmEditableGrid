@@ -80,6 +80,11 @@ class Home extends React.Component {
 
   }
 
+  handleRecordsPerPageChange(e) {
+    this.props.dispatch(TableDataActions.setRecordsPerPage(e.target.value))
+    this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
+  }
+
   render() {
 
     const { searchText } = this.state;        
@@ -120,23 +125,27 @@ class Home extends React.Component {
        ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
        
 
-        var TableBodyComponents;
-        if (isGrouped == true) {            
-            TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+        var TableBodyComponents = "";
 
-               return (                    
-                        <TableBody key={index} headerCount={headers.length} dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
-                      )
-            })
+        
+        if (isGrouped == true) {            
+          TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+
+             return (                    
+                      <TableBody key={index} headerCount={headers.length} dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
+                    )
+          })
         } else {
-          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
-        }        
+          TableBodyComponents = <TableBody key="16575674565467" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
+        }   
+    
+              
       ///////////////////////////////////////////////////////////////////////////////////////////////////          
 
         const TableHeaderComponents = headers.map((header,index) => { 
             return <TableHeader key={index} {...header} {...this.props} />;            
         });          
-        var PagerComponents = [];
+        
 
         const textInputStyle = {
           paddingTop:"10px",      
@@ -188,22 +197,37 @@ class Home extends React.Component {
               <button onClick={this.handleGenerateNewUserIdClick.bind(this)}>Generate</button>
               <button onClick={this.handleGenerateNewUserIdClickAsync.bind(this)}>GenerateAsync</button>
                 <div class="row">                                                   
-                    <form class="form-inline">
-                    <div class="form-group">
+                    
+  
+                    <div class="col-md-2">
                        <div class="btn-group">                  
                             <input type="text" ref="searchInput" value={this.state.searchText} class="form-control" onChange={this.handleSearchTextChange.bind(this)} placeholder="Search" style={textContainerStyle}></input>
                             <button class={closeIconActive} type="reset" onClick={this.handleClearBtnClick.bind(this)}></button>
                         </div>
                     </div>
-                    <div class="form-group">
-                      
+                    
+                    <div class="col-md-2"> 
                       <ReactCSSTransitionGroup transitionName="home-transition" transitionEnterTimeout={300} transitionLeaveTimeout={300}>
-                            {cancelBtn}
+                          {cancelBtn}
                             {saveBtn} 
-                       </ReactCSSTransitionGroup> 
-                     </div>
-                  </form>
-                                      
+                      </ReactCSSTransitionGroup> 
+                    </div>
+                    
+                    <div class="col-md-2 col-md-offset-7">
+                        Records per page
+                        <select defaultValue={this.props.recordsPerPage} class="form-control" onChange={this.handleRecordsPerPageChange.bind(this)}>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                        </select>
+                    </div>
+                                                      
                 </div>    
                 <br/>
 
@@ -223,10 +247,7 @@ class Home extends React.Component {
                 </div>
               
              {PagerComponent}
-              
-                       
-            
-                
+                   
           </div>
 
 

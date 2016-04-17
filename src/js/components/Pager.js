@@ -15,12 +15,19 @@ export default class Pager extends React.Component {
 
   handleDirectionButtonClick(direction, e) {    
      e.preventDefault();
-     this.props.dispatch(TableDataActions.movePage(direction))
+
+     if (direction === true && (this.props.currentPage === this.getNumberOfPages()) ) {       
+          return false;          
+     }
+
+     if (direction === false && (this.props.currentPage === 1)) {        
+          return false;        
+     }
+     this.props.dispatch(TableDataActions.movePage(direction));
+         
   }
-	render() {
 
-    // const numberOfPages = (this.props.tableData.length + 1) > this.props.recordsPerPage ? (((this.props.tableData.length + 1) / this.props.recordsPerPage)) : 1
-
+  getNumberOfPages() {
     var remainder = this.props.tableData.length % this.props.recordsPerPage;
     var numberOfPages = 0;
     if (remainder == 0){    
@@ -28,6 +35,15 @@ export default class Pager extends React.Component {
     } else {    
       numberOfPages = (this.props.tableData.length / this.props.recordsPerPage) + 1
     }
+    return numberOfPages    
+  }
+
+
+	render() {
+
+    // const numberOfPages = (this.props.tableData.length + 1) > this.props.recordsPerPage ? (((this.props.tableData.length + 1) / this.props.recordsPerPage)) : 1
+
+    const numberOfPages = this.getNumberOfPages();
     
     var lis = [];
     for (var i=1;i<=numberOfPages;i++) {
@@ -43,12 +59,23 @@ export default class Pager extends React.Component {
     
 
     var visiblePrev = {
-      display:(this.props.currentPage === 1 ? "none" : ""),
+    //   display:(this.props.currentPage === 1 ? "none" : ""),
     }
 
      var visibleLast = {
-      display:(this.props.currentPage === this.props.numberOfPages ? "none" : ""),
+      // display:(this.props.currentPage === numberOfPages ? "none" : ""),
     }
+
+
+    // var disablePrev = {
+    //   display:(this.props.currentPage === 1 ? "none" : ""),
+    // }
+
+    //  var disableLast = {
+    //   display:(this.props.currentPage === numberOfPages ? "none" : ""),
+    // }
+
+
 
 		return(
 			 <nav span="10">
@@ -62,7 +89,7 @@ export default class Pager extends React.Component {
 
               {lis}
 
-              <li style={visibleLast}>
+              <li style={visibleLast} >
                 <a href="#" aria-label="Next" onClick={this.handleDirectionButtonClick.bind(this, true)}>
                   <span aria-hidden="true">&raquo;</span>
                 </a>
