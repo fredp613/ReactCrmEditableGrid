@@ -19,8 +19,18 @@ export default class Pager extends React.Component {
   }
 	render() {
 
+    // const numberOfPages = (this.props.tableData.length + 1) > this.props.recordsPerPage ? (((this.props.tableData.length + 1) / this.props.recordsPerPage)) : 1
+
+    var remainder = this.props.tableData.length % this.props.recordsPerPage;
+    var numberOfPages = 0;
+    if (remainder == 0){    
+      numberOfPages = this.props.tableData.length / this.props.recordsPerPage; 
+    } else {    
+      numberOfPages = (this.props.tableData.length / this.props.recordsPerPage) + 1
+    }
+    
     var lis = [];
-    for (var i=1;i<=this.props.numberOfPages;i++) {
+    for (var i=1;i<=numberOfPages;i++) {
       
       if (this.props.currentPage === i) {
        lis.push(<li key={i} class="active"><a href="#" onClick={this.handlePageNumberClick.bind(this)}>{i}</a></li>);

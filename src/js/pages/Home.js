@@ -119,12 +119,6 @@ class Home extends React.Component {
 
        ///////THIS HERE IS VERY IMPORTANT/////////////////////////////////////////////////////////
        
-       let pageData = this.props.tableData 
-       let offset = this.props.currentPage - 1
-       let itemsPerPage = (this.props.recordsPerPage);
-       console.log(pageData.slice(offset, itemsPerPage))
-       
-       console.log(pageData)
 
         var TableBodyComponents;
         if (isGrouped == true) {            
@@ -135,7 +129,7 @@ class Home extends React.Component {
                       )
             })
         } else {
-          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={pageData.slice(offset, itemsPerPage)} headerCount={headers.length} {...this.props} />                    
+          TableBodyComponents = <TableBody key="1" isGrouped={false} dataForTable={tableData} headerCount={headers.length} {...this.props} />                    
         }        
       ///////////////////////////////////////////////////////////////////////////////////////////////////          
 
@@ -180,6 +174,13 @@ class Home extends React.Component {
           cancelBtn = <button class="btn btn-danger home-transition" onClick={this.handeCancelBtnClick.bind(this)} style={buttonStyle}>Cancel</button>      
         } 
 
+        var PagerComponent = "";
+
+        if ((this.props.tableData.length / this.props.recordsPerPage) > 1) {
+          PagerComponent = <Pager key="32432432" {...this.props} />
+        }
+
+
         return (
 
             <div class="container-fluid">  
@@ -221,10 +222,9 @@ class Home extends React.Component {
                 </table>              
                 </div>
               
-             
-      
-               <Pager key="32432432" {...this.props} />
-        
+             {PagerComponent}
+              
+                       
             
                 
           </div>

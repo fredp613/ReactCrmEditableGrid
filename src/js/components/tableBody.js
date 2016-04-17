@@ -76,9 +76,15 @@ export default class TableBody extends React.Component {
 			}			
 		}); 
 		
-		 
 		
-		const rows = sortedData.map((data, index, arr)=> {       		  			
+
+       	let offset =  (this.props.currentPage - 1) * this.props.recordsPerPage
+       	let itemsPerPage = this.props.recordsPerPage;              	
+       	let pagedData = sortedData.slice(offset, (itemsPerPage + offset));
+
+       	console.log(offset + " " + (itemsPerPage + offset))
+		
+		const rows = pagedData.map((data, index, arr)=> {       		  			
 			return  (<TableRow key={index}  
 		   		{...this.props} isVisible={this.state.groupShowing} {...data}  />)					   	 		   							   		   		
 		})
