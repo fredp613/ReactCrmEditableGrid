@@ -13,6 +13,7 @@ import {
 	SELECT_PAGE_NUMBER,
 	MOVE_PAGE,
 	SET_RECORDS_PER_PAGE,
+	PAGED_DATA,
 
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
@@ -25,24 +26,21 @@ export default function tableDataReducer(state, action) {
 				isEditing: action.payload.isEditing
 			}, ...state.isEditing)
 
+		case PAGED_DATA:
+			let offset1 =  (state.currentPage - 1) * state.recordsPerPage
+	       	let itemsPerPage1 = state.recordsPerPage;              	
+	       	//let pagedData = state.tableData.slice(offset, (itemsPerPage + offset));
+	       	return Object.assign({}, state, {
+	       		tableData : state.tableData.slice(offset1, (itemsPerPage1 + offset1)),
+	       	}, ...state)
+
+
 		case TOGGLE_QUICK_SORT:
 			const newSortFieldName = action.payload.sortFieldName;
 			const newSortDirection = action.payload.sortDirection;	
 			const isGrouped = action.payload.isGrouped;	
 
-			const tableDataForGroup = state.tableData.map((td)=>{
-				td.sortDirection = newSortDirection
-				td.sortFieldName = newSortFieldName
 
-				const newSortedValue = td.values.filter((val)=>{																				
-					return val.crmFieldName === newSortFieldName
-				})
-
-				td.sortedValue = newSortedValue[0].value
-				return td;
-			})
-
-			
 			if (!isGrouped) {
 
 				return Object.assign({}, state, {				
@@ -114,6 +112,22 @@ export default function tableDataReducer(state, action) {
 			})
 			
 		case FETCH_TABLE_DATA:	
+
+			const remainder = action.payload.tableData.length % state.recordsPerPage;	
+			var num = 1;	
+		    if (remainder == 0){    
+		      num = action.payload.tableData.length / state.recordsPerPage; 
+		    } else {    
+		      num = (action.payload.tableData.length / state.recordsPerPage) + 1
+		    }
+
+		    const numberOfRecords = action.payload.tableData.length;
+			    
+
+
+			const offset =  (state.currentPage - 1) * state.recordsPerPage
+       		const itemsPerPage = state.recordsPerPage;              	
+       		
 			const tdG = action.payload.tableData.map((td)=>{
 				
 				const newSortedValue = td.values.filter((val)=>{																				
@@ -124,14 +138,20 @@ export default function tableDataReducer(state, action) {
 				return td;
 			})
 
+			const tableSettings = action.payload.tableData[0]
+
+		
 			return Object.assign({}, state, {				
-						tableData: tdG,
+						tableData: tdG.slice(offset, (itemsPerPage + offset)),
+						originalTableDataCount: numberOfRecords,
+						originalTableData: action.payload.tableData,
 						twoOptionsData: action.payload.twoOptionsData,
 						lookupData: action.payload.lookupData,					
 						dataLoadedFromServer: true,
 						dataLoadedFromServerError: false,
-						sortDirection: action.payload.tableData[0].sortDirection,	
-						sortFieldName: action.payload.tableData[0].sortFieldName,
+						sortDirection: tableSettings.sortDirection,	
+						sortFieldName: tableSettings.sortFieldName,
+						numberOfPages: num,
 					});			
 		case RECEIVE_TABLE_DATA: 
 			return state;
@@ -156,20 +176,69 @@ export default function tableDataReducer(state, action) {
 			}, ...state.userId)	
 
 		case SELECT_PAGE_NUMBER:
+
+
+			const offset4 =  (parseInt(action.payload.pageNumber) - 1) * state.recordsPerPage
+       		const itemsPerPage4 = state.recordsPerPage;              	
+       		
+			const tdG3 = state.originalTableData.map((td)=>{
+				
+				const newSortedValue = td.values.filter((val)=>{																				
+					return val.crmFieldName === td.sortFieldName
+				})
+
+				td.sortedValue = newSortedValue[0].value
+				return td;
+			})
+
 			return Object.assign({}, state, {
+				tableData: tdG3.slice(offset4, (itemsPerPage4 + offset4)),
 				currentPage: parseInt(action.payload.pageNumber),
 			})
 		case MOVE_PAGE:	
+
 			const currentPage = action.payload.direction ? (state.currentPage + 1) : (state.currentPage - 1)
+
+			const offset3 =  (parseInt(currentPage) - 1) * state.recordsPerPage
+       		const itemsPerPage3 = state.recordsPerPage;              	
+       		
+			const tdG2 = state.originalTableData.map((td)=>{
+				
+				const newSortedValue = td.values.filter((val)=>{																				
+					return val.crmFieldName === td.sortFieldName
+				})
+
+				td.sortedValue = newSortedValue[0].value
+				return td;
+			})
+
+
+			
 			return Object.assign({}, state, {
+				tableData: tdG2.slice(offset3, (itemsPerPage3 + offset3)),
 				currentPage: parseInt(currentPage),
 			})	
 
 		case SET_RECORDS_PER_PAGE:
+
+			const offset2 =  (state.currentPage - 1) * state.recordsPerPage
+       		const itemsPerPage2 = parseInt(action.payload.recordsPerPage);              	
+       		
+			const tdG1 = state.originalTableData.map((td)=>{
+				
+				const newSortedValue = td.values.filter((val)=>{																				
+					return val.crmFieldName === td.sortFieldName
+				})
+
+				td.sortedValue = newSortedValue[0].value
+				return td;
+			})
+
 			return Object.assign({}, state, {
+				tableData: tdG1.slice(offset2, (itemsPerPage2 + offset2)),
 				currentPage: 1,
 				recordsPerPage: parseInt(action.payload.recordsPerPage),				
-			})
+			}, ...state)
 			
 		default:
 			return state;

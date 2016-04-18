@@ -9,14 +9,14 @@ export default class Pager extends React.Component {
 
 	handlePageNumberClick(e) {
       e.preventDefault();  
-      const pageNumber = e.target.text;
+      const pageNumber = e.target.text;   
       this.props.dispatch(TableDataActions.selectPageNumber(pageNumber)); 
   	}
 
   handleDirectionButtonClick(direction, e) {    
      e.preventDefault();
 
-     if (direction === true && (this.props.currentPage === this.getNumberOfPages()) ) {       
+     if (direction === true && (this.props.currentPage === this.props.numberOfRecords) ) {       
           return false;          
      }
 
@@ -27,23 +27,12 @@ export default class Pager extends React.Component {
          
   }
 
-  getNumberOfPages() {
-    var remainder = this.props.tableData.length % this.props.recordsPerPage;
-    var numberOfPages = 0;
-    if (remainder == 0){    
-      numberOfPages = this.props.tableData.length / this.props.recordsPerPage; 
-    } else {    
-      numberOfPages = (this.props.tableData.length / this.props.recordsPerPage) + 1
-    }
-    return numberOfPages    
-  }
-
-
+ 
 	render() {
 
     // const numberOfPages = (this.props.tableData.length + 1) > this.props.recordsPerPage ? (((this.props.tableData.length + 1) / this.props.recordsPerPage)) : 1
 
-    const numberOfPages = this.getNumberOfPages();
+    const numberOfPages = this.props.numberOfPages //this.getNumberOfPages();
     
     var lis = [];
     for (var i=1;i<=numberOfPages;i++) {

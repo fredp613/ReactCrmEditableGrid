@@ -21,19 +21,21 @@ class Home extends React.Component {
       super();
       this.state = {
         searchText: "",
-        isSearching: "", 
+        isSearching: false, 
         isEditing: false,                     
       }                          
   }
 
   componentWillMount() {
-    this.props.dispatch(TableDataActions.fetchData());    
+    this.props.dispatch(TableDataActions.fetchData())
+    this.props.dispatch(TableDataActions.getPagedData())
+
   }
      
-   handleClearBtnClick() {
-      this.setState({isSearching:false})
+  handleClearBtnClick() {
+      this.setState({isSearching:false, searchText:"",})
       this.refs.searchInput.focus();
-   } 
+  } 
 
   handleSearchTextChange(e) { 
     
@@ -128,9 +130,14 @@ class Home extends React.Component {
         var TableBodyComponents = "";
 
         
-        if (isGrouped == true) {            
-          TableBodyComponents = this.props.tableDataGroup.map((td, index)=> {
+        if (this.props.isGrouped == true) {            
+          
+          // let offset =  (this.props.currentPage - 1) * this.props.recordsPerPage
+          // let itemsPerPage = this.props.recordsPerPage;               
+          // let pagedData = sortedData.slice(offset, (itemsPerPage + offset));
 
+          TableBodyComponents = this.props.tableDataGroup.map((td, index)=> { 
+          //if grouped data is larger than records per page, only grab the records per page otherwise all of it and continue to next;                      
              return (                    
                       <TableBody key={index} headerCount={headers.length} dataForTable={this.props.tableDataGroup[index][1]} groupRowData={this.props.tableDataGroup[index][1][0]} {...this.props} />
                     )
@@ -185,7 +192,7 @@ class Home extends React.Component {
 
         var PagerComponent = "";
 
-        if ((this.props.tableData.length / this.props.recordsPerPage) > 1) {
+        if ((this.props.tableData.length / this.props.recordsPerPage) >= 1) {
           PagerComponent = <Pager key="32432432" {...this.props} />
         }
 

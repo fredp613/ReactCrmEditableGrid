@@ -46,8 +46,12 @@ export default class TableHeader extends React.Component {
 		
 		const linkStyle = {
       		outline: "none",
-      		cursor: "pointer"
+      		cursor: "pointer"      		
     	};
+
+    	const cancelLinkStyle = {
+    		color: "red",
+    	}
     	    
 
     	const sortClass = this.props.sortDirection == "asc" ? "up" : "down";
@@ -79,7 +83,7 @@ export default class TableHeader extends React.Component {
     		headerNameTag = <span>{this.props.fieldName}</span>
     	}
     	if (this.props.isSorted && this.props.isGrouped) {
-    			cancelGroupBtnTag = <a class='glyphicon glyphicon-remove' style={linkStyle} 
+    			cancelGroupBtnTag = <a class='glyphicon glyphicon-remove' style={cancelLinkStyle} 
     			onClick={this.handleCancelGroupBtnClick.bind(this, this.props.fieldName)} />
     	}
 

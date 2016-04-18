@@ -17,8 +17,16 @@ export const GROUP_TABLE_DATA = "GROUP_TABLE_DATA";
 export const MOVE_PAGE = "MOVE_PAGE";
 export const SELECT_PAGE_NUMBER = "SELECT_PAGE_NUMBER";
 export const SET_RECORDS_PER_PAGE = "SET_RECORDS_PER_PAGE";
+export const PAGED_DATA = "PAGED_DATA"
 
-	
+
+export function getPagedData() {
+	return {
+		type: PAGED_DATA,		
+	}
+}
+
+
 export function toggleEditingMode(isEditing) {
 	return {
 		type: TOGGLE_EDITING_MODE,
@@ -74,7 +82,6 @@ export function fetchTableDataSuccess(data) {
 	const lookupData = TableDataStore.getLookupData();
 	const twoOptionsData = TableDataStore.getTwoOptionsData();
 	 
-
 	return {
 		type: FETCH_TABLE_DATA,
 		payload: {

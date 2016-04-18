@@ -36,8 +36,8 @@ export default class TableBody extends React.Component {
 
 	render() {		
 		
-		const isGrouped = this.props.isGrouped;
-		const colSpan = this.props.headerCount //TableDataStore.getHeaders().length;
+		const {isGrouped} = this.props;
+		const {colSpan} = this.props //.headerCount //TableDataStore.getHeaders().length;
 		
 		
 		const rowHoverStyle = {      		
@@ -77,15 +77,20 @@ export default class TableBody extends React.Component {
 		}); 
 		
 		
-
-       	let offset =  (this.props.currentPage - 1) * this.props.recordsPerPage
-       	let itemsPerPage = this.props.recordsPerPage;              	
-       	let pagedData = sortedData.slice(offset, (itemsPerPage + offset));
-       			
-		const rows = pagedData.map((data, index, arr)=> {       		  			
+    
+		const rows = sortedData.map((data, index, arr)=> {       		  			
 			return  (<TableRow key={index}  
 		   		{...this.props} isVisible={this.state.groupShowing} {...data}  />)					   	 		   							   		   		
 		})
+
+  //      	let offset =  (this.props.currentPage - 1) * this.props.recordsPerPage
+  //      	let itemsPerPage = this.props.recordsPerPage;              	
+  //      	let pagedData = sortedData.slice(offset, (itemsPerPage + offset));
+    
+		// const rows = pagedData.map((data, index, arr)=> {       		  			
+		// 	return  (<TableRow key={index}  
+		//    		{...this.props} isVisible={this.state.groupShowing} {...data}  />)					   	 		   							   		   		
+		// })
 	    	    	    	
 		return(	
 			<tbody>	
