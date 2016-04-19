@@ -84,7 +84,7 @@ class Home extends React.Component {
 
   handleRecordsPerPageChange(e) {
     this.props.dispatch(TableDataActions.setRecordsPerPage(e.target.value))
-    this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
+    this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, this.props.isGrouped));
   }
 
   render() {
@@ -96,7 +96,10 @@ class Home extends React.Component {
     const { twoOptionsData } = this.props;
     const { isGrouped } = this.props;   
     const { isSearching } = this.state;
+    const { originalTableDataCount } = this.props;
+    const { recordsPerPage } = this.props;
     const closeIconActive = isSearching ? "glyphicon glyphicon-remove-circle close-icon-active" : "glyphicon glyphicon-remove-circle close-icon-inactive";
+
 
     if (this.props.dataLoadedFromServer && !this.props.dataLoadedFromServerError) {
     
@@ -192,7 +195,7 @@ class Home extends React.Component {
 
         var PagerComponent = "";
 
-        if ((this.props.tableData.length / this.props.recordsPerPage) >= 1) {
+        if ((originalTableDataCount / recordsPerPage) > 1) {
           PagerComponent = <Pager key="32432432" {...this.props} />
         }
 

@@ -35,16 +35,39 @@ export default function tableDataReducer(state, action) {
 	       	}, ...state)
 
 
+
 		case TOGGLE_QUICK_SORT:
 			const newSortFieldName = action.payload.sortFieldName;
 			const newSortDirection = action.payload.sortDirection;	
 			const isGrouped = action.payload.isGrouped;	
 
+			const sortedData = state.tableData.sort((a, b) => {
+			
+				if (newSortDirection === "asc") {
+					if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
+				    	return 1;
+				  	}
+				    if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
+				    	return -1;
+				    }						
+				  // a must be equal to b
+				  return 0;
+				} else {
+					if (a.sortedValue.toLowerCase() < b.sortedValue.toLowerCase()) {
+				    	return 1;
+				  	}
+				    if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
+				    	return -1;
+				    }
+				}			
+			}); 			
+
+
 
 			if (!isGrouped) {
 
 				return Object.assign({}, state, {				
-					tableData: state.tableData.map((td)=>{						
+					tableData: sortedData.map((td)=>{						
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
@@ -57,16 +80,44 @@ export default function tableDataReducer(state, action) {
 				}, ...state);
 			} else {
 				return Object.assign({}, state, {				
-					tableData: state.tableData.map((td)=>{						
+					tableData: sortedData.map((td)=>{						
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
-					tableDataGroup: _.toPairs(_.groupBy(state.tableData, "sortedValue")).map((td, index)=> {
+					tableDataGroup: _.toPairs(_.groupBy(sortedData, "sortedValue")).map((td, index)=> {
 									td.id = index;
-									return Object.assign({}, td, {...state});
-					}),
+									td[1][0].sortDirection = newSortDirection
+									td[1][0].sortFieldName = newSortFieldName
+									console.log(td[1][0])
+									const newSortedValue = td[1][0].values.filter((val)=>{																						
+										return val.crmFieldName === newSortFieldName
+									})
+
+									td[1][0].sortedValue = newSortedValue[0].value									
+									return Object.assign({}, td, {...td});
+					}).sort((a, b) => {									
+							if (newSortDirection === "asc") {
+								if (a[0].toLowerCase() > b[0].toLowerCase()) {
+							    	return 1;
+							  	}
+							    if (a[0].toLowerCase() < b[0].toLowerCase()) {
+							    	return -1;
+							    }						
+							  // a must be equal to b
+							  return 0;
+							} else {
+								if (a[0].toLowerCase() < b[0].toLowerCase()) {
+							    	return 1;
+							  	}
+							    if (a[0].toLowerCase() > b[0].toLowerCase()) {
+							    	return -1;
+							    }
+							}			
+						})
+
+					,
 					sortDirection: newSortDirection,	
 					sortFieldName: newSortFieldName,
 					isGrouped: true,		
@@ -121,10 +172,6 @@ export default function tableDataReducer(state, action) {
 		      num = (action.payload.tableData.length / state.recordsPerPage) + 1
 		    }
 
-		    const numberOfRecords = action.payload.tableData.length;
-			    
-
-
 			const offset =  (state.currentPage - 1) * state.recordsPerPage
        		const itemsPerPage = state.recordsPerPage;              	
        		
@@ -139,7 +186,7 @@ export default function tableDataReducer(state, action) {
 			})
 
 			const tableSettings = action.payload.tableData[0]
-
+			const numberOfRecords = action.payload.tableData.length;
 		
 			return Object.assign({}, state, {				
 						tableData: tdG.slice(offset, (itemsPerPage + offset)),
@@ -217,12 +264,12 @@ export default function tableDataReducer(state, action) {
 			return Object.assign({}, state, {
 				tableData: tdG2.slice(offset3, (itemsPerPage3 + offset3)),
 				currentPage: parseInt(currentPage),
-			})	
+			}, ...state)	
 
 		case SET_RECORDS_PER_PAGE:
-
-			const offset2 =  (state.currentPage - 1) * state.recordsPerPage
+			
        		const itemsPerPage2 = parseInt(action.payload.recordsPerPage);              	
+       		const offset2 = 0  //(state.currentPage - 1) * itemsPerPage2
        		
 			const tdG1 = state.originalTableData.map((td)=>{
 				
@@ -234,10 +281,12 @@ export default function tableDataReducer(state, action) {
 				return td;
 			})
 
+			
+
 			return Object.assign({}, state, {
 				tableData: tdG1.slice(offset2, (itemsPerPage2 + offset2)),
 				currentPage: 1,
-				recordsPerPage: parseInt(action.payload.recordsPerPage),				
+				recordsPerPage: itemsPerPage2,								
 			}, ...state)
 			
 		default:

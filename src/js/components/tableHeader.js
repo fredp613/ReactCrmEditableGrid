@@ -7,7 +7,9 @@ export default class TableHeader extends React.Component {
 
 	constructor() {
 	    super();
-	 
+	 	this.state = {
+	 		cancelButtonVisible: false,
+	 	}
 
 	}
 
@@ -29,13 +31,12 @@ export default class TableHeader extends React.Component {
 		}	
 		this.setState({
 			cancelButtonVisible: true,
-		})	
-		console.log(this.props)			
+		})			
 	}	
 
 	handleCancelGroupBtnClick(fieldName) {
 		console.log(this.props.sortDirection)	
-		this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));	
+		this.props.dispatch(TableDataActions.toggleQuickSort(this.props.fieldName, this.props.sortDirection, false));	
 				
 		this.setState({
 			cancelButtonVisible: false,

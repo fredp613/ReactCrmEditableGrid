@@ -11,6 +11,7 @@ export default class Pager extends React.Component {
       e.preventDefault();  
       const pageNumber = e.target.text;   
       this.props.dispatch(TableDataActions.selectPageNumber(pageNumber)); 
+      this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, this.props.isGrouped));
   	}
 
   handleDirectionButtonClick(direction, e) {    
@@ -24,7 +25,19 @@ export default class Pager extends React.Component {
           return false;        
      }
      this.props.dispatch(TableDataActions.movePage(direction));
+     this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, this.props.isGrouped));
          
+  }
+
+  getNumberOfPages() {
+    const remainder = this.props.originalTableDataCount % this.props.recordsPerPage; 
+      var num = 1;  
+        if (remainder == 0){    
+          num = this.props.originalTableDataCount / this.props.recordsPerPage; 
+        } else {    
+          num = (this.props.originalTableDataCount / this.props.recordsPerPage) + 1
+        }
+      return num;
   }
 
  
@@ -32,7 +45,7 @@ export default class Pager extends React.Component {
 
     // const numberOfPages = (this.props.tableData.length + 1) > this.props.recordsPerPage ? (((this.props.tableData.length + 1) / this.props.recordsPerPage)) : 1
 
-    const numberOfPages = this.props.numberOfPages //this.getNumberOfPages();
+    const numberOfPages = this.getNumberOfPages();
     
     var lis = [];
     for (var i=1;i<=numberOfPages;i++) {
@@ -56,13 +69,6 @@ export default class Pager extends React.Component {
     }
 
 
-    // var disablePrev = {
-    //   display:(this.props.currentPage === 1 ? "none" : ""),
-    // }
-
-    //  var disableLast = {
-    //   display:(this.props.currentPage === numberOfPages ? "none" : ""),
-    // }
 
 
 
