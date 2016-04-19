@@ -41,7 +41,7 @@ export default function tableDataReducer(state, action) {
 			const newSortDirection = action.payload.sortDirection;	
 			const isGrouped = action.payload.isGrouped;	
 
-			const sortedData = state.tableData.sort((a, b) => {
+			const sortedData = state.originalTableData.sort((a, b) => {
 			
 				if (newSortDirection === "asc") {
 					if (a.sortedValue.toLowerCase() > b.sortedValue.toLowerCase()) {
@@ -60,14 +60,17 @@ export default function tableDataReducer(state, action) {
 				    	return -1;
 				    }
 				}			
-			}); 			
+			}); 	
 
-
+			const offsetx =  (state.currentPage - 1) * state.recordsPerPage
+       		const itemsPerPagex = state.recordsPerPage;              	
+       		
+       		const sortedAndPagedData = sortedData.slice(offsetx, (itemsPerPagex + offsetx))
 
 			if (!isGrouped) {
 
 				return Object.assign({}, state, {				
-					tableData: sortedData.map((td)=>{						
+					tableData: sortedAndPagedData.map((td)=>{						
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
@@ -80,13 +83,13 @@ export default function tableDataReducer(state, action) {
 				}, ...state);
 			} else {
 				return Object.assign({}, state, {				
-					tableData: sortedData.map((td)=>{						
+					tableData: sortedAndPagedData.map((td)=>{						
 							const newSortedValue = td.values.filter((val)=>{																						
 								return val.crmFieldName === newSortFieldName
 							})
 							return Object.assign({}, td, { sortDirection: newSortDirection, sortFieldName: newSortFieldName, sortedValue: newSortedValue[0].value}, ...td)
 						}),
-					tableDataGroup: _.toPairs(_.groupBy(sortedData, "sortedValue")).map((td, index)=> {
+					tableDataGroup: _.toPairs(_.groupBy(sortedAndPagedData, "sortedValue")).map((td, index)=> {
 									td.id = index;
 									td[1][0].sortDirection = newSortDirection
 									td[1][0].sortFieldName = newSortFieldName
