@@ -35,8 +35,9 @@ export default class TableHeader extends React.Component {
 	}	
 
 	handleCancelGroupBtnClick(fieldName) {
-		console.log(this.props.sortDirection)	
-		this.props.dispatch(TableDataActions.toggleQuickSort(this.props.fieldName, this.props.sortDirection, false));	
+		
+		// this.props.dispatch(TableDataActions.toggleQuickSort(this.props.fieldName, this.props.sortDirection, this.props.isGrouped));	
+		this.props.dispatch(TableDataActions.cancelDirtyRecords());
 				
 		this.setState({
 			cancelButtonVisible: false,

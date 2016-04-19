@@ -147,18 +147,61 @@ export default function tableDataReducer(state, action) {
 			             }
 		        	})		        	
 		        	return Object.assign({}, data, {values: newvals });		        	
+		        }),
+		        originalTableData: state.originalTableData.map((data) => {	
+		        	const newvals = data.values.map((value)=> {		        		
+		        		if (value.isDirty) {		        					        					        			
+		        			return Object.assign({}, value, {value: value.dirtyValue, isDirty: false, dirtyValue: ""})		        			
+		        		} else {
+		        			return value;
+			             }
+		        	})		        	
+		        	return Object.assign({}, data, {values: newvals });		        	
 		        })
-		      })
+		      }, ...state)
+		case APPEND_DIRTY_RECORDS:
+			 return Object.assign({}, state, {
+			 	
+		        tableData: state.tableData.map((data) => {	
+		        	const newvals = data.values.map((value)=> {		        		
+		        		if ((value.crmRecordId === action.payload.crmRecordId) && (value.crmFieldName === action.payload.crmFieldName)) {		        					        					        			
+		        			return Object.assign({}, value, {dirtyValue: action.payload.dirtyValue, isDirty: true})		        			
+		        		} else {
+		        			return value;
+			             }
+		        	})
+		        	// console.log(values)		        	
+		        	return Object.assign({}, data, {values: newvals });		        	
+		        }), 
+		        originalTableData: state.originalTableData.map((data) => {	
+		        	const newvals = data.values.map((value)=> {		        		
+		        		if ((value.crmRecordId === action.payload.crmRecordId) && (value.crmFieldName === action.payload.crmFieldName)) {		        					        					        			
+		        			return Object.assign({}, value, {dirtyValue: action.payload.dirtyValue, isDirty: true})		        			
+		        		} else {
+		        			return value;
+			             }
+		        	})
+		        	// console.log(values)		        	
+		        	return Object.assign({}, data, {values: newvals });		        	
+		        }),
+		      }, ...state)
+
 		case CANCEL_DIRTY_RECORDS:
 			return Object.assign({}, state, {			 	
 		        tableData: state.tableData.map((data) => {	
 		        	const newvals = data.values.map((value)=> {		        				        		
 	        			return Object.assign({}, value, {dirtyValue: "", isDirty: false})		        					        		
-		        	})
-		        	// console.log(values)		        	
+		        	})		        	
 		        	return Object.assign({}, data, {values: newvals });		        	
-		        })
-		      })					
+		        }),
+		         originalTableData: state.originalTableData.map((data) => {	
+		        	const newvals = data.values.map((value)=> {		        				        		
+	        			return Object.assign({}, value, {dirtyValue: "", isDirty: false})		        					        		
+		        	})		        	
+		        	return Object.assign({}, data, {values: newvals });		        	
+		        }),
+		      }, ...state)
+		      					
 		case FETCH_TABLE_DATA_ERROR:
 			return Object.assign({}, state, {				
 				dataLoadedFromServer: true,
@@ -205,21 +248,7 @@ export default function tableDataReducer(state, action) {
 					});			
 		case RECEIVE_TABLE_DATA: 
 			return state;
-		case APPEND_DIRTY_RECORDS:
-			 return Object.assign({}, state, {
-			 	
-		        tableData: state.tableData.map((data) => {	
-		        	const newvals = data.values.map((value)=> {		        		
-		        		if ((value.crmRecordId === action.payload.crmRecordId) && (value.crmFieldName === action.payload.crmFieldName)) {		        					        					        			
-		        			return Object.assign({}, value, {dirtyValue: action.payload.dirtyValue, isDirty: true})		        			
-		        		} else {
-		        			return value;
-			             }
-		        	})
-		        	// console.log(values)		        	
-		        	return Object.assign({}, data, {values: newvals });		        	
-		        })
-		      })
+		
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
 				userId: action.id,

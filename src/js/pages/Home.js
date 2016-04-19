@@ -63,7 +63,7 @@ class Home extends React.Component {
       // this.props.dispatch.updateDirtyRecords();      
       this.refs.searchInput.focus();          
       this.props.dispatch(TableDataActions.updateDirtyRecords())
-       this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
+       // this.props.dispatch(TableDataActions.toggleQuickSort(this.props.sortFieldName, this.props.sortDirection, false));
       
 
   }
