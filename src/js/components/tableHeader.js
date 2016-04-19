@@ -36,9 +36,8 @@ export default class TableHeader extends React.Component {
 
 	handleCancelGroupBtnClick(fieldName) {
 		
-		// this.props.dispatch(TableDataActions.toggleQuickSort(this.props.fieldName, this.props.sortDirection, this.props.isGrouped));	
-		this.props.dispatch(TableDataActions.cancelDirtyRecords());
-				
+		this.props.dispatch(TableDataActions.toggleQuickSort(this.props.fieldName, this.props.sortDirection, false));	
+						
 		this.setState({
 			cancelButtonVisible: false,
 		})
@@ -52,6 +51,8 @@ export default class TableHeader extends React.Component {
     	};
 
     	const cancelLinkStyle = {
+    		outline: "none",
+      		cursor: "pointer",      		
     		color: "red",
     	}
     	    
