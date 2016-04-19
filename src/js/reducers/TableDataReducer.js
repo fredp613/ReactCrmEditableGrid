@@ -18,8 +18,13 @@ import {
 } from "../actions/TableDataActions"
 import TableDataStore from "../stores/TableDataStore"
 			
+function _test() {
+	console.log("test----------------")
+}
 
 export default function tableDataReducer(state, action) {	
+	
+
 	switch (action.type) {	
 		case TOGGLE_EDITING_MODE:
 			return Object.assign({}, state, {
@@ -37,6 +42,7 @@ export default function tableDataReducer(state, action) {
 
 
 		case TOGGLE_QUICK_SORT:
+			
 			const newSortFieldName = action.payload.sortFieldName;
 			const newSortDirection = action.payload.sortDirection;	
 			const isGrouped = action.payload.isGrouped;	
@@ -201,7 +207,7 @@ export default function tableDataReducer(state, action) {
 		        	return Object.assign({}, data, {values: newvals });		        	
 		        }),
 		      }, ...state)
-		      					
+
 		case FETCH_TABLE_DATA_ERROR:
 			return Object.assign({}, state, {				
 				dataLoadedFromServer: true,
@@ -209,7 +215,7 @@ export default function tableDataReducer(state, action) {
 			})
 			
 		case FETCH_TABLE_DATA:	
-
+			_test();
 			const remainder = action.payload.tableData.length % state.recordsPerPage;	
 			var num = 1;	
 		    if (remainder == 0){    
