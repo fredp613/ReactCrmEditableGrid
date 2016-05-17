@@ -10,6 +10,7 @@ import {
 	CANCEL_DIRTY_RECORDS,
 	GENERATE_USER_ID,
 	GROUP_TABLE_DATA,
+	UNGROUP_TABLE_DATA,
 	SELECT_PAGE_NUMBER,
 	MOVE_PAGE,
 	SET_RECORDS_PER_PAGE,
@@ -132,14 +133,12 @@ export default function tableDataReducer(state, action) {
 					isGrouped: true,		
 				}, ...state);
 
-			}
-		case GROUP_TABLE_DATA:
-			return Object.assign({}, state, {									
-					tableDataGroup: _.toPairs(_.groupBy(state.tableData, "sortedValue")).map((td, index)=> {
-									td.id = index;
-									return Object.assign({}, td, {...state});
-					}),						
-				});
+			}	
+
+		case UNGROUP_TABLE_DATA:
+			return Object.assign({}, state, {													
+				isGrouped: false,						
+				}, ...state);
 									
 		case UPDATE_DIRTY_RECORDS:
 			return Object.assign({}, state, {
@@ -153,7 +152,7 @@ export default function tableDataReducer(state, action) {
 			             }
 		        	})		        	
 		        	return Object.assign({}, data, {values: newvals });		        	
-		        }),
+		        }, ...state),
 		        originalTableData: state.originalTableData.map((data) => {	
 		        	const newvals = data.values.map((value)=> {		        		
 		        		if (value.isDirty) {		        					        					        			
@@ -177,8 +176,8 @@ export default function tableDataReducer(state, action) {
 			             }
 		        	})
 		        	// console.log(values)		        	
-		        	return Object.assign({}, data, {values: newvals });		        	
-		        }), 
+		        	return Object.assign({}, data, {values: newvals }, ...data);		        	
+		        }, ...state), 
 		        originalTableData: state.originalTableData.map((data) => {	
 		        	const newvals = data.values.map((value)=> {		        		
 		        		if ((value.crmRecordId === action.payload.crmRecordId) && (value.crmFieldName === action.payload.crmFieldName)) {		        					        					        			
@@ -198,8 +197,8 @@ export default function tableDataReducer(state, action) {
 		        	const newvals = data.values.map((value)=> {		        				        		
 	        			return Object.assign({}, value, {dirtyValue: "", isDirty: false})		        					        		
 		        	})		        	
-		        	return Object.assign({}, data, {values: newvals });		        	
-		        }),
+		        	return Object.assign({}, data, {values: newvals }, ...data);		        	
+		        }, ...state),
 		         originalTableData: state.originalTableData.map((data) => {	
 		        	const newvals = data.values.map((value)=> {		        				        		
 	        			return Object.assign({}, value, {dirtyValue: "", isDirty: false})		        					        		
@@ -212,7 +211,7 @@ export default function tableDataReducer(state, action) {
 			return Object.assign({}, state, {				
 				dataLoadedFromServer: true,
 				dataLoadedFromServerError: true,
-			})
+			}, ...state)
 			
 		case FETCH_TABLE_DATA:	
 			_test();
@@ -251,14 +250,14 @@ export default function tableDataReducer(state, action) {
 						sortDirection: tableSettings.sortDirection,	
 						sortFieldName: tableSettings.sortFieldName,
 						numberOfPages: num,
-					});			
+					}, ...state);			
 		case RECEIVE_TABLE_DATA: 
 			return state;
 		
 		case GENERATE_USER_ID:
 			return Object.assign({}, state, {
 				userId: action.id,
-			}, ...state.userId)	
+			}, ...state)	
 
 		case SELECT_PAGE_NUMBER:
 
@@ -279,7 +278,7 @@ export default function tableDataReducer(state, action) {
 			return Object.assign({}, state, {
 				tableData: tdG3.slice(offset4, (itemsPerPage4 + offset4)),
 				currentPage: parseInt(action.payload.pageNumber),
-			})
+			}, ...state)
 		case MOVE_PAGE:	
 
 			const currentPage = action.payload.direction ? (state.currentPage + 1) : (state.currentPage - 1)

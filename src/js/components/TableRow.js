@@ -54,7 +54,7 @@ export default class TableRow extends React.Component {
 			display: visibility,					
 		}		
 		
-		var classForRow = "";
+		let classForRow = "";
 				
 		const rowValueComponents = this.props.values.map((child, index) => {
 
